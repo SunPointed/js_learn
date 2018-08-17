@@ -1,3 +1,6 @@
+/*
+	有很多错误
+*/
 var WAIT = 1;
 var SUCCESS = 2;
 var FAIL = 3;
