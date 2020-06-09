@@ -72,3 +72,57 @@ class Solution {
     }
 }
 ```
+### 2
+```
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note:
+
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+
+Input: candidates = [10,1,2,7,6,1,5], target = 8,
+A solution set is:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+```
+##### understand
+```
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        subSum(candidates.apply { sort() }, 0, target, mutableListOf(), res)
+        return res
+    }
+    
+    private fun subSum(
+        candidates: IntArray,
+        curIndex: Int,
+        target: Int,
+        temp: MutableList<Int>,
+        res: MutableList<List<Int>>
+    ) {
+        if (target == 0) {
+            res.add(mutableListOf<Int>().apply { addAll(temp) })
+            return
+        }
+        if (target < 0) {
+            return
+        }
+        for (i in curIndex until candidates.size) {
+            if(i > curIndex && candidates[i] == candidates[i - 1]) {
+                continue
+            }
+            temp.add(candidates[i])
+            subSum(candidates, i + 1, target - candidates[i], temp, res)
+            temp.removeAt(temp.size - 1)
+        }
+    }
+}
+```
