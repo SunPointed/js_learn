@@ -92,6 +92,86 @@ A solution set is:
   [1, 1, 6]
 ]
 ```
+#### mine 1
+```
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableSetOf<List<Int>>()
+        sub(candidates, target, null, res)
+        return res.toList()
+    }
+    
+    fun sub(candidates: IntArray, target: Int, preIndexList:MutableList<Int>?, resList: MutableSet<List<Int>>) {
+        candidates.forEachIndexed { index, data ->
+            if(preIndexList == null || !preIndexList.contains(index)) {
+                when {
+                    data > target -> {
+
+                    }
+                    data < target -> {
+                        val preList =  mutableListOf<Int>().apply {
+                            preIndexList?.also {
+                                addAll(it)
+                            }
+                            add(index)
+                        }
+                        sub(candidates, target - data, preList, resList)
+                    }
+                    else -> {
+                        resList.add(mutableListOf<Int>().apply {
+                            preIndexList?.forEach {
+                                this.add(candidates[it])
+                            }
+                            this.add(data)
+                            sort()
+                        })
+                    }
+                }
+            }
+        }
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        sub(candidates.apply { sort() }, 0, target, null, res)
+        return res
+    }
+    
+    fun sub(
+        candidates: IntArray,
+        startIndex: Int,
+        target: Int,
+        datas: MutableList<Int>?,
+        resList: MutableList<List<Int>>
+    ) {
+        for (i in startIndex until candidates.size) {
+            if (i > startIndex && candidates[i] == candidates[i - 1]) continue
+
+            val data = candidates[i]
+            if (data > target) continue
+            else if (data < target) {
+                sub(candidates, i + 1, target - data, mutableListOf<Int>().apply {
+                    datas?.also {
+                        addAll(it)
+                    }
+                    add(data)
+                }, resList)
+            } else {
+                resList.add(mutableListOf<Int>().apply {
+                    datas?.also {
+                        addAll(it)
+                    }
+                    add(data)
+                })
+            }
+        }
+    }
+}
+```
 ##### understand
 ```
 class Solution {
