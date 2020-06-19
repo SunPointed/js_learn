@@ -313,3 +313,51 @@ class Solution {
     }
 }
 ```
+### 5
+```
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Note that an empty string is also considered valid.
+
+Input: "()"
+Output: true
+
+Input: "(]"
+Output: false
+
+Input: "([)]"
+Output: false
+
+Input: "{[]}"
+Output: true
+```
+##### mine
+```
+class Solution {
+    fun isValid(s: String): Boolean {
+        if (s.isEmpty()) return true
+        // ArrayDeque代替Stack，注意是从最前端入栈出栈
+        val stack = ArrayDeque<Char>()
+        s.forEach {
+            if (stack.size > 0) {
+                if (needPop(it, stack.first)) {
+                    stack.pop()
+                } else {
+                    stack.push(it)
+                }
+            } else {
+                stack.push(it)
+            }
+        }
+        return stack.size == 0
+    }
+
+    fun needPop(x1: Char, x2: Char): Boolean {
+        return (x1 == ')' && x2 == '(') || (x1 == ']' && x2 == '[' || (x1 == '}' && x2 == '{'))
+    }
+}
+```
