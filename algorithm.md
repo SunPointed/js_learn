@@ -379,3 +379,15 @@ Note:
     -100.0 < x < 100.0
     n is a 32-bit signed integer, within the range [−231, 231 − 1]
 ```
+##### like
+```
+class Solution {
+    fun myPow(x: Double, n: Int): Double {
+        if (n == 1) return x
+        if (n == -1) return 1.0 / x
+        if (n == 0) return 1.0
+        val half = myPow(x, n / 2)
+        return half * half * myPow(x, n % 2)
+    }
+}
+```
