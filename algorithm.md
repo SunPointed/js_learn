@@ -391,3 +391,99 @@ class Solution {
     }
 }
 ```
+### 6
+```
+Write a program to solve a Sudoku puzzle by filling the empty cells.
+
+A sudoku solution must satisfy all of the following rules:
+
+Each of the digits 1-9 must occur exactly once in each row.
+Each of the digits 1-9 must occur exactly once in each column.
+Each of the the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+Empty cells are indicated by the character '.'.
+
+Note:
+The given board contain only digits 1-9 and the character '.'.
+You may assume that the given Sudoku puzzle will have a single unique solution.
+The given board size is always 9x9.
+```
+##### mine
+```
+import kotlin.experimental.or
+class Solution {
+    fun solveSudoku(board: Array<CharArray>): Unit {
+        solve(board, 0, 0)
+    }
+    
+    fun solve(board: Array<CharArray>, x: Int, y: Int): Boolean {
+        if (isSolve(board)) return true
+
+        val ny = (y + 1) % 9
+        val nx = if(ny == 0) (x + 1) % 9 else x
+        if (board[x][y] == '.') {
+            var solve = false
+            for (index in 0..8) {
+                board[x][y] = '1' + index
+                if (isValid(board, x, y, board[x][y])) {
+                    if (solve(board, nx, ny)) return true
+                }
+            }
+            board[x][y] = '.'
+            return false
+        } else {
+            return solve(board, nx, ny)
+        }
+    }
+    
+    fun isValid(board: Array<CharArray>, x: Int, y: Int, cur: Char): Boolean {
+        var res = true
+
+        res = board[x].filterIndexed { index, _ ->
+            index != y
+        }.none {
+            it == cur
+        }
+
+        if (!res) return false
+
+        board.forEachIndexed { index, chars ->
+            if (index != x && chars[y] == cur) {
+                return false
+            }
+        }
+
+        val sx = when {
+            x < 3 -> 0
+            x < 6 -> 3
+            else -> 6
+        }
+
+        val sy = when {
+            y < 3 -> 0
+            y < 6 -> 3
+            else -> 6
+        }
+
+        for (i in sx until (sx + 3)) {
+            val b = board[i]
+            for (j in sy until (sy + 3)) {
+                val c = b[j]
+                if (!(i == x && j == y) && c == cur) {
+                    return false
+                }
+            }
+        }
+
+        return res
+    }
+
+    fun isSolve(board: Array<CharArray>): Boolean {
+        return board.all { chars ->
+            val noDot = chars.none { c ->
+                c == '.'
+            }
+            noDot
+        }
+    }
+}
+```
