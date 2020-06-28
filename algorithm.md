@@ -487,3 +487,118 @@ class Solution {
     }
 }
 ```
+### 7
+```
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+Example:
+Input:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+Output: 1->1->2->3->4->4->5->6
+```
+##### mine 1
+```
+class Solution {
+    fun mergeKLists(lists: Array<ListNode?>): ListNode? {
+        var resNode: ListNode? = null
+        var tempNode: ListNode? = null
+
+        var curMin = findMin(lists)
+        while (curMin != null) {
+            if (resNode == null) {
+                resNode = curMin
+                tempNode = curMin
+            } else {
+                tempNode?.next = curMin
+                tempNode = curMin
+            }
+            curMin = findMin(lists)
+        }
+
+        return resNode
+    }
+
+    fun findMin(lists: Array<ListNode?>): ListNode? {
+        var min: ListNode? = null
+        var index = -1
+        lists.forEachIndexed { i, listNode ->
+            if (listNode != null) {
+                if (min == null) {
+                    min = listNode
+                    index = i
+                } else {
+                    if (min!!.`val` > listNode.`val`) {
+                        min = listNode
+                        index = i
+                    }
+                }
+            }
+        }
+
+        if(index != -1 && min != null) {
+            lists[index] = min?.next
+        }
+        return min
+    }
+    
+    class ListNode(var `val`: Int) {
+        var next: ListNode? = null
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun mergeKLists(lists: Array<ListNode?>): ListNode? {
+        if (lists.isEmpty()) return null
+        if (lists.size == 1) return lists[0]
+
+        var len = lists.size
+        while (len != 1) {
+            for (i in 0 until (len / 2)) {
+                lists[i] = mergeTwo(lists[i * 2], lists[i * 2 + 1])
+            }
+            if(len % 2 == 1){
+                lists[len / 2] = lists[len - 1]
+                len = (len + 1) / 2
+            } else {
+                len /= 2
+            }
+        }
+        return lists[0]
+    }
+
+    fun mergeTwo(node1: ListNode?, node2: ListNode?): ListNode? {
+        if (node1 == null) return node2
+        if (node2 == null) return node1
+        val start = ListNode(0)
+        var cur = start
+        var n1 = node1
+        var n2 = node2
+        while (n1 != null || n2 != null) {
+            if(n1 != null && n2 !=null) {
+                if (n1.`val` <= n2.`val`) {
+                    cur.next = n1
+                    cur = n1
+                    n1 = n1.next
+                } else {
+                    cur.next = n2
+                    cur = n2
+                    n2 = n2.next
+                }
+            } else if(n1 != null) {
+                cur.next = n1
+                n1 = null
+            } else if(n2 != null) {
+                cur.next = n2
+                n2 = null
+            }
+        }
+        return start.next
+    }
+}
+```
