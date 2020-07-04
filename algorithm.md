@@ -617,7 +617,7 @@ Output: 1
 
 Your algorithm should run in O(n) time and uses constant extra space.
 ```
-##### mine 1
+##### mine 1 too slow
 ```
 class Solution {
     class Node(
