@@ -677,3 +677,41 @@ class Solution {
     }
 }
 ```
+##### mine 2 even slow
+```
+class Solution {
+    fun firstMissingPositive(nums: IntArray): Int {
+        nums.sort()
+        var value = 1
+        nums.forEach {
+            if (it > 0 && it == value) {
+                value++
+            }
+        }
+        return value   
+    }
+}
+```
+##### mine 3 acceptable
+```
+class Solution {
+    fun firstMissingPositive(nums: IntArray): Int {
+        var count = 0
+        val set = mutableSetOf<Int>()
+        nums.forEach {
+            if (it > 0) {
+                set.add(it)
+                count++
+            }
+        }
+
+        for (res in 1..count) {
+            if (!set.contains(res)) {
+                return res
+            }
+        }
+
+        return 1 + count 
+    }
+}
+```
