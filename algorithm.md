@@ -602,3 +602,78 @@ class Solution {
     }
 }
 ```
+### 8
+```
+Given an unsorted integer array, find the smallest missing positive integer.
+
+Input: [1,2,0]
+Output: 3
+
+Input: [3,4,-1,1]
+Output: 2
+
+Input: [7,8,9,11,12]
+Output: 1
+
+Your algorithm should run in O(n) time and uses constant extra space.
+```
+##### mine 1
+```
+class Solution {
+    class Node(
+        var value: Int,
+        var next: Node? = null
+    )
+    
+    fun firstMissingPositive(nums: IntArray): Int {
+        val head = Node(-1)
+        var count = 0
+        nums.forEach {
+            if (it > 0) {
+                val node = Node(it)
+                var cur = head.next
+                if (cur == null) {
+                    head.next = node
+                } else {
+                    var find = false
+                    var pre:Node? = head
+                    while (cur != null) {
+                        if (cur!!.value < it) {
+                            pre = cur
+                            cur = cur!!.next
+                        } else if(cur!!.value == it){
+                            find = true
+                            break
+                        } else {
+                            find = true
+
+                            pre?.next = node
+                            node.next = cur
+
+                            break
+                        }
+                    }
+
+                    if (!find) {
+                        pre?.next = node
+                    }
+                }
+                count++
+            }
+        }
+
+        return if(head.next == null || head.next!!.value > 1) {
+            1
+        } else {
+            var value = 1
+            var cur = head.next
+            while (cur != null && cur!!.value == value){
+                cur = cur!!.next
+                value++
+            }
+
+            value
+        }
+    }
+}
+```
