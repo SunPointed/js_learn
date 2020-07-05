@@ -715,3 +715,33 @@ class Solution {
     }
 }
 ```
+##### mine 4 best
+```
+class Solution {
+    fun firstMissingPositive(nums: IntArray): Int {
+        var i = 0
+        while (i < nums.size) {
+            if(nums[i] == i + 1 || nums[i] < 1 || nums[i] > nums.size || nums[nums[i] - 1] == nums[i])
+                i++
+            else {
+                val temp = nums[i]
+                nums[i] = nums[temp - 1]
+                nums[temp - 1] = temp
+            }
+        }
+
+        i = 0
+        var res = 1
+        while (i < nums.size){
+            if(nums[i] == res){
+                i++
+                res++
+            } else {
+                break
+            }
+        }
+
+        return res
+    }
+}
+```
