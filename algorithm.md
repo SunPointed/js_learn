@@ -745,3 +745,38 @@ class Solution {
     }
 }
 ```
+### 9
+```
+Given an array of strings, group anagrams together.
+
+Input: ["eat", "tea", "tan", "ate", "nat", "bat"],
+Output:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+
+All inputs will be in lowercase.
+The order of your output does not matter.
+```
+##### mine 1 acceptable
+```
+class Solution {
+    fun groupAnagrams(strs: Array<String>): List<List<String>> {
+        val map = mutableMapOf<String, MutableList<String>>()
+        strs.forEach {
+            val key = it.toList().sorted().joinToString()
+            if(map[key] == null) {
+                map[key] = mutableListOf()
+            }
+
+            map[key]?.add(it)
+        }
+
+        return map.map {
+            it.value
+        }
+    }
+}
+```
