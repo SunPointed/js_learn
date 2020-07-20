@@ -780,3 +780,72 @@ class Solution {
     }
 }
 ```
+### 10
+```
+Substring with Concatenation of All Words
+
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
+
+Example 1:
+
+Input:
+  s = "barfoothefoobarman",
+  words = ["foo","bar"]
+Output: [0,9]
+
+Explanation: Substrings starting at index 0 and 9 are "barfoo" and "foobar" respectively.
+The output order does not matter, returning [9,0] is fine too.
+
+Example 2:
+
+Input:
+  s = "wordgoodgoodgoodbestword",
+  words = ["word","good","best","word"]
+Output: []
+```
+##### 1
+```
+class Solution {
+    fun findSubstring(s: String, words: Array<String>): List<Int> {
+        val res = mutableListOf<Int>()
+        val wordNum = words.size
+        if (wordNum == 0) {
+            return res
+        }
+        val wordLen = words[0].length
+        //HashMap1 存所有单词
+        val allWords = mutableMapOf<String, Int>()
+        for (w in words) {
+            val value = allWords.getOrDefault(w, 0)
+            allWords[w] = value + 1
+        }
+        //遍历所有子串
+        for (i in 0..(s.length - wordNum * wordLen)) {
+            //HashMap2 存当前扫描的字符串含有的单词
+            val hasWords = mutableMapOf<String, Int>()
+            var num = 0
+            //判断该子串是否符合
+            while (num < wordNum) {
+                val word = s.substring(i + num * wordLen, i + (num + 1) * wordLen)
+                //判断该单词在 HashMap1 中
+                if (allWords.containsKey(word)) {
+                    val value = hasWords.getOrDefault(word, 0)
+                    hasWords[word] = value + 1
+                    //判断当前单词的 value 和 HashMap1 中该单词的 value
+                    if (hasWords[word]!! > allWords[word]!!) {
+                        break
+                    }
+                } else {
+                    break
+                }
+                num++
+            }
+            //判断是不是所有的单词都符合条件
+            if (num == wordNum) {
+                res.add(i)
+            }
+        }
+        return res
+    }
+}
+```
