@@ -849,3 +849,141 @@ class Solution {
     }
 }
 ```
+### 11
+```
+Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+
+Note:
+The solution set must not contain duplicate triplets.
+
+Given array nums = [-1, 0, 1, 2, -1, -4],
+
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+```
+##### mine
+```
+class Solution {
+    fun threeSum(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+        for ((index, num) in nums.withIndex()) {
+            if (index > 0 && nums[index - 1] == num) continue
+
+            twoSum1(index + 1, nums, -num).forEach {
+                res.add(it.apply {
+                    add(num)
+                })
+            }
+
+        }
+        return res
+    }
+    
+    fun twoSum1(startIndex: Int, nums: IntArray, target: Int): List<MutableList<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+        var i = startIndex
+        var j = nums.size - 1
+        while (i < j) {
+            val t = nums[i] + nums[j]
+            if (t == target) {
+                res.add(mutableListOf(nums[i], nums[j]))
+                i++
+                j--
+                while (i < j && nums[i - 1] == nums[i]) i++
+                while (i < j && nums[j + 1] == nums[j]) j--
+            } else if (t < target) {
+                i++
+            } else {
+                j--
+            }
+        }
+        return res
+    }
+}
+```
+### 12
+```
+ Construct Binary Search Tree from Preorder Traversal
+ 根据前序遍历结果回复二叉搜索树
+ https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/
+
+ Return the root node of a binary search tree that matches the given preorder traversal.
+
+(Recall that a binary search tree is a binary tree where for every node, any descendant of node.left has a value < node.val, and any descendant of node.right has a value > node.val.  Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
+
+It's guaranteed that for the given test cases there is always possible to find a binary search tree with the given requirements.
+
+Input: [8,5,1,7,10,12]
+Output: [8,5,10,1,7,null,12]
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun bstFromPreorder(preorder: IntArray): TreeNode? {
+        if (preorder.isEmpty()) return null
+
+        val root = TreeNode(preorder[0])
+        var curNode = root
+        val stack = ArrayDeque<TreeNode>()
+        var index = 1
+        while (index != preorder.size) {
+            if (preorder[index] < curNode.`val`) {
+                stack.push(curNode)
+                curNode.left = TreeNode(preorder[index])
+                curNode = curNode.left!!
+            } else {
+                var tempNode = stack.peek()
+                while (tempNode != null && tempNode.`val` < preorder[index]) {
+                    curNode = stack.pop()
+                    tempNode = stack.peek()
+                }
+                curNode.right = TreeNode(preorder[index])
+                curNode = curNode.right!!
+            }
+            index++
+        }
+        return root
+    }
+}
+```
+##### recursion
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    var i = 0
+    fun bstFromPreorder(preorder: IntArray): TreeNode? {
+        return bstFromPreorder(preorder, Int.MAX_VALUE)
+    }
+
+    fun bstFromPreorder(preorder: IntArray, bound: Int): TreeNode? {
+        if (i == preorder.size || preorder[i] > bound) return null
+        val root = TreeNode(preorder[i++])
+        root.left = bstFromPreorder(preorder, root.`val`)
+        root.right = bstFromPreorder(preorder, bound)
+        return root
+    }
+}
+```
