@@ -987,3 +987,131 @@ class Solution {
     }
 }
 ```
+### 13
+```
+Reorder Routes to Make All Paths Lead to the City Zero
+
+https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
+
+There are n cities numbered from 0 to n-1 and n-1 roads such that there is only one way to travel between two different cities (this network form a tree). Last year, The ministry of transport decided to orient the roads in one direction because they are too narrow.
+
+Roads are represented by connections where connections[i] = [a, b] represents a road from city a to b.
+
+This year, there will be a big event in the capital (city 0), and many people want to travel to this city.
+
+Your task consists of reorienting some roads such that each city can visit the city 0. Return the minimum number of edges changed.
+
+It's guaranteed that each city can reach the city 0 after reorder.
+```
+##### 1
+```
+class Solution {
+    fun minReorder(n: Int, connections: Array<IntArray>): Int {
+        val right = mutableMapOf<Int, MutableSet<Int>>()
+        val error = mutableMapOf<Int, MutableSet<Int>>()
+
+        for (i in 0..n) {
+            right[i] = mutableSetOf()
+            error[i] = mutableSetOf()
+        }
+
+        for (road in connections) {
+            right[road[1]]!!.add(road[0])
+            error[road[0]]!!.add(road[1])
+        }
+
+        return stepN(0, right, error)
+    }
+
+    fun stepN(
+        city: Int,
+        right: MutableMap<Int, MutableSet<Int>>,
+        error: MutableMap<Int, MutableSet<Int>>
+    ): Int {
+        var res = 0
+        for (tr in right[city]!!) {
+            error[tr]!!.remove(city)
+            res += stepN(tr, right, error)
+        }
+
+        for (te in error[city]!!) {
+            right[te]!!.remove(city)
+            res++
+            res += stepN(te, right, error)
+        }
+
+        return res
+    }
+}
+```
+### 14
+```
+Scramble String
+
+Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
+
+Below is one possible representation of s1 = "great":
+   great
+   /    \
+  gr    eat
+ / \    /  \
+g   r  e   at
+           / \
+          a   t
+To scramble the string, we may choose any non-leaf node and swap its two children.
+
+For example, if we choose the node "gr" and swap its two children, it produces a scrambled string "rgeat".
+   rgeat
+   /    \
+  rg    eat
+ / \    /  \
+r   g  e   at
+           / \
+          a   t
+We say that "rgeat" is a scrambled string of "great".
+Similarly, if we continue to swap the children of nodes "eat" and "at", it produces a scrambled string "rgtae".
+    rgtae
+   /    \
+  rg    tae
+ / \    /  \
+r   g  ta  e
+       / \
+      t   a
+We say that "rgtae" is a scrambled string of "great".
+
+Given two strings s1 and s2 of the same length, determine if s2 is a scrambled string of s1.
+```
+##### 1
+```
+class Solution {
+    fun isScramble(s1: String, s2: String): Boolean {
+        if (s1.length != s2.length) return false
+        if (s1.length == 1) return s1 == s2
+        val a = s1.toCharArray().apply {
+            sort()
+        }
+        val b = s2.toCharArray().apply {
+            sort()
+        }
+        if(!a.contentEquals(b)) return false
+        for (pos in s1.indices) {
+            if ((isScramble(s1.substring(0, pos), s2.substring(0, pos)) && isScramble(
+                    s1.substring(
+                        pos
+                    ), s2.substring(pos)
+                ))
+            ) {
+                return true
+            }
+            if ((isScramble(
+                    s1.substring(0, pos),
+                    s2.substring(s1.length - pos)
+                ) && isScramble(s1.substring(pos), s2.substring(0, s1.length - pos)))
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
