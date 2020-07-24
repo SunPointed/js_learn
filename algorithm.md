@@ -1115,3 +1115,67 @@ class Solution {
     }
 }
 ```
+### 15
+```
+Domino and Tromino Tiling
+
+We have two types of tiles: a 2x1 domino shape, and an "L" tromino shape. These shapes may be rotated.
+
+XX  <- domino
+
+XX  <- "L" tromino
+X
+
+Given N, how many ways are there to tile a 2 x N board? Return your answer modulo 10^9 + 7.
+
+(In a tiling, every square must be covered by a tile. Two tilings are different if and only if there are two 4-directionally adjacent cells on the board such that exactly one of the tilings has both squares occupied by a tile.)
+
+Example:
+Input: 3
+Output: 5
+Explanation: 
+The five different ways are listed below, different letters indicates different tiles:
+XYZ XXZ XYY XXY XYY
+XYZ YYZ XZZ XYY XXY
+
+N  will be in range [1, 1000].
+```
+##### 1
+```
+ /**
+     * 0(1) 1(1) 2(2)2   3(5)3   3   3   3   4    4    4    4    4    4    4    4    4    4    4
+     * return 0          num(n-1)+num(n-2)+2=2+1+2=5     num(n-1)+num(n-2)+num(n-3)*2+2=5+2+1*2+2=11
+     *      Y    YX XX   YXZ YXX XXZ XXY XYY YXZA YXXA XXZA XXYA XYYA YXZZ XXZZ YXXY YXYY XZZY XXYY
+     *      Y    YX YY   YXZ YZZ YYZ XYY XXY YXZA YZZA YYZA XYYA XXYA YXAA YYAA YXYY YXXY XXYY XZZY
+     * 5     5     5     5     5     5     5          5
+     * 0 ->5 0->5  1->5  1->5  2->5  2->5  3->5       4->5
+     * XXZZY XZZYY YXAAZ YXXZZ YXAAZ XXZAA num(3)+ AA num(4) + M
+     * XZZYY XXZZY YXXZZ YXAAZ YXAZZ YYZZA         MM          M
+     * n(0) = 1
+     * n(1) = 1
+     * n(2) = 2
+     * n > 3 -> num(n) = num(n-1) + num(n-2) + 2(num(n-3)+ ... + num(0))
+     *                 = num(n-1) + [num(n-2) + num(n-3) + 2(num(n-4) + ... + num(0))] + num(n-3)
+     * n > 4 -> num(n-1) = num(n-2) + num(n-3) + + 2(num(n-4) + ... + num(0))
+     * n > 4 -> num(n) = num(n-1) + num(n-1) + num(n-3)
+     *                 = num(n-1) * 2 + num(n-3)
+     */
+    fun numTilings(N: Int): Int {
+        return (when (N) {
+            0 -> 0
+            1 -> 1
+            2 -> 2
+            else -> {
+                val f = IntArray(N + 1)
+                f[1] = 1
+                f[2] = 2
+                f[3] = 5
+                for (i in 4..N) {
+                    f[i] = 2 * f[i - 1] % 1000000007 + f[i - 2] % 1000000007
+                    f[i] %= 1000000007
+                }
+                f[N]
+            }
+        })
+    }
+```
