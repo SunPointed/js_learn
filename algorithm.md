@@ -1179,3 +1179,136 @@ N  will be in range [1, 1000].
         })
     }
 ```
+### 16
+```
+X of a Kind in a Deck of Cards
+
+In a deck of cards, each card has an integer written on it.
+
+Return true if and only if you can choose X >= 2 such that it is possible to split the entire deck into 1 or more groups of cards, where:
+
+Each group has exactly X cards.
+All the cards in each group have the same integer.
+
+Input: deck = [1,2,3,4,4,3,2,1]
+Output: true
+Explanation: Possible partition [1,1],[2,2],[3,3],[4,4].
+
+Input: deck = [1,1,1,2,2,2,3,3]
+Output: false´
+Explanation: No possible partition.
+
+Input: deck = [1]
+Output: false
+Explanation: No possible partition.
+
+Input: deck = [1,1]
+Output: true
+Explanation: Possible partition [1,1].
+
+Input: deck = [1,1,2,2,2,2]
+Output: true
+Explanation: Possible partition [1,1],[2,2],[2,2].
+
+Constraints:
+1 <= deck.length <= 10^4
+0 <= deck[i] < 10^4
+```
+##### mine
+```
+class Solution {
+    fun hasGroupsSizeX(deck: IntArray): Boolean {
+        val map = mutableMapOf<Int, Int>()
+        for (number in deck) {
+            if (map[number] == null) {
+                map[number] = 1
+            } else {
+                map[number] = map[number]!! + 1
+            }
+        }
+        var min = Int.MAX_VALUE
+        map.values.forEach {
+            if (min > it) {
+                min = it
+            }
+        }
+        var res = 0
+        while (min > 1) {
+            res = 0
+            for (value in map.values) {
+                if (value % min == 0) {
+                    res++
+                } else {
+                    break
+                }
+            }
+            if(res == map.values.size) return true
+            min--
+        }
+        return res == map.values.size
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun hasGroupsSizeX(deck: IntArray): Boolean {
+        val map = mutableMapOf<Int, Int>()
+        for (number in deck) {
+            map[number] = map.getOrDefault(number, 0) + 1
+        }
+        var res = 0
+        for (d in map.values) {
+            res = gcd(d, res)
+        }
+        return res > 1
+    }
+
+    // 最大公约数
+    fun gcd(a: Int, b: Int): Int {
+        return if (b > 0) gcd(b, a % b) else a
+    }
+}
+```
+### 17
+```
+Subarray Sums Divisible by K
+
+Given an array A of integers, return the number of (contiguous, non-empty) subarrays that have a sum divisible by K.
+
+Input: A = [4,5,0,-2,-3,1], K = 5
+Output: 7
+Explanation: There are 7 subarrays with a sum divisible by K = 5:
+[4, 5, 0, -2, -3, 1], [5], [5, 0], [5, 0, -2, -3], [0], [0, -2, -3], [-2, -3]
+
+Note:
+1 <= A.length <= 30000
+-10000 <= A[i] <= 10000
+2 <= K <= 10000
+```
+##### like
+```
+class Solution {
+    fun subarraysDivByK(A: IntArray, K: Int): Int {
+        val map = IntArray(K)
+
+        var sum = 0
+        for (a in A) {
+            sum += a
+            var group = sum % K
+            if(group < 0) group += K
+            map[group]++
+        }
+
+        var res = 0
+        for(x in map) {
+            if(x > 1){
+                // Cn2
+                res += (x * (x-1)) / 2
+            }
+        }
+
+        return map[0] + res
+    }
+}
+```
