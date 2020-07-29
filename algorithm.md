@@ -1312,3 +1312,318 @@ class Solution {
     }
 }
 ```
+### 18
+```
+Design Twitter
+
+Design a simplified version of Twitter where users can post tweets, follow/unfollow another user and is able to see the 10 most recent tweets in the user's news feed. Your design should support the following methods:
+
+postTweet(userId, tweetId): Compose a new tweet.
+getNewsFeed(userId): Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent.
+follow(followerId, followeeId): Follower follows a followee.
+unfollow(followerId, followeeId): Follower unfollows a followee.
+```
+##### mine
+```
+class Twitter() {
+
+    /** Initialize your data structure here. */
+    private val followMap = mutableMapOf<Int, MutableList<Int>>()
+    private val userList = mutableListOf<Int>()
+    private val tweetMap = mutableMapOf<Int, MutableList<Tweet>>()
+    private var time = 0L
+
+    private fun initUser(userId: Int) {
+        if (!userList.contains(userId)) {
+            userList.add(userId)
+        }
+    }
+
+    private fun initTweet(userId: Int) {
+        if (!tweetMap.containsKey(userId)) {
+            tweetMap[userId] = mutableListOf()
+        }
+    }
+
+    private fun initFollow(userId: Int) {
+        if (!followMap.containsKey(userId)) {
+            followMap[userId] = mutableListOf()
+        }
+    }
+
+    /** Compose a new tweet. */
+    fun postTweet(userId: Int, tweetId: Int) {
+        initUser(userId)
+        initTweet(userId)
+        tweetMap[userId]?.add(Tweet(tweetId, time++))
+    }
+
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    fun getNewsFeed(userId: Int): List<Int> {
+        val res = mutableListOf<Tweet>()
+        var watchOwn = false
+        followMap[userId]?.forEach { followeeId ->
+            if (followeeId == userId) {
+                watchOwn = true
+            }
+            tweetMap[followeeId]?.also { tweets ->
+                res.addAll(tweets)
+            }
+        }
+
+        if (!watchOwn) {
+            tweetMap[userId]?.also { tweets ->
+                res.addAll(tweets)
+            }
+        }
+
+        res.run {
+            sortBy {
+                it.time
+            }
+            reverse()
+        }
+
+        return if (res.size < 10) {
+            res.map { it.tweetId }
+        } else {
+            res.subList(0, 10).map {
+                it.tweetId
+            }
+        }
+    }
+
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    fun follow(followerId: Int, followeeId: Int) {
+        initUser(followerId)
+        initUser(followeeId)
+        initFollow(followerId)
+
+        if (followMap[followerId]?.contains(followeeId) == false) {
+            followMap[followerId]?.add(followeeId)
+        }
+    }
+
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    fun unfollow(followerId: Int, followeeId: Int) {
+        initUser(followerId)
+        initUser(followeeId)
+
+        if (followMap[followerId]?.contains(followeeId) == true) {
+            followMap[followerId]?.remove(followeeId)
+        }
+
+    }
+
+    class Tweet(val tweetId: Int, val time: Long)
+
+}
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * var obj = Twitter()
+ * obj.postTweet(userId,tweetId)
+ * var param_2 = obj.getNewsFeed(userId)
+ * obj.follow(followerId,followeeId)
+ * obj.unfollow(followerId,followeeId)
+ */
+```
+##### like
+```
+class Twitter() {
+    Map<Integer, List<Tweet>> tweets = new HashMap<>(); // userid -> user's tweets
+    Map<Integer, Set<Integer>> followees = new HashMap<>(); // userid -> user's followees
+
+    /** Initialize your data structure here. */
+    public Twitter() {
+
+    }
+
+    /** Compose a new tweet. */
+    public void postTweet(int userId, int tweetId) {
+        if (!tweets.containsKey(userId)) tweets.put(userId, new LinkedList<>());
+        tweets.get(userId).add(0, new Tweet(tweetId));
+    }
+
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    public List<Integer> getNewsFeed(int userId) {
+        Queue<Feed> q = new PriorityQueue<>(Comparator.comparing(f -> -f.curr.order)); // descending
+
+        if (!tweets.getOrDefault(userId, Collections.emptyList()).isEmpty()) {
+            q.offer(new Feed(tweets.get(userId)));
+        }
+
+        for (Integer followee : followees.getOrDefault(userId, Collections.emptySet())) {
+            if (!tweets.getOrDefault(followee, Collections.emptyList()).isEmpty()){
+                q.offer(new Feed(tweets.get(followee)));
+            }
+        }
+
+        List<Integer> feeds = new ArrayList<>();
+        for (int i = 0; i < 10 && !q.isEmpty(); i++) {
+            Feed feed = q.poll();
+            feeds.add(feed.curr.id);
+
+            if (feed.advance()) {
+                q.offer(feed);
+            }
+        }
+
+        return feeds;
+    }
+
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    public void follow(int followerId, int followeeId) {
+        if (followerId == followeeId) return;
+        if (!followees.containsKey(followerId)) followees.put(followerId, new HashSet<>());
+        followees.get(followerId).add(followeeId);
+    }
+
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    public void unfollow(int followerId, int followeeId) {
+        if (!followees.containsKey(followerId)) return;
+        followees.get(followerId).remove(followeeId);
+    }
+
+    int globalOrder = 0;
+
+    class Tweet {
+        int id;
+        int order;
+
+        Tweet(int id) {
+            this.id = id;
+            this.order = globalOrder++;
+        }
+    }
+
+    class Feed {
+        Iterator<Tweet> iterator;
+        Tweet curr;
+
+        Feed(List<Tweet> tweets) {
+            // tweets cannot be empty
+            iterator = tweets.iterator();
+            curr = iterator.next();
+        }
+
+        boolean advance() {
+            if (!iterator.hasNext()) return false;
+            this.curr = iterator.next();
+            return true;
+        }
+    }
+}
+```
+### 19
+```
+Longest Harmonious Subsequence
+
+We define a harmounious array as an array where the difference between its maximum value and its minimum value is exactly 1.
+
+Now, given an integer array, you need to find the length of its longest harmonious subsequence among all its possible subsequences.
+
+Input: [1,3,2,2,5,2,3,7]
+Output: 5
+Explanation: The longest harmonious subsequence is [3,2,2,2,3].
+```
+##### mine
+```
+class Solution {
+    fun findLHS(nums: IntArray): Int {
+        class Count(var left: Int = 0, var own: Int = 0, var right: Int = 0) {
+            val max: Int
+                get() {
+                    return if (left == 0 && right == 0 && own != 0) {
+                        0
+                    } else if (own == 0) {
+                        0
+                    } else {
+                        if (left > right) {
+                            left + own
+                        } else {
+                            right + own
+                        }
+                    }
+                }
+        }
+
+        val map = mutableMapOf<Int, Count>()
+        for (num in nums) {
+            if (map[num - 1] == null) map[num - 1] = Count()
+            if (map[num] == null) map[num] = Count()
+            if (map[num + 1] == null) map[num + 1] = Count()
+
+            map[num - 1]!!.right++
+            map[num]!!.own++
+            map[num - 1]!!.left++
+        }
+
+
+        return map.values.map {
+            it.max
+        }.max() ?: 0
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun findLHS(nums: IntArray): Int {
+        val map = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            map[num] = map.getOrDefault(num, 0) + 1
+        }
+        var result = 0
+        for (key in map.keys) {
+            if (map.containsKey(key + 1)) {
+                result = result.coerceAtLeast(map[key + 1]!! + map[key]!!)
+            }
+        }
+        return result
+    }
+}
+```
+### 20
+```
+Patching Array
+
+Given a sorted positive integer array nums and an integer n, add/patch elements to the array such that any number in range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required.
+
+Input: nums = [1,3], n = 6
+Output: 1 
+Explanation:
+Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4.
+Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3].
+Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6].
+So we only need 1 patch.
+
+Input: nums = [1,5,10], n = 20
+Output: 2
+Explanation: The two patches can be [2, 4].
+
+Input: nums = [1,2,2], n = 5
+Output: 0
+```
+##### mine
+```
+```
+##### like
+```
+class Solution {
+    fun minPatches(nums: IntArray, n: Int): Int {
+        var patch = 0
+        var i = 0
+        var miss = 1L
+        while (miss <= n) {
+            if (i >= nums.size || miss < nums[i]) {
+                miss += miss
+                patch++
+            } else {
+                miss += nums[i++]
+            }
+        }
+        return patch
+    }
+}
+```
