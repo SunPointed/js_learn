@@ -1627,3 +1627,494 @@ class Solution {
     }
 }
 ```
+### 21
+```
+Smallest Range Covering Elements from K Lists
+
+You have k lists of sorted integers in ascending order. Find the smallest range that includes at least one number from each of the k lists.
+
+We define the range [a,b] is smaller than range [c,d] if b-a < d-c or a < c if b-a == d-c.
+
+Input: [[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+Output: [20,24]
+Explanation: 
+List 1: [4, 10, 15, 24,26], 24 is in range [20,24].
+List 2: [0, 9, 12, 20], 20 is in range [20,24].
+List 3: [5, 18, 22, 30], 22 is in range [20,24].
+
+Note
+The given list may contain duplicates, so ascending order means >= here.
+1 <= k <= 3500
+-105 <= value of elements <= 105.
+```
+##### 1
+```
+class Solution {
+    fun smallestRange(nums: List<List<Int>>): IntArray {
+        val res = intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE)
+        val indexes = IntArray(nums.size)
+        val pq = PriorityQueue<Int>(Comparator<Int> { o1, o2 ->
+            nums[o1][indexes[o1]] - nums[o2][indexes[o2]]
+        })
+
+        var max = Int.MIN_VALUE
+        for (i in nums.indices) {
+            pq.offer(i)
+            max = if (max < nums[i][0]) nums[i][0] else max
+        }
+
+        var range = Int.MAX_VALUE
+
+        while (true) {
+            val curIndex = pq.poll() ?: break
+            if (range > max - nums[curIndex][indexes[curIndex]]) {
+                range = max - nums[curIndex][indexes[curIndex]]
+                res[1] = max
+                res[0] = nums[curIndex][indexes[curIndex]]
+            }
+            indexes[curIndex]++
+            if (indexes[curIndex] == nums[curIndex].size) {
+                break
+            }
+            if (nums[curIndex][indexes[curIndex]] > max) {
+                max = nums[curIndex][indexes[curIndex]]
+            }
+            pq.offer(curIndex)
+        }
+        return res
+    }
+}
+```
+### 22
+```
+Range Module
+
+A Range Module is a module that tracks ranges of numbers. Your task is to design and implement the following interfaces in an efficient manner.
+
+addRange(int left, int right) Adds the half-open interval [left, right), tracking every real number in that interval. Adding an interval that partially overlaps with currently tracked numbers should add any numbers in the interval [left, right) that are not already tracked.
+
+queryRange(int left, int right) Returns true if and only if every real number in the interval [left, right) is currently being tracked.
+
+removeRange(int left, int right) Stops tracking every real number currently being tracked in the interval [left, right).
+```
+##### mine
+```
+class RangeModule() {
+
+    private val pq = mutableListOf<IntArray>()
+
+    fun addRange(left: Int, right: Int) {
+        val iterator = pq.iterator()
+        while (iterator.hasNext()) {
+            val a = iterator.next()
+            if (a[0] >= left && a[1] <= right) {
+                iterator.remove()
+            }
+        }
+
+        val f = pq.find {
+            left >= it[0] && left <= it[1]
+        }?.also {
+            if (right <= it[1]) {
+                /**
+                 * range already exist
+                 */
+                return
+            }
+        }
+
+        val l = pq.findLast {
+            right >= it[0] && right <= it[1]
+        }?.also {
+            if (left >= it[0]) {
+                /**
+                 * range already exist
+                 */
+                return
+            }
+        }
+
+        if (f == null && l == null) {
+            pq.add(intArrayOf(left, right))
+        } else if (f != null && l == null) {
+            f[1] = right
+        } else if (f == null && l != null) {
+            l[0] = left
+        } else if (l != null && f != null) {
+            l[0] = f[0]
+            pq.remove(f)
+        }
+    }
+
+    fun queryRange(left: Int, right: Int): Boolean {
+        return pq.find {
+            it[0] <= left && it[1] >= right
+        } != null
+    }
+
+    fun removeRange(left: Int, right: Int) {
+        val iterator = pq.iterator()
+        while (iterator.hasNext()) {
+            val a = iterator.next()
+            if (a[0] >= left && a[1] <= right) {
+                iterator.remove()
+            }
+        }
+        
+        val f = pq.find {
+            left >= it[0] && left <= it[1]
+        }?.also {
+            if (right <= it[1]) {
+                val temp = it[1]
+                it[1] = left
+                pq.add(intArrayOf(right, temp))
+                return
+            }
+        }
+
+        val l = pq.findLast {
+            right >= it[0] && right <= it[1]
+        }?.also {
+            if (left >= it[0]) {
+                val temp = it[0]
+                it[0] = right
+                pq.add(intArrayOf(temp, left))
+                return
+            }
+        }
+
+        if (f == null && l == null) {
+            return
+        }
+
+        if (f != null) {
+            f[1] = left
+        }
+
+        if (l != null) {
+            l[0] = right
+        }
+    }
+
+}
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * var obj = RangeModule()
+ * obj.addRange(left,right)
+ * var param_2 = obj.queryRange(left,right)
+ * obj.removeRange(left,right)
+ */
+```
+### 23
+```
+Binary Tree Pruning
+
+We are given the head node root of a binary tree, where additionally every node's value is either a 0 or a 1.
+
+Return the same tree where every subtree (of the given tree) not containing a 1 has been removed.
+
+(Recall that the subtree of a node X is X, plus every node that is a descendant of X.)
+
+Example 1:
+Input: [1,null,0,0,1]
+Output: [1,null,0,null,1]
+
+Explanation: 
+Only the red nodes satisfy the property "every subtree not containing a 1".
+The diagram on the right represents the answer.
+1     1
+ 0  -> 0
+0 1     1
+
+Example 2:
+Input: [1,0,1,0,0,0,1]
+Output: [1,null,1,null,1]
+   1               1
+ 0   1   ->         1
+0 0 0 1              1
+
+Example 3:
+Input: [1,1,0,1,1,0,1,0]
+Output: [1,1,0,1,1,null,1]
+     1                   1
+  1    0               1   0
+ 1 1  0 1   ->        1 1    1
+0 
+
+Note:
+The binary tree will have at most 200 nodes.
+The value of each node will only be 0 or 1
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun pruneTree(root: TreeNode?): TreeNode? {
+        if (root == null) return null
+        if (root.left != null)
+            root.left = pruneTree(root.left)
+        if (root.right != null)
+            root.right = pruneTree(root.right)
+        if (root.left == null && root.right == null) {
+            return if (root.`val` == 1) root else null
+        }
+        return root
+    }
+}
+```
+### 24
+```
+Max Dot Product of Two Subsequences
+
+Given two arrays nums1 and nums2
+
+Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
+
+A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, [2,3,5] is a subsequence of [1,2,3,4,5] while [1,5,3] is not).
+
+Example 1:
+Input: nums1 = [2,1,-2,5], nums2 = [3,0,-6]
+Output: 18
+Explanation: Take subsequence [2,-2] from nums1 and subsequence [3,-6] from nums2.
+Their dot product is (2*3 + (-2)*(-6)) = 18.
+
+Example 2:
+Input: nums1 = [3,-2], nums2 = [2,-6,7]
+Output: 21
+Explanation: Take subsequence [3] from nums1 and subsequence [7] from nums2.
+Their dot product is (3*7) = 21.
+
+Example 3:
+Input: nums1 = [-1,-1], nums2 = [1,1]
+Output: -1
+Explanation: Take subsequence [-1] from nums1 and subsequence [1] from nums2.
+Their dot product is -1.
+
+Constraints:
+
+1 <= nums1.length, nums2.length <= 500
+-1000 <= nums1[i], nums2[i] <= 1000
+```
+##### dp solve
+```
+class Solution {
+    fun maxDotProduct(nums1: IntArray, nums2: IntArray): Int {
+        val temp = Array(nums1.size) {
+            Array(nums2.size) {
+                Int.MIN_VALUE
+            }
+        }
+        var res = Int.MIN_VALUE
+        for (i in nums1.indices) {
+            for (j in nums2.indices) {
+                if (i == 0 && j == 0) {
+                    temp[i][j] = nums1[i] * nums2[j]
+                } else if (i == 0) {
+                    val a = nums1[i] * nums2[j]
+                    val c = temp[i][j - 1]
+                    temp[i][j] = Math.max(a, c)
+                } else if (j == 0) {
+                    val a = nums1[i] * nums2[j]
+                    val b = temp[i - 1][j]
+                    temp[i][j] = Math.max(a, b)
+                } else {
+                    val a = nums1[i] * nums2[j]
+                    val b = temp[i - 1][j]
+                    val c = temp[i][j - 1]
+                    val d = temp[i - 1][j - 1] + a
+                    temp[i][j] = Math.max(Math.max(a, b), Math.max(c, d))
+                }
+                if (res < temp[i][j])
+                    res = temp[i][j]
+            }
+        }
+        return res
+    }
+}
+```
+### 25
+```
+Decrypt String from Alphabet to Integer Mapping
+
+Given a string s formed by digits ('0' - '9') and '#' . We want to map s to English lowercase characters as follows:
+
+Characters ('a' to 'i') are represented by ('1' to '9') respectively.
+Characters ('j' to 'z') are represented by ('10#' to '26#') respectively. 
+Return the string formed after mapping.
+
+It's guaranteed that a unique mapping will always exist.
+
+Input: s = "10#11#12"
+Output: "jkab"
+Explanation: "j" -> "10#" , "k" -> "11#" , "a" -> "1" , "b" -> "2".
+
+Input: s = "1326#"
+Output: "acz"
+
+Input: s = "25#"
+Output: "y"
+
+Input: s = "12345678910#11#12#13#14#15#16#17#18#19#20#21#22#23#24#25#26#"
+Output: "abcdefghijklmnopqrstuvwxyz"
+
+Constraints:
+
+1 <= s.length <= 1000
+s[i] only contains digits letters ('0'-'9') and '#' letter.
+s will be valid string such that mapping is always possible.
+```
+##### mine
+```
+class Solution {
+    fun freqAlphabets(s: String): String {
+        val map1 = mutableMapOf<Char, String>().apply {
+            put('1', "a")
+            put('2', "b")
+            put('3', "c")
+            put('4', "d")
+            put('5', "e")
+            put('6', "f")
+            put('7', "g")
+            put('8', "h")
+            put('9', "i")
+        }
+        val map2 = mutableMapOf<String, String>().apply {
+            put("10#", "j")
+            put("11#", "k")
+            put("12#", "l")
+            put("13#", "m")
+            put("14#", "n")
+            put("15#", "o")
+            put("16#", "p")
+            put("17#", "q")
+            put("18#", "r")
+            put("19#", "s")
+            put("20#", "t")
+            put("21#", "u")
+            put("22#", "v")
+            put("23#", "w")
+            put("24#", "x")
+            put("25#", "y")
+            put("26#", "z")
+        }
+        var res = ""
+        var i = s.length - 1
+        while (i >= 0) {
+            if (s[i] == '#') {
+                res = map2[s.substring(i - 2, i + 1)] + res
+                i -= 3
+            } else {
+                res = map1[s[i]] + res
+                i--
+            }
+        }
+        return res
+    }
+}
+```
+### 26
+```
+Reverse Nodes in k-Group
+
+Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
+
+k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+
+Example:
+Given this linked list: 1->2->3->4->5
+For k = 2, you should return: 2->1->4->3->5
+For k = 3, you should return: 3->2->1->4->5
+
+Note:
+Only constant extra memory is allowed.
+You may not alter the values in the list's nodes, only nodes itself may be changed.
+```
+##### mine
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseKGroup(head: ListNode?, k: Int): ListNode? {
+        var curRoot = head
+        var preRoot = curRoot
+
+        var preLast: ListNode? = null
+
+        var resNode: ListNode? = null
+
+        while (curRoot != null) {
+            var count = 0
+            while (curRoot != null && count < k) {
+                val temp = curRoot
+                curRoot = curRoot.next
+                count++
+                if (count == k) {
+                    /**
+                     * 断开准备reverse
+                     */
+                    temp.next = null
+                }
+            }
+            if(count == k) {
+                if (resNode == null) {
+                    /**
+                     * 第一次reverse
+                     */
+                    resNode = reverse(preRoot)
+                } else {
+                    /**
+                     * 之后的reverse接在前一次之后
+                     */
+                    preLast?.next = reverse(preRoot)
+                }
+                /**
+                 * 反转后preRoot从最前变最末尾，接上当前的curRoot继续
+                 */
+                preRoot?.next = curRoot
+                /**
+                 * preRoot反转后变为preLast
+                 */
+                preLast = preRoot
+                /**
+                 * 最后preRoot移动到curRoot准备下次反转
+                 */
+                preRoot = curRoot
+            }
+        }
+        return resNode
+    }
+    
+    fun reverse(head: ListNode?): ListNode? {
+        if (head == null) return head
+        var cur: ListNode? = null
+        var a = head
+        while (a != null) {
+            val temp = a.next
+            a.next = cur
+            cur = a
+            if (temp == null) {
+                return a
+            }
+            a = temp
+        }
+        return null
+    }
+}
+```
