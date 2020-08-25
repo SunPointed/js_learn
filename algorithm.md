@@ -2118,3 +2118,52 @@ class Solution {
     }
 }
 ```
+### 27
+```
+Sequential Digits
+
+An integer has sequential digits if and only if each digit in the number is one more than the previous digit.
+
+Return a sorted list of all the integers in the range [low, high] inclusive that have sequential digits.
+
+Input: low = 100, high = 300
+Output: [123,234]
+
+Input: low = 1000, high = 13000
+Output: [1234,2345,3456,4567,5678,6789,12345]
+
+10 <= low <= high <= 10^9
+```
+##### mine
+```
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        if (low < 10 || high > 10_000_000_000) return emptyList()
+
+        val res = mutableListOf<Int>()
+
+        var temp = ""
+
+        for (i in '1'..'8') {
+            temp += i
+            var j = 1
+            temp += (i + j)
+            var cur = temp.toInt()
+            while (cur < high) {
+                if (cur >= low) {
+                    res.add(cur)
+                }
+                if (i + j == '9') {
+                    break
+                }
+                temp += (i + ++j)
+                cur = temp.toInt()
+            }
+
+            temp = ""
+        }
+
+        return res.sorted()
+    }
+}
+```
