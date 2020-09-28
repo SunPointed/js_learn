@@ -2167,3 +2167,166 @@ class Solution {
     }
 }
 ```
+### 28
+```
+Maximum Students Taking Exam
+
+Given a m * n matrix seats  that represent seats distributions in a classroom. If a seat is broken, it is denoted by '#' character otherwise it is denoted by a '.' character.
+
+Students can see the answers of those sitting next to the left, right, upper left and upper right, but he cannot see the answers of the student sitting directly in front or behind him. Return the maximum number of students that can take the exam together without any cheating being possible..
+
+Students must be placed in seats in good condition.
+```
+##### choose
+```
+fun maxStudents(seats: Array<CharArray>): Int {
+        val m: Int = seats.size
+        val n: Int = seats[0].size
+        val validity = IntArray(m) // validity数组用于记录每一横排位置是否能坐
+        val stateSize = 1 shl n // 每一横排可由学生排布的方式有2^n种
+        val dp = Array(m) { IntArray(stateSize) }
+        var ans = 0
+        // 初始化validity数组
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                validity[i] = (validity[i] shl 1) + if (seats[i][j] == '.') 1 else 0
+            }
+        }
+        // 初始化dp数组
+        for (i in 0 until m) {
+            for (j in 0 until stateSize) {
+                dp[i][j] = -1
+            }
+        }
+
+        for (i in 0 until m) {
+            for (j in 0 until stateSize) {
+                // j & validity[i] == j 判断j的状态下能否坐下第i横排
+                // (j & (j >> 1) == 0) 判断j模式左右是否没人
+                if (j and validity[i] == j && j and (j shr 1) == 0) {
+                    if (i == 0) { // 第一横排
+                        dp[i][j] = Integer.bitCount(j)
+                    } else {
+                        // 不是第一排，就要遍历前一排，从而取得当前排的最大值。
+                        for (k in 0 until stateSize) {
+                            if (j and (k shr 1) == 0 && j shr 1 and k == 0 && dp[i - 1][k] != -1) {
+                                dp[i][j] = max(dp[i - 1][k] + Integer.bitCount(j), dp[i][j])
+                            }
+                        }
+                    }
+                    ans = max(ans, dp[i][j])
+                }
+            }
+        }
+        return ans
+    }
+```
+### 29
+```
+Maximize Sum Of Array After K Negations
+
+Given an array A of integers, we must modify the array in the following way: we choose an i and replace A[i] with -A[i], and we repeat this process K times in total.  (We may choose the same index i multiple times.)
+
+Return the largest possible sum of the array after modifying it in this way.
+
+
+Input: A = [4,2,3], K = 1
+Output: 5
+Explanation: Choose indices (1,) and A becomes [4,-2,3].
+
+
+Input: A = [3,-1,0,2], K = 3
+Output: 6
+Explanation: Choose indices (1, 2, 2) and A becomes [3,1,0,2].
+
+
+Input: A = [2,-3,-1,5,-4], K = 2
+Output: 13
+Explanation: Choose indices (1, 4) and A becomes [2,3,-1,5,4].
+
+
+Note:
+1 <= A.length <= 10000
+1 <= K <= 10000
+-100 <= A[i] <= 100
+```
+##### mine
+```
+class Solution {
+    fun largestSumAfterKNegations(A: IntArray, K: Int): Int {
+        if (A.isEmpty()) return 0
+
+        val B = A.filter {
+            it < 0
+        }.sorted()
+
+        val C = A.map {
+            Math.abs(it)
+        }.sorted().toMutableList()
+
+        return if (B.size == K) C.sum() else if (B.size > K) C.sum() + B.subList(K, B.size)
+            .sum() * 2 else {
+            if ((K - B.size) % 2 == 0) C.sum() else C.apply { C[0] = -C[0] }.sum()
+        }
+    }
+}
+```
+##### best
+```
+class Solution {
+    fun largestSumAfterKNegations(A: IntArray, K: Int): Int {
+        val pq = PriorityQueue<Int>()
+
+        for (x in A) pq.add(x)
+        var count = K
+        while (count-- > 0) pq.add(-pq.poll()!!)
+
+        var sum = 0
+        for (i in A.indices) {
+            sum += pq.poll()!!
+        }
+        return sum
+    }
+}
+```
+### 30
+```
+Kth Largest Element in an Array
+
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+Example 1:
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+
+Example 2:
+Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+```
+##### mine
+```
+class Solution {
+    fun findKthLargest(nums: IntArray, k: Int): Int {
+        val pq = PriorityQueue<Int>()
+        
+        for(num in nums) pq.add(-num)
+        var count = k
+        while (count > 1) {
+            pq.poll()
+            count--
+        }
+        return -pq.poll()!!
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun findKthLargest(nums: IntArray, k: Int): Int {
+        return nums.apply { sort() }[nums.size-k]
+    }
+}
+```
