@@ -2330,3 +2330,207 @@ class Solution {
     }
 }
 ```
+### 31
+```
+Maximum Number of Non-Overlapping Substrings
+
+Given a string s of lowercase letters, you need to find the maximum number of non-empty substrings of s that meet the following conditions:
+
+The substrings do not overlap, that is for any two substrings s[i..j] and s[k..l], either j < k or i > l is true.
+A substring that contains a certain character c must also contain all occurrences of c.
+Find the maximum number of substrings that meet the above conditions. If there are multiple solutions with the same number of substrings, return the one with minimum total length. It can be shown that there exists a unique solution of minimum total length.
+
+Notice that you can return the substrings in any order.
+
+Example 1:
+Input: s = "adefaddaccc"
+Output: ["e","f","ccc"]
+Explanation: The following are all the possible substrings that meet the conditions:
+[
+  "adefaddaccc"
+  "adefadda",
+  "ef",
+  "e",
+  "f",
+  "ccc",
+]
+If we choose the first string, we cannot choose anything else and we'd get only 1. If we choose "adefadda", we are left with "ccc" which is the only one that doesn't overlap, thus obtaining 2 substrings. Notice also, that it's not optimal to choose "ef" since it can be split into two. Therefore, the optimal way is to choose ["e","f","ccc"] which gives us 3 substrings. No other solution of the same number of substrings exist.
+
+Example 2:
+Input: s = "abbaccd"
+Output: ["d","bb","cc"]
+Explanation: Notice that while the set of substrings ["d","abba","cc"] also has length 3, it's considered incorrect since it has larger total length.
+
+Constraints:
+1 <= s.length <= 10^5
+s contains only lowercase English letters.
+```
+##### anwser
+```
+    fun maxNumOfSubstrings(s: String): List<String> {
+        val seg = arrayOfNulls<Seg>(26)
+        for (i in 0..25) {
+            seg[i] = Seg(-1, -1)
+        }
+        // 预处理左右端点
+        for (i in s.indices) {
+            val charIdx: Int = s[i] - 'a'
+            if (seg[charIdx]!!.left == -1) {
+                seg[charIdx]!!.right = i
+                seg[charIdx]!!.left = seg[charIdx]!!.right
+            } else {
+                seg[charIdx]!!.right = i
+            }
+        }
+        for (i in 0..25) {
+            if (seg[i]!!.left != -1) {
+                var j = seg[i]!!.left
+                while (j <= seg[i]!!.right) {
+                    val charIdx: Int = s[j] - 'a'
+                    if (seg[i]!!.left <= seg[charIdx]!!.left && seg[charIdx]!!.right <= seg[i]!!.right
+                    ) {
+                        ++j
+                        continue
+                    }
+                    seg[i]!!.left = Math.min(seg[i]!!.left, seg[charIdx]!!.left)
+                    seg[i]!!.right = Math.max(seg[i]!!.right, seg[charIdx]!!.right)
+                    j = seg[i]!!.left
+                    ++j
+                }
+            }
+        }
+        // 贪心选取
+        Arrays.sort(seg)
+        val ans: MutableList<String> = ArrayList()
+        var end = -1
+        for (segment in seg) {
+            val left = segment!!.left
+            val right = segment!!.right
+            if (left == -1) {
+                continue
+            }
+            if (end == -1 || left > end) {
+                end = right
+                ans.add(s.substring(left, right + 1))
+            }
+        }
+        return ans
+    }
+```
+### 32
+```
+Random Pick Index
+
+Given an array of integers with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.
+
+Note:
+The array size can be very large. Solution that uses too much extra space will not pass the judge.
+
+Example:
+int[] nums = new int[] {1,2,3,3,3};
+Solution solution = new Solution(nums);
+
+// pick(3) should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+solution.pick(3);
+
+// pick(1) should return 0. Since in the array only nums[0] is equal to 1.
+solution.pick(1);
+```
+##### mine
+```
+class Solution(val nums: IntArray) {
+    val random = Random(System.currentTimeMillis())
+
+    fun pick(target: Int): Int {
+      var count = 0
+            for (num in nums) {
+                if (target == num) count++
+            }
+
+            if (count == 0) return -1
+
+            val random = (random.nextDouble() * count).toInt()
+            count = 0
+            for ((index, num) in nums.withIndex()) {
+                if (target == num) {
+                    if (count == random) {
+                        return index
+                    } else {
+                        count++
+                    }
+                }
+            }
+            return nums.indexOf(target)
+    }
+
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * var obj = Solution(nums)
+ * var param_1 = obj.pick(target)
+ */
+```
+### 33
+```
+Find Latest Group of Size M
+
+Given an array arr that represents a permutation of numbers from 1 to n. You have a binary string of size n that initially has all its bits set to zero.
+
+At each step i (assuming both the binary string and arr are 1-indexed) from 1 to n, the bit at position arr[i] is set to 1. You are given an integer m and you need to find the latest step at which there exists a group of ones of length m. A group of ones is a contiguous substring of 1s such that it cannot be extended in either direction.
+
+Return the latest step at which there exists a group of ones of length exactly m. If no such group exists, return -1.
+
+Input: arr = [3,5,1,2,4], m = 1
+Output: 4
+Explanation:
+Step 1: "00100", groups: ["1"]
+Step 2: "00101", groups: ["1", "1"]
+Step 3: "10101", groups: ["1", "1", "1"]
+Step 4: "11101", groups: ["111", "1"]
+Step 5: "11111", groups: ["11111"]
+The latest step at which there exists a group of size 1 is step 4.
+
+Input: arr = [3,1,5,4,2], m = 2
+Output: -1
+Explanation:
+Step 1: "00100", groups: ["1"]
+Step 2: "10100", groups: ["1", "1"]
+Step 3: "10101", groups: ["1", "1", "1"]
+Step 4: "10111", groups: ["1", "111"]
+Step 5: "11111", groups: ["11111"]
+No group of size 2 exists during any step.
+
+Input: arr = [1], m = 1
+Output: 1
+
+Input: arr = [2,1], m = 2
+Output: 2
+
+Constraints:
+n == arr.length
+1 <= n <= 10^5
+1 <= arr[i] <= n
+All integers in arr are distinct.
+1 <= m <= arr.length
+```
+##### like
+```
+class Solution {
+    fun findLatestStep(arr: IntArray, m: Int): Int {
+        var res = -1
+        val n = arr.size
+        if (n == m) return n
+        val length = IntArray(n + 2)
+        for (i in 0 until n) {
+            val a = arr[i]
+            val left = length[a - 1]
+            val right = length[a + 1]
+            length[a + right] = left + right + 1
+            length[a - left] = length[a + right]
+            if (left == m || right == m) res = i
+        }
+        return res
+    }
+}
+```
