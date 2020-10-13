@@ -2664,3 +2664,238 @@ class Solution {
     }
 }
 ```
+##### like
+```
+class Solution {
+    fun nextGreatestLetter(letters: CharArray, target: Char): Char {
+        val n: Int = letters.size
+
+        //hi starts at 'n' rather than the usual 'n - 1'. 
+        //It is because the terminal condition is 'lo < hi' and if hi starts from 'n - 1', 
+        //we can never consider value at index 'n - 1'
+        var lo = 0
+        var hi = n
+
+        //Terminal condition is 'lo < hi', to avoid infinite loop when target is smaller than the first element
+        while (lo < hi) {
+            val mid = lo + (hi - lo) / 2
+            if (letters[mid] > target) 
+                hi = mid 
+            else 
+                lo = mid + 1 //letters[mid] <= target
+        }
+        //Because lo can end up pointing to index 'n', in which case we return the first element
+        return letters[lo % n]
+    }
+}
+```
+### 37
+```
+Longest Well-Performing Interval
+
+We are given hours, a list of the number of hours worked per day for a given employee.
+
+A day is considered to be a tiring day if and only if the number of hours worked is (strictly) greater than 8.
+
+A well-performing interval is an interval of days for which the number of tiring days is strictly larger than the number of non-tiring days.
+
+Return the length of the longest well-performing interval.
+
+Input: hours = [9,9,6,0,6,6,9]
+Output: 3
+Explanation: The longest well-performing interval is [9,9,6].
+
+Constraints:
+1 <= hours.length <= 10000
+0 <= hours[i] <= 16
+```
+##### mine
+```
+class Solution {
+    fun longestWPI(hours: IntArray): Int {
+        for(i in hours.indices){
+            hours[i] = if(hours[i] - 8 > 0) 1 else -1
+        }
+
+        val p = IntArray(hours.size + 1)
+        var cur = 0
+        for(i in hours.indices) {
+            p[i] = cur
+            cur += hours[i]
+        }
+        p[p.size - 1] = cur
+
+        var res = 0
+        for(i in p.indices) {
+            for(j in i + 1 until p.size) {
+                if(p[i] < p[j]) res = Math.max(res, j - i)
+            }
+        }
+
+        return res
+    }
+}
+```
+### 38
+```
+Maximum Number of Occurrences of a Substring
+
+Given a string s, return the maximum number of ocurrences of any substring under the following rules:
+    The number of unique characters in the substring must be less than or equal to maxLetters.
+    The substring size must be between minSize and maxSize inclusive.
+
+Example 1:
+Input: s = "aababcaab", maxLetters = 2, minSize = 3, maxSize = 4
+Output: 2
+Explanation: Substring "aab" has 2 ocurrences in the original string.
+It satisfies the conditions, 2 unique letters and size 3 (between minSize and maxSize).
+
+Example 2:
+Input: s = "aaaa", maxLetters = 1, minSize = 3, maxSize = 3
+Output: 2
+Explanation: Substring "aaa" occur 2 times in the string. It can overlap.
+
+Example 3:
+Input: s = "aabcabcab", maxLetters = 2, minSize = 2, maxSize = 3
+Output: 3
+
+Example 4:
+Input: s = "abcde", maxLetters = 2, minSize = 3, maxSize = 3
+Output: 0
+
+Constraints:
+1 <= s.length <= 10^5
+1 <= maxLetters <= 26
+1 <= minSize <= maxSize <= min(26, s.length)
+s only contains lowercase English letters.
+```
+##### mine Time Limit Exceeded
+```
+class Solution {
+    fun maxFreq(s: String, maxLetters: Int, minSize: Int, maxSize: Int): Int {
+        var res = 0
+        val set = mutableSetOf<Char>()
+        for (i in s.indices) {
+            for (j in i until s.length) {
+                if (j - i in minSize..maxSize) {
+                    val child = s.substring(i, j)
+                    set.clear()
+                    var needNext = true
+                    for (c in child) {
+                        set.add(c)
+                        if (set.size > maxLetters) {
+                            needNext = false
+                            break
+                        }
+                    }
+                    if (needNext) {
+                        val count = count(s, child)
+                        if (count > res) {
+                            res = count
+                        }
+                    } else {
+                        break
+                    }
+                }
+            }
+        }
+        return res
+    }
+    
+    fun count(s: String, child: String): Int {
+        var i = 0
+        var count = 0
+        while (s.length - i >= child.length) {
+            val firstIndex = s.indexOf(child, i)
+            if (firstIndex != -1) {
+                count++
+                i = firstIndex + 1
+            } else {
+                break
+            }
+        }
+        return count
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun maxFreq(s: String, maxLetters: Int, minSize: Int, maxSize: Int): Int {
+        var res = 0
+        val map = mutableMapOf<String, Int>()
+        val set = mutableSetOf<Char>()
+        for (i in s.indices) {
+            val end = Math.min(s.length, i + maxSize)
+            for (j in i..end) {
+                if (j - i in minSize..maxSize) {
+                    val child = s.substring(i, j)
+                    var needNext = true
+                    set.clear()
+                    for (c in child) {
+                        set.add(c)
+                        if (set.size > maxLetters) {
+                            needNext = false
+                            break
+                        }
+                    }
+                    if (needNext) {
+                        if (map.containsKey(child)) {
+                            map[child] = map[child]!! + 1
+                        } else {
+                            map[child] = 1
+                        }
+                        res = Math.max(res, map[child]!!)
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+##### mine 3
+```
+class Solution {
+    fun maxFreq(s: String, maxLetters: Int, minSize: Int, maxSize: Int): Int {
+        var res = 0
+        val map = mutableMapOf<String, Int>()
+        val set = mutableSetOf<Char>()
+        for (i in 0..(s.length - minSize)) {
+            val child = s.substring(i, i + minSize)
+            var needNext = true
+            set.clear()
+            for (c in child) {
+                set.add(c)
+                if (set.size > maxLetters) {
+                    needNext = false
+                    break
+                }
+            }
+
+            if(needNext) {
+                if (map.containsKey(child)) {
+                    map[child] = map[child]!! + 1
+                } else {
+                    map[child] = 1
+                }
+                res = Math.max(res, map[child]!!)
+            }
+        }
+        return res
+    }
+}
+```
+### 39
+```
+Print in Order
+
+Suppose we have a class:
+public class Foo {
+  public void first() { print("first"); }
+  public void second() { print("second"); }
+  public void third() { print("third"); }
+}
+
+The same instance of Foo will be passed to three different threads. Thread A will call first(), thread B will call second(), and thread C will call third(). Design a mechanism and modify the program to ensure that second() is executed after first(), and third() is executed after second().
+```
