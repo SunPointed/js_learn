@@ -2899,3 +2899,100 @@ public class Foo {
 
 The same instance of Foo will be passed to three different threads. Thread A will call first(), thread B will call second(), and thread C will call third(). Design a mechanism and modify the program to ensure that second() is executed after first(), and third() is executed after second().
 ```
+##### mine
+```
+class Foo {
+
+    public Foo() {
+        
+    }
+    
+    volatile boolean isFirstRun = false;
+    volatile boolean isSecondRun = false;
+    private final Object lock = new Object();
+
+    public void first(Runnable printFirst) throws InterruptedException {
+        synchronized(lock) {
+            // printFirst.run() outputs "first". Do not change or remove this line.
+            printFirst.run();
+            isFirstRun = true;
+            lock.notifyAll();
+        }
+    }
+
+    public void second(Runnable printSecond) throws InterruptedException {
+        synchronized(lock) {
+            while(!isFirstRun){
+                lock.wait();
+            }
+            // printSecond.run() outputs "second". Do not change or remove this line.
+            printSecond.run();
+            isSecondRun = true;
+            lock.notifyAll();
+        }
+        
+    }
+
+    public void third(Runnable printThird) throws InterruptedException {
+        synchronized(lock) { 
+            while(!isSecondRun){
+                lock.wait();
+            }
+            // printThird.run() outputs "third". Do not change or remove this line.
+            printThird.run();
+        }
+    }
+}
+```
+### 40
+```
+Reorder List
+
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You may not modify the values in the list's nodes, only nodes itself may be changed.
+
+Example 1:
+Given 1->2->3->4, reorder it to 1->4->2->3.
+
+Example 2:
+Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+```
+##### mine
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reorderList(head: ListNode?): Unit {
+        if(head == null) return
+
+        var cur = head!!
+        val link = LinkedList<ListNode>()
+        while (cur.next != null) {
+            link.add(cur.next!!)
+            cur.next = cur.next!!.next
+        }
+        var i = 0
+        while (link.size > 0) {
+            if(i % 2 == 0) {
+                cur.next = link.removeLast()
+            } else {
+                cur.next = link.removeFirst()
+            }
+            cur = cur.next!!
+            if(link.size == 0) {
+                cur.next = null
+            }
+            i++
+        }
+    }
+}
+```
