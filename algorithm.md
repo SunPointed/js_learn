@@ -3288,3 +3288,205 @@ class Solution {
     }
 }
 ```
+### 46
+```
+As Far from Land as Possible
+
+Given an N x N grid containing only values 0 and 1, where 0 represents water and 1 represents land, find a water cell such that its distance to the nearest land cell is maximized and return the distance.
+
+The distance used in this problem is the Manhattan distance: the distance between two cells (x0, y0) and (x1, y1) is |x0 - x1| + |y0 - y1|.
+
+If no land or water exists in the grid, return -1.
+
+Example 1:
+Input: [[1,0,1],[0,0,0],[1,0,1]]
+Output: 2
+Explanation: 
+The cell (1, 1) is as far as possible from all the land with distance 2.
+
+Example 2:
+Input: [[1,0,0],[0,0,0],[0,0,0]]
+Output: 4
+Explanation: 
+The cell (2, 2) is as far as possible from all the land with distance 4.
+
+Note:
+1 <= grid.length == grid[0].length <= 100
+grid[i][j] is 0 or 1
+```
+##### mine
+```
+class Solution {
+    fun maxDistance(grid: Array<IntArray>): Int {
+        var res = 0
+        val arrivedGrid = Array(grid.size) {
+            BooleanArray(grid[0].size)
+        }
+        val queue = LinkedBlockingQueue<IntArray>()
+        for (i in grid.indices) {
+            for (j in grid[i].indices) {
+                if (grid[i][j] == 1) {
+                    arrivedGrid[i][j] = true
+                    queue.add(intArrayOf(i, j, 0))
+                }
+            }
+        }
+        while (queue.isNotEmpty()) {
+            val cur = queue.poll()!!
+            if (cur[0] - 1 > -1 && !arrivedGrid[cur[0] - 1][cur[1]]) {
+                arrivedGrid[cur[0] - 1][cur[1]] = true
+                queue.add(intArrayOf(cur[0] - 1, cur[1], cur[2] + 1))
+            }
+            if (cur[0] + 1 < grid[0].size && !arrivedGrid[cur[0] + 1][cur[1]]) {
+                arrivedGrid[cur[0] + 1][cur[1]] = true
+                queue.add(intArrayOf(cur[0] + 1, cur[1], cur[2] + 1))
+            }
+            if (cur[1] - 1 > -1 && !arrivedGrid[cur[0]][cur[1] - 1]) {
+                arrivedGrid[cur[0]][cur[1] - 1] = true
+                queue.add(intArrayOf(cur[0], cur[1] - 1, cur[2] + 1))
+            }
+            if (cur[1] + 1 < grid.size && !arrivedGrid[cur[0]][cur[1] + 1]) {
+                arrivedGrid[cur[0]][cur[1] + 1] = true
+                queue.add(intArrayOf(cur[0], cur[1] + 1, cur[2] + 1))
+            }
+            res = Math.max(cur[2], res)
+        }
+        return if(res == 0) -1 else res
+    }
+}
+```
+### 47
+```
+Maximum Subarray
+
+Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+
+Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+
+Example 1:
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+
+Example 2:
+Input: nums = [1]
+Output: 1
+
+Example 3:
+Input: nums = [0]
+Output: 0
+
+Example 4:
+Input: nums = [-1]
+Output: -1
+
+Example 5:
+Input: nums = [-2147483647]
+Output: -2147483647
+
+Constraints:
+1 <= nums.length <= 2 * 10^4
+-2^31 <= nums[i] <= 2^31 - 1
+```
+##### mine
+```
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        var res = Int.MIN_VALUE
+        var cur = 0
+        val temp = IntArray(nums.size + 1)
+        temp[0] = cur
+        for (i in 1 until temp.size) {
+            cur += nums[i - 1]
+            temp[i] = cur
+        }
+        for (i in temp.indices) {
+            for (j in i until temp.size) {
+                if (i != j) {
+                    res = Math.max(res, temp[j] - temp[i])
+                }
+            }
+        }
+        return res
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        var res = nums[0]
+        var sum = 0
+        for (num in nums) {
+            sum = if (sum > 0) {
+                sum + num
+            } else {
+                num
+            }
+            res = Math.max(res, sum)
+        }
+        return res
+    }
+}
+```
+#####
+```
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        var cur = 0
+        var res = nums[0]
+        for(num in nums) {
+            cur = Math.max(num, cur + num)
+            res = Math.max(cur, res)
+        }
+        return res
+    }
+}
+```
+### 48
+```
+2 Keys Keyboard
+
+Initially on a notepad only one character 'A' is present. You can perform two operations on this notepad for each step:
+Copy All: You can copy all the characters present on the notepad (partial copy is not allowed).
+Paste: You can paste the characters which are copied last time.
+
+Given a number n. You have to get exactly n 'A' on the notepad by performing the minimum number of steps permitted. Output the minimum number of steps to get n 'A'.
+
+Example 1:
+Input: 3
+Output: 3
+Explanation:
+Intitally, we have one character 'A'.
+In step 1, we use Copy All operation.
+In step 2, we use Paste operation to get 'AA'.
+In step 3, we use Paste operation to get 'AAA'.
+
+Note:
+The n will be in the range [1, 1000].
+```
+##### mine
+```
+class Solution {
+    fun minSteps(n: Int): Int {
+        if(n == 1) return 0
+        val array = IntArray((n + 1) / 2)
+        for (i in 1..((n + 1) / 2)) {
+            if (n % i == 0) {
+                array[i - 1] = n / i
+            }
+        }
+        var res = Int.MAX_VALUE
+        for ((index, a) in array.withIndex()) {
+            if (a != 0) {
+                res = if (a == n) {
+                    Math.min(res, a)
+                } else {
+                    Math.min(res, minSteps(index + 1) + a)
+                }
+            }
+        }
+        return res
+    }
+}
+```
