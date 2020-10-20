@@ -3490,3 +3490,211 @@ class Solution {
     }
 }
 ```
+### 49
+```
+132 Pattern
+
+Given an array of n integers nums, a 132 pattern is a subsequence of three integers nums[i], nums[j] and nums[k] such that i < j < k and nums[i] < nums[k] < nums[j].
+
+Return true if there is a 132 pattern in nums, otherwise return false.
+
+Example 1:
+Input: nums = [1,2,3,4]
+Output: false
+Explanation: There is no 132 pattern in the sequence.
+
+Example 2:
+Input: nums = [3,1,4,2]
+Output: true
+Explanation: There is a 132 pattern in the sequence: [1, 4, 2].
+
+Example 3:
+Input: nums = [-1,3,2,0]
+Output: true
+Explanation: There are three 132 patterns in the sequence: [-1, 3, 2], [-1, 3, 0] and [-1, 2, 0].
+
+Constraints:
+n == nums.length
+1 <= n <= 3 * 104
+-109 <= nums[i] <= 109
+```
+##### mine Time Limit Exceeded
+```
+class Solution {
+    fun find132pattern(nums: IntArray): Boolean {
+        if (nums.size < 3) return false
+
+        for (i in 0 until (nums.size - 2)) {
+            for (j in i + 1 until (nums.size - 1)) {
+                for (k in j + 1 until nums.size) {
+                    if (nums[i] < nums[j] && nums[i] < nums[k] && nums[j] > nums[k]) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+}
+```
+##### mine 2 Time Limit Exceeded
+```
+class Solution {
+    fun find132pattern(nums: IntArray): Boolean {
+        if (nums.size < 3) return false
+        for (i in 1 until nums.size - 1) {
+            for (s in 0 until i) {
+                for (e in (i + 1) until nums.size) {
+                    if (nums[i] > nums[s] && nums[i] > nums[e] && nums[e] > nums[s]) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun find132pattern(nums: IntArray): Boolean {
+        if (nums.size < 3) return false
+        val stack = ArrayDeque<Int>()
+        val mins = IntArray(nums.size)
+        mins[0] = nums[0]
+        for (i in 1 until nums.size) {
+            mins[i] = Math.min(mins[i - 1], nums[i])
+        }
+        for (i in nums.indices.reversed()) {
+            if (nums[i] > mins[i]) {
+                while (!stack.isEmpty() && stack.peek()!! <= mins[i]){
+                    stack.pop()
+                }
+                if(!stack.isEmpty() && stack.peek()!! < nums[i]){
+                    return true
+                }
+                stack.push(nums[i])
+            }
+        }
+        return false
+    }
+}
+```
+### 50
+```
+Wildcard Matching
+
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the entire input string (not partial).
+
+Note:
+s could be empty and contains only lowercase letters a-z.
+p could be empty and contains only lowercase letters a-z, and characters like ? or *.
+
+Example 1:
+Input:
+s = "aa"
+p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+Example 2:
+Input:
+s = "aa"
+p = "*"
+Output: true
+Explanation: '*' matches any sequence.
+
+Example 3:
+Input:
+s = "cb"
+p = "?a"
+Output: false
+Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+
+Example 4:
+Input:
+s = "adceb"
+p = "*a*b"
+Output: true
+Explanation: The first '*' matches the empty sequence, while the second '*' matches the substring "dce".
+
+Example 5:
+Input:
+s = "acdcb"
+p = "a*c?b"
+Output: false
+```
+##### mine 
+```
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        if (s.isEmpty() && p.isEmpty()) return true
+        if (s.isEmpty()) return p.count { it == '*' } == p.length
+        if (p.isEmpty()) return false
+
+        val temp = Array<Array<Boolean>>(s.length) {
+            Array(p.length) {
+                false
+            }
+        }
+
+        temp[0][0] = s[0] == p[0] || p[0] == '*' || p[0] == '?'
+        var minCount = if(s[0] == p[0] || p[0] == '?') 1 else 0
+        for (i in 1 until p.length) {
+            temp[0][i] = when {
+                p[i] == '*' -> temp[0][i - 1]
+                p[i] == '?' -> {
+                    when {
+                        p[i - 1] == '*' && minCount < 1 -> {
+                            minCount++
+                            temp[0][i - 1]
+                        }
+                        else -> {
+                            minCount++
+                            false
+                        }
+                    }
+                }
+                else -> {
+                    when {
+                        p[i - 1] == '*' && s[0] == p[i] && minCount < 1 -> {
+                            minCount++
+                            temp[0][i - 1]
+                        }
+                        else -> {
+                            minCount++
+                            false
+                        }
+                    }
+                }
+            }
+        }
+
+        for (i in 1 until s.length) {
+            temp[i][0] = when {
+                p[0] == '*' -> true
+                else -> false
+            }
+        }
+
+        for (i in 1 until s.length) {
+            for (j in 1 until p.length) {
+                temp[i][j] = when {
+                    s[i] == p[j] -> temp[i - 1][j - 1]
+                    p[j] == '?' -> temp[i - 1][j - 1]
+                    p[j] == '*' -> temp[i - 1][j] || temp[i][j - 1]
+                    else -> false
+                }
+            }
+        }
+
+        return temp[s.length - 1][p.length - 1]
+    }
+}
+```
