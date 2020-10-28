@@ -3698,3 +3698,651 @@ class Solution {
     }
 }
 ```
+### 51
+```
+Number of Closed Islands
+
+Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally connected group of 0s and a closed island is an island totally (all left, top, right, bottom) surrounded by 1s.
+
+Return the number of closed islands.
+
+Example 1:
+Input: grid = [
+[1,1,1,1,1,1,1,0],
+[1,0,0,0,0,1,1,0],
+[1,0,1,0,1,1,1,0],
+[1,0,0,0,0,1,0,1],
+[1,1,1,1,1,1,1,0]]
+Output: 2
+Explanation: 
+Islands in gray are closed because they are completely surrounded by water (group of 1s).
+
+Example 2:
+Input: grid = [
+[0,0,1,0,0],
+[0,1,0,1,0],
+[0,1,1,1,0]]
+Output: 1
+
+Example 3:
+Input: grid = [[1,1,1,1,1,1,1],
+               [1,0,0,0,0,0,1],
+               [1,0,1,1,1,0,1],
+               [1,0,1,0,1,0,1],
+               [1,0,1,1,1,0,1],
+               [1,0,0,0,0,0,1],
+               [1,1,1,1,1,1,1]]
+Output: 2
+
+[
+[0,0,1,1,0,1,0,0,1,0],
+[1,1,0,1,1,0,1,1,1,0],
+[1,0,1,1,1,0,0,1,1,0],
+[0,1,1,0,0,0,0,1,0,1],
+[0,0,0,0,0,0,1,1,1,0],
+[0,1,0,1,0,1,0,1,1,1],
+[1,0,1,0,1,1,0,0,0,1],
+[1,1,1,1,1,1,0,0,0,0],
+[1,1,1,0,0,1,0,1,0,1],
+[1,1,1,0,1,1,0,1,1,0]]
+
+Constraints:
+1 <= grid.length, grid[0].length <= 100
+0 <= grid[i][j] <=1
+```
+##### mine
+```
+class Solution {
+    fun closedIsland(grid: Array<IntArray>): Int {
+        if (grid.isEmpty()) return 0
+        if (grid[0].isEmpty()) return 0
+        val stack = ArrayDeque<IntArray>()
+        var res = 0
+        for ((i, array) in grid.withIndex()) {
+            for ((j, n) in array.withIndex()) {
+                if (n == 0) {
+                    if (i == 0 || i == grid.size - 1 || j == 0 || j == array.size - 1) {
+                        // 本身在最外层则所有相邻连续的0都不满足条件
+                    } else {
+                        // 判断是否满足条件
+                        stack.clear()
+                        stack.push(intArrayOf(i, j))
+                        var isMatch = true
+                        while (stack.isNotEmpty()) {
+                            val temp = stack.pop()
+                            if (temp[0] == 0 || temp[0] == grid.size - 1 || temp[1] == 0 || temp[1] == array.size - 1) {
+                                isMatch = false
+                            }
+
+                            if (temp[0] > 0 && grid[temp[0] - 1][temp[1]] == 0) {
+                                grid[temp[0] - 1][temp[1]] = -1
+                                stack.push(intArrayOf(temp[0] - 1, temp[1]))
+                            }
+
+                            if (temp[0] < grid.size - 1 && grid[temp[0] + 1][temp[1]] == 0) {
+                                grid[temp[0] + 1][temp[1]] = -1
+                                stack.push(intArrayOf(temp[0] + 1, temp[1]))
+                            }
+
+                            if (temp[1] > 0 && grid[temp[0]][temp[1] - 1] == 0) {
+                                grid[temp[0]][temp[1] - 1] = -1
+                                stack.push(intArrayOf(temp[0], temp[1] - 1))
+                            }
+
+                            if (temp[1] < array.size - 1 && grid[temp[0]][temp[1] + 1] == 0) {
+                                grid[temp[0]][temp[1] + 1] = -1
+                                stack.push(intArrayOf(temp[0], temp[1] + 1))
+                            }
+                        }
+
+                        if (isMatch) {
+                            res++
+                        }
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+### 52
+```
+Construct Quad Tree
+
+Given a n * n matrix grid of 0's and 1's only. We want to represent the grid with a Quad-Tree.
+
+Return the root of the Quad-Tree representing the grid.
+
+Notice that you can assign the value of a node to True or False when isLeaf is False, and both are accepted in the answer.
+
+A Quad-Tree is a tree data structure in which each internal node has exactly four children. Besides, each node has two attributes:
+val: True if the node represents a grid of 1's or False if the node represents a grid of 0's. 
+isLeaf: True if the node is leaf node on the tree or False if the node has the four children.
+class Node {
+    public boolean val;
+    public boolean isLeaf;
+    public Node topLeft;
+    public Node topRight;
+    public Node bottomLeft;
+    public Node bottomRight;
+}
+
+We can construct a Quad-Tree from a two-dimensional area using the following steps:
+If the current grid has the same value (i.e all 1's or all 0's) set isLeaf True and set val to the value of the grid and set the four children to Null and stop.
+If the current grid has different values, set isLeaf to False and set val to any value and divide the current grid into four sub-grids as shown in the photo.
+Recurse for each of the children with the proper sub-grid.
+
+If you want to know more about the Quad-Tree, you can refer to the wiki.
+
+Quad-Tree format:
+The output represents the serialized format of a Quad-Tree using level order traversal, where null signifies a path terminator where no node exists below.
+It is very similar to the serialization of the binary tree. The only difference is that the node is represented as a list [isLeaf, val].
+If the value of isLeaf or val is True we represent it as 1 in the list [isLeaf, val] and if the value of isLeaf or val is False we represent it as 0.
+
+Example 1:
+Input: grid = [[0,1],[1,0]]
+Output: [[0,1],[1,0],[1,1],[1,1],[1,0]]
+Explanation: The explanation of this example is shown below:
+Notice that 0 represnts False and 1 represents True in the photo representing the Quad-Tree.
+
+Example 2:
+Input: grid = [[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0]]
+Output: [[0,1],[1,1],[0,1],[1,1],[1,0],null,null,null,null,[1,0],[1,0],[1,1],[1,1]]
+Explanation: All values in the grid are not the same. We divide the grid into four sub-grids.
+The topLeft, bottomLeft and bottomRight each has the same value.
+The topRight have different values so we divide it into 4 sub-grids where each has the same value.
+Explanation is shown in the photo below:
+
+Example 3:
+Input: grid = [[1,1],[1,1]]
+Output: [[1,1]]
+
+Example 4:
+Input: grid = [[0]]
+Output: [[1,0]]
+
+Example 5:
+Input: grid = [[1,1,0,0],[1,1,0,0],[0,0,1,1],[0,0,1,1]]
+Output: [[0,1],[1,1],[1,0],[1,0],[1,1]]
+
+[
+[1,1,1,1,0,0,0,0],
+[1,1,1,1,0,0,0,0],
+[1,1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1,1],
+[1,1,1,1,0,0,0,0],
+[1,1,1,1,0,0,0,0],
+[1,1,1,1,0,0,0,0],
+[1,1,1,1,0,0,0,0]]
+
+Constraints:
+n == grid.length == grid[i].length
+n == 2^x where 0 <= x <= 6
+```
+##### mine
+```
+/**
+ * Definition for a QuadTree node.
+ * class Node(var `val`: Boolean, var isLeaf: Boolean) {
+ *     var topLeft: Node? = null
+ *     var topRight: Node? = null
+ *     var bottomLeft: Node? = null
+ *     var bottomRight: Node? = null
+ * }
+ */
+
+class Solution {
+    fun construct(grid: Array<IntArray>): Node? {
+        return construct1(grid, 0, 0, grid.size, grid.size)
+    }
+    
+    private fun construct1(
+        grid: Array<IntArray>,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int
+    ): Node? {
+        if (grid.isEmpty()) return null
+        if (right - left == 1) {
+            return Node(grid[top][left] == 1, true)
+        }
+
+        if (right - left > 1) {
+            val tl =
+                construct1(grid, left, top, (right - left) / 2 + left, (bottom - top) / 2 + top)
+            val tr =
+                construct1(grid, (right - left) / 2 + left, top, right, (bottom - top) / 2 + top)
+            val bl =
+                construct1(grid, left, (bottom - top) / 2 + top, (right - left) / 2 + left, bottom)
+            val br =
+                construct1(grid, (right - left) / 2 + left, (bottom - top) / 2 + top, right, bottom)
+            return if (
+                (tl?.`val` == tr?.`val` && bl?.`val` == br?.`val` && tl?.`val` == bl?.`val`)
+                && (tl?.isLeaf == tr?.isLeaf && bl?.isLeaf == br?.isLeaf && tl?.isLeaf == bl?.isLeaf && tl?.isLeaf == true)
+            ) {
+                Node(tl.`val`, true)
+            } else {
+                Node(true, false).apply {
+                    topLeft = tl
+                    topRight = tr
+                    bottomLeft = bl
+                    bottomRight = br
+                }
+            }
+        }
+
+        return null
+    }
+}
+```
+### 53
+```
+Sqrt(x)
+
+Implement int sqrt(int x).
+
+Compute and return the square root of x, where x is guaranteed to be a non-negative integer.
+
+Since the return type is an integer, the decimal digits are truncated and only the integer part of the result is returned.
+
+Example 1:
+Input: 4
+Output: 2
+
+Example 2:
+Input: 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since 
+             the decimal part is truncated, 2 is returned.
+```
+##### mine
+```
+class Solution {
+    fun mySqrt(x: Int): Int {
+        if (x == 0) return 0
+        var left = 1
+        var right = x
+        while (left <= right) {
+            val mid = left + (right - left) / 2
+            when {
+                mid == x / mid -> {
+                    return mid
+                }
+                mid < x / mid -> {
+                    left = mid + 1
+                }
+                else -> {
+                    right = mid - 1
+                }
+            }
+        }
+        return right
+    }
+}
+```
+### 54
+```
+Number of Dice Rolls With Target Sum
+
+You have d dice, and each die has f faces numbered 1, 2, ..., f.
+
+Return the number of possible ways (out of fd total ways) modulo 10^9 + 7 to roll the dice so the sum of the face up numbers equals target.
+
+Example 1:
+Input: d = 1, f = 6, target = 3
+Output: 1
+Explanation: 
+You throw one die with 6 faces.  There is only one way to get a sum of 3.
+
+Example 2:
+Input: d = 2, f = 6, target = 7
+Output: 6
+Explanation: 
+You throw two dice, each with 6 faces.  There are 6 ways to get a sum of 7:
+1+6, 2+5, 3+4, 4+3, 5+2, 6+1.
+
+Example 3:
+Input: d = 2, f = 5, target = 10
+Output: 1
+Explanation: 
+You throw two dice, each with 5 faces.  There is only one way to get a sum of 10: 5+5.
+
+Example 4:
+Input: d = 1, f = 2, target = 3
+Output: 0
+Explanation: 
+You throw one die with 2 faces.  There is no way to get a sum of 3.
+
+Example 5:
+Input: d = 30, f = 30, target = 500
+Output: 222616187
+Explanation: 
+The answer must be returned modulo 10^9 + 7.
+
+Constraints:
+1 <= d, f <= 30
+1 <= target <= 1000
+```
+##### mine Time Limit Exceeded
+```
+fun numRollsToTarget(d: Int, f: Int, target: Int): Int {
+        var res = 0
+        if (target > f) {
+            if (d > 1) {
+                for (i in 1..f) {
+                    res += numRollsToTarget(d - 1, f, target - i)
+                }
+            }
+        } else {
+            if (d > 1) {
+                for (i in 1 until target) {
+                    res += numRollsToTarget(d - 1, f, target - i)
+                }
+            } else {
+                res += 1
+            }
+        }
+        return res
+    }
+
+```
+##### like
+```
+class Solution {
+    fun numRollsToTarget(d: Int, f: Int, target: Int): Int {
+        if (d == 0) {
+            return if (0 == target) 1 else 0
+        }
+        val mod = 1000000007
+        val array = Array(d + 1) {
+            IntArray(target + 1) {
+                0
+            }
+        }
+        array[0][0] = 1
+        for (i in 1..d) {
+            for (j in 1..target) {
+                if (j > i * f) continue else {
+                    var k = 1
+                    while (k <= f && k <= j){
+                        array[i][j] = (array[i][j] + array[i - 1][j-k]) % mod
+                        k++
+                    }
+                }
+            }
+        }
+        return array[d][target]
+    }
+}
+```
+### 55
+```
+Minimum Size Subarray Sum
+
+Given an array of n positive integers and a positive integer s, find the minimal length of a contiguous subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+
+Example: 
+
+Input: s = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: the subarray [4,3] has the minimal length under the problem constraint.
+
+Follow up:
+If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log n). 
+```
+##### mine
+```
+class Solution {
+    fun minSubArrayLen(s: Int, nums: IntArray): Int {
+        val queue = ArrayDeque<Int>()
+        var res = Int.MAX_VALUE
+        var sum = 0
+        for (i in nums) {
+            sum += i
+            queue.push(i)
+            while (sum >= s) {
+                res = Math.min(res, queue.size)
+                sum -= queue.removeLast()
+            }
+        }
+        return if(res == Int.MAX_VALUE) 0 else res
+    }
+}
+```
+### 56
+```
+Construct String from Binary Tree
+
+You need to construct a string consists of parenthesis and integers from a binary tree with the preorder traversing way.
+
+The null node needs to be represented by empty parenthesis pair "()". And you need to omit all the empty parenthesis pairs that don't affect the one-to-one mapping relationship between the string and the original binary tree.
+
+Example 1:
+Input: Binary tree: [1,2,3,4]
+       1
+     /   \
+    2     3
+   /    
+  4     
+
+Output: "1(2(4))(3)"
+Explanation: Originallay it needs to be "1(2(4)())(3()())", 
+but you need to omit all the unnecessary empty parenthesis pairs. 
+And it will be "1(2(4))(3)".
+
+Example 2:
+Input: Binary tree: [1,2,3,null,4]
+       1
+     /   \
+    2     3
+     \  
+      4 
+
+Output: "1(2()(4))(3)"
+Explanation: Almost the same as the first example, 
+except we can't omit the first parenthesis pair to break the one-to-one mapping relationship between the input and the output.
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun tree2str(t: TreeNode?): String {
+        if (t == null) return ""
+        var res = "${t.`val`}"
+        if (t.left != null) {
+            res = "$res(${tree2str(t.left)})"
+        } else {
+            if (t.right != null) {
+                res = "$res()"
+            }
+        }
+
+        if (t.right != null) {
+            res = "$res(${tree2str(t.right)})"
+        }
+        return res
+    }
+}
+```
+### 57
+```
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
+
+It is guaranteed that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+
+Example 1:
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+
+Example 2:
+Input: candidates = [2,3,5], target = 8
+Output: [[2,2,2,2],[2,3,3],[3,5]]
+
+Example 3:
+Input: candidates = [2], target = 1
+Output: []
+
+Example 4:
+Input: candidates = [1], target = 1
+Output: [[1]]
+
+Example 5:
+Input: candidates = [1], target = 2
+Output: [[1,1]]
+
+Constraints:
+1 <= candidates.length <= 30
+1 <= candidates[i] <= 200
+All elements of candidates are distinct.
+1 <= target <= 500
+```
+##### mine
+```
+class Solution {
+    fun combinationSum(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        val temp = mutableListOf<Int>()
+        val list = candidates.filter {
+            it <= target
+        }.sortedBy {
+            it
+        }
+        combinationSumSub(list, target, res, temp)
+        return res
+    }
+
+    fun combinationSumSub(
+        candidates: List<Int>,
+        target: Int,
+        res: MutableList<List<Int>>,
+        temp: MutableList<Int>
+    ) {
+        when {
+            target == 0 -> {
+                res.add(mutableListOf<Int>().apply {
+                    addAll(temp)
+                })
+                return
+            }
+            target < 0 -> {
+                return
+            }
+            else -> {
+                for (num in candidates) {
+                    if (temp.isNotEmpty() && temp[temp.size - 1] > num) {
+                        continue
+                    }
+                    temp.add(num)
+                    combinationSumSub(candidates, target - num, res, temp)
+                    temp.removeAt(temp.size - 1)
+                }
+            }
+        }
+    }
+}
+```
+### 58
+```
+Zuma Game
+
+Think about Zuma Game. You have a row of balls on the table, colored red(R), yellow(Y), blue(B), green(G), and white(W). You also have several balls in your hand.
+
+Each time, you may choose a ball in your hand, and insert it into the row (including the leftmost place and rightmost place). Then, if there is a group of 3 or more balls in the same color touching, remove these balls. Keep doing this until no more balls can be removed.
+
+Find the minimal balls you have to insert to remove all the balls on the table. If you cannot remove all the balls, output -1.
+
+Example 1:
+Input: board = "WRRBBW", hand = "RB"
+Output: -1
+Explanation: WRRBBW -> WRR[R]BBW -> WBBW -> WBB[B]W -> WW
+
+Example 2:
+Input: board = "WWRRBBWW", hand = "WRBRW"
+Output: 2
+Explanation: WWRRBBWW -> WWRR[R]BBWW -> WWBBWW -> WWBB[B]WW -> WWWW -> empty
+
+Example 3:
+Input: board = "G", hand = "GGGGG"
+Output: 2
+Explanation: G -> G[G] -> GG[G] -> empty 
+
+Example 4:
+Input: board = "RBYYBBRRB", hand = "YRBGB"
+Output: 3
+Explanation: RBYYBBRRB -> RBYY[Y]BBRRB -> RBBBRRB -> RRRB -> B -> B[B] -> BB[B] -> empty 
+
+Constraints:
+You may assume that the initial row of balls on the table won’t have any 3 or more consecutive balls with the same color.
+1 <= board.length <= 16
+1 <= hand.length <= 5
+Both input strings will be non-empty and only contain characters 'R','Y','B','G','W'.
+```
+##### like
+```
+class Solution {
+    fun findMinStep(board: String, hand: String): Int {
+        val handCount = IntArray(26) {
+            0
+        }
+        for (i in hand.indices) handCount[hand[i] - 'A']++
+        val rs = helper("$board#", handCount)
+        return if (rs == 6) -1 else rs
+    }
+
+    fun helper(s: String, h: IntArray): Int {
+        var ss = remove(s)
+        if (ss == "#") return 0
+        var rs = 6
+        var need = 0
+        var i = 0
+        var j = 0
+        while (j < ss.length) {
+            if (ss[i] == ss[j]) {
+                j++
+                continue
+            }
+            need = 3 - (j - i)
+            if (h[ss[i] - 'A'] >= need) {
+                h[ss[i] - 'A'] -= need
+                rs = Math.min(rs, need + helper(ss.substring(0, i) + ss.substring(j), h))
+                h[ss[i] - 'A'] += need
+            }
+            i = j
+        }
+        return rs
+    }
+
+    fun remove(board: String): String {
+        var i = 0
+        var j = 0
+        while (j < board.length) {
+            if (board[i] == board[j]) {
+                j++
+                continue
+            }
+            if (j - i >= 3)
+                return remove(board.substring(0, i) + board.substring(j))
+            i = j
+            j++
+        }
+        return board
+    }
+}
+```
