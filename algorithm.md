@@ -4346,3 +4346,105 @@ class Solution {
     }
 }
 ```
+### 59
+```
+Knight Probability in Chessboard
+
+On an NxN chessboard, a knight starts at the r-th row and c-th column and attempts to make exactly K moves. The rows and columns are 0 indexed, so the top-left square is (0, 0), and the bottom-right square is (N-1, N-1).
+
+A chess knight has 8 possible moves it can make, as illustrated below. Each move is two squares in a cardinal direction, then one square in an orthogonal direction.
+
+Each time the knight is to move, it chooses one of eight possible moves uniformly at random (even if the piece would go off the chessboard) and moves there.
+
+The knight continues moving until it has made exactly K moves or has moved off the chessboard. Return the probability that the knight remains on the board after it has stopped moving.
+
+Example:
+Input: 3, 2, 0, 0
+Output: 0.0625
+Explanation: There are two moves (to (1,2), (2,1)) that will keep the knight on the board.
+From each of those positions, there are also two moves that will keep the knight on the board.
+The total probability the knight stays on the board is 0.0625.
+
+Note:
+N will be between 1 and 25.
+K will be between 0 and 100.
+The knight always initially starts on the board.
+```
+##### mine 1 Time Limit Exceeded
+```
+class Solution {
+    val array = arrayOf(
+        intArrayOf(1, 2),
+        intArrayOf(1, -2),
+        intArrayOf(2, 1),
+        intArrayOf(2, -1),
+        intArrayOf(-1, 2),
+        intArrayOf(-1, -2),
+        intArrayOf(-2, 1),
+        intArrayOf(-2, -1)
+    )
+
+    fun knightProbability(N: Int, K: Int, r: Int, c: Int): Double {
+        if (K == 0) {
+            return if (isLegal(r, c, N)) 1.0 else 0.0
+        }
+
+        if (K == 1) {
+            var legalCount = 0
+            for (a in array) {
+                if (isLegal(r + a[0], c + a[1], N)) {
+                    legalCount++
+                }
+            }
+            return legalCount / 8.0
+        }
+        var res = 0.0
+        for (a in array) {
+            if (isLegal(r + a[0], c + a[1], N)) {
+                res += 0.125 * knightProbability(N, K - 1, r + a[0], c + a[1])
+            }
+        }
+        return res
+    }
+
+    fun isLegal(r: Int, c: Int, len: Int): Boolean = r in 0 until len && (c in 0 until len)
+}
+```
+##### like
+```
+class Solution {
+    val array = arrayOf(
+        intArrayOf(1, 2),
+        intArrayOf(1, -2),
+        intArrayOf(2, 1),
+        intArrayOf(2, -1),
+        intArrayOf(-1, 2),
+        intArrayOf(-1, -2),
+        intArrayOf(-2, 1),
+        intArrayOf(-2, -1)
+    )
+    
+    private lateinit var dp: Array<Array<DoubleArray>>
+    
+    fun knightProbability(N: Int, K: Int, r: Int, c: Int): Double {
+        dp = Array(N) {
+            Array(N) {
+                DoubleArray(
+                    K + 1
+                )
+            }
+        }
+        return find(N, K, r, c)
+    }
+
+    fun find(N: Int, K: Int, r: Int, c: Int): Double {
+        if (r < 0 || r > N - 1 || c < 0 || c > N - 1) return 0.0
+        if (K == 0) return 1.0
+        if (dp[r][c][K] != 0.0) return dp[r][c][K]
+        var rate = 0.0
+        for (i in array.indices) rate += 0.125 * find(N, K - 1, r + array[i][0], c + array[i][1])
+        dp[r][c][K] = rate
+        return rate
+    }
+}
+```
