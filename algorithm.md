@@ -4448,3 +4448,134 @@ class Solution {
     }
 }
 ```
+### 60
+```
+Convert Binary Number in a Linked List to Integer
+
+Given head which is a reference node to a singly-linked list. The value of each node in the linked list is either 0 or 1. The linked list holds the binary representation of a number.
+
+Return the decimal value of the number in the linked list.
+
+Example 1:
+Input: head = [1,0,1]
+Output: 5
+Explanation: (101) in base 2 = (5) in base 10
+
+Example 2:
+Input: head = [0]
+Output: 0
+
+Example 3:
+Input: head = [1]
+Output: 1
+
+Example 4:
+Input: head = [1,0,0,1,0,0,1,1,1,0,0,0,0,0,0]
+Output: 18880
+
+Example 5:
+Input: head = [0,0]
+Output: 0
+```
+##### mine
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getDecimalValue(head: ListNode?): Int {
+        var a = reverse(head)
+        var res = 0
+        var mode = 0.0
+        while (a != null) {
+            res += a.`val` * Math.pow(2.0, mode).toInt()
+            mode += 1.0
+            a = a.next
+        }
+        return res
+    }
+    
+    fun reverse(head: ListNode?): ListNode? {
+        if (head == null) return head
+        var cur: ListNode? = null
+        var a = head
+        while (a != null) {
+            val temp = a.next
+            a.next = cur
+            cur = a
+            if (temp == null) {
+                return a
+            }
+            a = temp
+        }
+        return null
+    }
+}
+```
+##### like
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getDecimalValue(head: ListNode?): Int {
+        var res = 0
+        var a = head
+        while (a != null) {
+            res = (res.shl(1).or(a.`val`))
+            a = a.next
+        }
+        return res
+    }
+}
+```
+### 61
+```
+Given a chemical formula (given as a string), return the count of each atom.
+
+The atomic element always starts with an uppercase character, then zero or more lowercase letters, representing the name.
+
+One or more digits representing that element's count may follow if the count is greater than 1. If the count is 1, no digits will follow. For example, H2O and H2O2 are possible, but H1O2 is impossible.
+
+Two formulas concatenated together to produce another formula. For example, H2O2He3Mg4 is also a formula.
+
+A formula placed in parentheses, and a count (optionally added) is also a formula. For example, (H2O2) and (H2O2)3 are formulas.
+
+Given a formula, return the count of all elements as a string in the following form: the first name (in sorted order), followed by its count (if that count is more than 1), followed by the second name (in sorted order), followed by its count (if that count is more than 1), and so on.
+
+Example 1:
+Input: formula = "H2O"
+Output: "H2O"
+Explanation: The count of elements are {'H': 2, 'O': 1}.
+
+Example 2:
+Input: formula = "Mg(OH)2"
+Output: "H2MgO2"
+Explanation: The count of elements are {'H': 2, 'Mg': 1, 'O': 2}.
+
+Example 3:
+Input: formula = "K4(ON(SO3)2)2"
+Output: "K4N2O14S4"
+Explanation: The count of elements are {'K': 4, 'N': 2, 'O': 14, 'S': 4}.
+
+Example 4:
+Input: formula = "Be32"
+Output: "Be32"
+
+Constraints:
+1 <= formula.length <= 1000
+formula consists of English letters, digits, '(', and ')'.
+formula is always valid.
+```
