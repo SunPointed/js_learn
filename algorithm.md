@@ -4579,3 +4579,127 @@ Constraints:
 formula consists of English letters, digits, '(', and ')'.
 formula is always valid.
 ```
+### mine
+```
+class Solution {
+    fun countOfAtoms(formula: String): String {
+        val resMap = countOfAtomsSub(0, formula.length - 1, formula).toSortedMap()
+        var res = ""
+        resMap.forEach { (t, u) ->
+            res += t
+            if(u != 1) {
+                res += u
+            }
+        }
+        return res
+    }
+
+    fun countOfAtomsSub(startIndex: Int, endIndex: Int, formula: String): Map<String, Int> {
+        val map = mutableMapOf<String, Int>()
+        var index = startIndex
+        var curLetter = ""
+        while (index <= endIndex) {
+            when {
+                formula[index] == '(' -> {
+                    if (curLetter.isNotEmpty()) {
+                        if (map.containsKey(curLetter)) {
+                            map[curLetter] = map[curLetter]!! + 1
+                        } else {
+                            map[curLetter] = 1
+                        }
+                        curLetter = ""
+                    }
+                    val adapterIndex = getParenthesesAdapterIndex(index, formula)
+                    val childMul = getChildMul(adapterIndex, formula)
+                    val childMap = countOfAtomsSub(index + 1, adapterIndex - 1, formula)
+                    childMap.forEach { (t, u) ->
+                        if (map.containsKey(t)) {
+                            map[t] = map[t]!! + u * childMul.first
+                        } else {
+                            map[t] = u * childMul.first
+                        }
+                    }
+                    index = adapterIndex + childMul.second + 1
+                }
+                formula[index] == ')' -> {
+                    if (curLetter.isNotEmpty()) {
+                        if (map.containsKey(curLetter)) {
+                            map[curLetter] = map[curLetter]!! + 1
+                        } else {
+                            map[curLetter] = 1
+                        }
+                        curLetter = ""
+                    }
+                    index++
+                }
+                formula[index] in 'A'..'Z' -> {
+                    if (curLetter.isEmpty()) {
+                        curLetter += formula[index]
+                    } else {
+                        if (map.containsKey(curLetter)) {
+                            map[curLetter] = map[curLetter]!! + 1
+                        } else {
+                            map[curLetter] = 1
+                        }
+                        curLetter = "" + formula[index]
+                    }
+                    index++
+                }
+                formula[index] in 'a'..'z' -> {
+                    curLetter += formula[index]
+                    index++
+                }
+                formula[index] in '0'..'9' -> {
+                    val count = getChildMul(index - 1, formula)
+                    if (map.containsKey(curLetter)) {
+                        map[curLetter] = map[curLetter]!! + count.first
+                    } else {
+                        map[curLetter] = count.first
+                    }
+                    curLetter = ""
+                    index += count.second
+                }
+            }
+        }
+        if(curLetter.isNotEmpty()) {
+            if (map.containsKey(curLetter)) {
+                map[curLetter] = map[curLetter]!! + 1
+            } else {
+                map[curLetter] = 1
+            }
+        }
+        return map
+    }
+
+    fun getChildMul(index: Int, formula: String): Pair<Int, Int> {
+        if (index == formula.length - 1) return Pair(1, 0)
+        var i = index + 1
+        var res = ""
+        while (i < formula.length) {
+            if (formula[i] in '0'..'9')
+                res += formula[i]
+            else
+                break
+            i++
+        }
+        return if (res.isEmpty()) Pair(1, 0) else Pair(res.toInt(), res.length)
+    }
+
+    fun getParenthesesAdapterIndex(index: Int, formula: String): Int {
+        var parenthesesCount = 0
+        var i = index
+        while (i < formula.length) {
+            if (formula[i] == '(')
+                parenthesesCount++
+            else if (formula[i] == ')') {
+                parenthesesCount--
+            }
+            if (parenthesesCount == 0) {
+                return i
+            }
+            i++
+        }
+        throw IllegalStateException("getParenthesesAdapterIndex fail")
+    }
+}
+```
