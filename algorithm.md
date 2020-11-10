@@ -4703,3 +4703,63 @@ class Solution {
     }
 }
 ```
+### 62
+```
+Merge Intervals
+
+Given a collection of intervals, merge all overlapping intervals.
+
+Example 1:
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+
+Example 2:
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+NOTE: input types have been changed on April 15, 2019. Please reset to default code definition to get new method signature.
+
+Constraints:
+intervals[i][0] <= intervals[i][1]
+```
+### mine
+```
+class Solution {
+    fun merge(intervals: Array<IntArray>): Array<IntArray> {
+        if(intervals.isNullOrEmpty()) return arrayOf()
+        val list = mutableListOf<IntArray>().apply {
+            add(intervals[0])
+        }
+        var index = 1
+        while (index < intervals.size) {
+            mergeChild(intervals[index], list)
+            index++
+        }
+        return list.toTypedArray()
+    }
+
+    fun mergeChild(array: IntArray, list: MutableList<IntArray>) {
+        var merge = false
+        val iter = list.iterator()
+        while (iter.hasNext()) {
+            val cur = iter.next()
+            if (array[0] >= cur[0] && array[1] <= cur[1]) {
+                merge = true
+            } else if (array[0] <= cur[0] && array[1] >= cur[1]) {
+                iter.remove()
+            } else if (array[0] in cur[0]..cur[1]) {
+                array[0] = cur[0]
+                iter.remove()
+            } else if (array[1] in cur[0]..cur[1]) {
+                array[1] = cur[1]
+                iter.remove()
+            }
+        }
+        if (!merge) {
+            list.add(array)
+        }
+    }
+}
+```
