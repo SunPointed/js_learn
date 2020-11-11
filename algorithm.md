@@ -4763,3 +4763,211 @@ class Solution {
     }
 }
 ```
+### 63
+```
+Add to Array-Form of Integer
+
+For a non-negative integer X, the array-form of X is an array of its digits in left to right order.  For example, if X = 1231, then the array form is [1,2,3,1].
+
+Given the array-form A of a non-negative integer X, return the array-form of the integer X+K.
+
+Example 1:
+Input: A = [1,2,0,0], K = 34
+Output: [1,2,3,4]
+Explanation: 1200 + 34 = 1234
+
+Example 2:
+Input: A = [2,7,4], K = 181
+Output: [4,5,5]
+Explanation: 274 + 181 = 455
+
+Example 3:
+Input: A = [2,1,5], K = 806
+Output: [1,0,2,1]
+Explanation: 215 + 806 = 1021
+
+Example 4:
+Input: A = [9,9,9,9,9,9,9,9,9,9], K = 1
+Output: [1,0,0,0,0,0,0,0,0,0,0]
+Explanation: 9999999999 + 1 = 10000000000
+
+Note：
+1 <= A.length <= 10000
+0 <= A[i] <= 9
+0 <= K <= 10000
+If A.length > 1, then A[0] != 0
+```
+##### mine 1 very slow
+```
+class Solution {
+    fun addToArrayForm(A: IntArray, K: Int): List<Int> {
+        val kk = K.toString().map {
+            it - '0'
+        }.toMutableList()
+        var tmp = 0
+        var ki = kk.size - 1
+        var i = A.size - 1
+        var div = 10
+        while (i >= 0 && ki >= 0) {
+            val value = A[i] + kk[ki] + tmp
+            tmp = value / div
+            kk[ki] = value % div
+            i--
+            ki--
+        }
+        while (i >= 0) {
+            val value = A[i] + tmp
+            tmp = value / div
+            kk.add(0, value % div)
+            i--
+        }
+        while (ki >= 0) {
+            val value = kk[ki] + tmp
+            tmp = value / div
+            kk[ki] = value % div
+            ki--
+        }
+        if (tmp > 0) {
+            kk.add(0, tmp)
+        }
+        return kk
+    }
+}
+```
+##### mine
+```
+class Solution {
+    fun addToArrayForm(A: IntArray, K: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        val kk = K.toString()
+        var tmp = 0
+        var ki = kk.length - 1
+        var i = A.size - 1
+        val div = 10
+        while (i >= 0 && ki >= 0) {
+            val value = A[i] + (kk[ki] - '0') + tmp
+            tmp = value / div
+            res.add(0, value % div)
+            i--
+            ki--
+        }
+        while (i >= 0) {
+            val value = A[i] + tmp
+            tmp = value / div
+            res.add(0, value % div)
+            i--
+        }
+        while (ki >= 0) {
+            val value = (kk[ki] - '0') + tmp
+            tmp = value / div
+            res.add(0, value % div)
+            ki--
+        }
+        if (tmp > 0) {
+            res.add(0, tmp)
+        }
+        return res
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun addToArrayForm(A: IntArray, K: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        var KK = K
+        for (i in A.size - 1 downTo 0) {
+            res.add(0, (A[i] + KK) % 10)
+            KK = (A[i] + KK) / 10
+        }
+        while (KK > 0) {
+            res.add(0, KK % 10)
+            KK /= 10
+        }
+        return res
+    }
+}
+```
+### 64
+```
+Given an array of distinct integers arr, find all pairs of elements with the minimum absolute difference of any two elements. 
+
+Return a list of pairs in ascending order(with respect to pairs), each pair [a, b] follows
+a, b are from arr
+a < b
+b - a equals to the minimum absolute difference of any two elements in arr
+
+Example 1:
+Input: arr = [4,2,1,3]
+Output: [[1,2],[2,3],[3,4]]
+Explanation: The minimum absolute difference is 1. List all pairs with difference equal to 1 in ascending order.
+
+Example 2:
+Input: arr = [1,3,6,10,15]
+Output: [[1,3]]
+
+Example 3:
+Input: arr = [3,8,-10,23,19,-4,-14,27]
+Output: [[-14,-10],[19,23],[23,27]]
+
+Constraints:
+2 <= arr.length <= 10^5
+-10^6 <= arr[i] <= 10^6
+```
+##### mine
+```
+class Solution {
+    fun minimumAbsDifference(arr: IntArray): List<List<Int>> {
+        arr.sort()
+        val map = mutableMapOf<Int, MutableList<List<Int>>>()
+        var i = 1
+        while (i < arr.size) {
+            val key = arr[i] - arr[i - 1]
+            if (map.containsKey(key)) {
+                map[key]!!.add(listOf(arr[i - 1], arr[i]))
+            } else {
+                map[key] = mutableListOf(listOf(arr[i - 1], arr[i]))
+            }
+            i++
+        }
+
+        return map[map.keys.min()!!]!!.toList()
+    }
+}
+```
+### 65
+```
+Get Watched Videos by Your Friends
+
+There are n people, each person has a unique id between 0 and n-1. Given the arrays watchedVideos and friends, where watchedVideos[i] and friends[i] contain the list of watched videos and the list of friends respectively for the person with id = i.
+
+Level 1 of videos are all watched videos by your friends, level 2 of videos are all watched videos by the friends of your friends and so on. In general, the level k of videos are all watched videos by people with the shortest path exactly equal to k with you. Given your id and the level of videos, return the list of videos ordered by their frequencies (increasing). For videos with the same frequency order them alphabetically from least to greatest. 
+
+Example 1:
+Input: watchedVideos = [["A","B"],["C"],["B","C"],["D"]], friends = [[1,2],[0,3],[0,3],[1,2]], id = 0, level = 1
+Output: ["B","C"] 
+Explanation: 
+You have id = 0 (green color in the figure) and your friends are (yellow color in the figure):
+Person with id = 1 -> watchedVideos = ["C"] 
+Person with id = 2 -> watchedVideos = ["B","C"] 
+The frequencies of watchedVideos by your friends are: 
+B -> 1 
+C -> 2
+
+Example 2:
+Input: watchedVideos = [["A","B"],["C"],["B","C"],["D"]], friends = [[1,2],[0,3],[0,3],[1,2]], id = 0, level = 2
+Output: ["D"]
+Explanation: 
+You have id = 0 (green color in the figure) and the only friend of your friends is the person with id = 3 (yellow color in the figure).
+
+Constraints:
+n == watchedVideos.length == friends.length
+2 <= n <= 100
+1 <= watchedVideos[i].length <= 100
+1 <= watchedVideos[i][j].length <= 8
+0 <= friends[i].length < n
+0 <= friends[i][j] < n
+0 <= id < n
+1 <= level < n
+if friends[i] contains j, then friends[j] contains i
+```
