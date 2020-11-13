@@ -4971,3 +4971,185 @@ n == watchedVideos.length == friends.length
 1 <= level < n
 if friends[i] contains j, then friends[j] contains i
 ```
+##### mine
+```
+class Solution {
+    fun watchedVideosByFriends(watchedVideos: List<List<String>>, friends: Array<IntArray>, id: Int, level: Int): List<String> {
+        var tlevel = 0
+        var curSize = 0
+        val ids = mutableListOf<Int>().apply {
+            add(id)
+        }
+        val oids = mutableSetOf<Int>()
+        while (ids.isNotEmpty()) {
+            if(tlevel == level) break
+            if(curSize == 0) {
+                curSize = ids.size
+            }
+            val curId = ids.removeAt(0)
+            if(!oids.contains(curId)) {
+                friends[curId].forEach {
+                    if (!oids.contains(it)) {
+                        ids.add(it)
+                    }
+                }
+            }
+            oids.add(curId)
+            curSize--
+            if(curSize == 0) {
+                tlevel++
+            }
+        }
+
+        val map = mutableMapOf<String, Int>()
+        val res = mutableListOf<String>()
+        ids.forEach {
+            watchedVideos[it].forEach { vs ->
+                if (map.containsKey(vs)) {
+                    map[vs] = map[vs]!! + 1
+                } else {
+                    map[vs] = 1
+                }
+            }
+        }
+        map.keys.forEach {
+            res.add(it)
+        }
+        res.sortWith(Comparator { o1: String, o2: String ->
+            if (map[o1] == map[o2]) o1.compareTo(o2) else map[o1]!! - map[o2]!!
+        })
+        return res
+    }
+}
+```
+### 66
+```
+Classes More Than 5 Students
+
+There is a table courses with columns: student and class
+
+Please list out all classes which have more than or equal to 5 students.
+
+For example, the table:
++---------+------------+
+| student | class      |
++---------+------------+
+| A       | Math       |
+| B       | English    |
+| C       | Math       |
+| D       | Biology    |
+| E       | Math       |
+| F       | Computer   |
+| G       | Math       |
+| H       | Math       |
+| I       | Math       |
++---------+------------+
+
+Should output:
++---------+
+| class   |
++---------+
+| Math    |
++---------+
+
+Note:
+The students should not be counted duplicate in each course.
+```
+##### answer
+```
+select class from courses group by class having count(distinct student) >= 5;
+```
+### 67
+```
+Split Linked List in Parts
+
+Given a (singly) linked list with head node root, write a function to split the linked list into k consecutive linked list "parts".
+
+The length of each part should be as equal as possible: no two parts should have a size differing by more than 1. This may lead to some parts being null.
+
+The parts should be in order of occurrence in the input list, and parts occurring earlier should always have a size greater than or equal parts occurring later.
+
+Return a List of ListNode's representing the linked list parts that are formed.
+
+Examples 1->2->3->4, k = 5 // 5 equal parts [ [1], [2], [3], [4], null ]
+
+Example 1:
+Input:
+root = [1, 2, 3], k = 5
+Output: [[1],[2],[3],[],[]]
+Explanation:
+The input and each element of the output are ListNodes, not arrays.
+For example, the input root has root.val = 1, root.next.val = 2, \root.next.next.val = 3, and root.next.next.next = null.
+The first element output[0] has output[0].val = 1, output[0].next = null.
+The last element output[4] is null, but it's string representation as a ListNode is [].
+
+Example 2:
+Input: 
+root = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], k = 3
+Output: [[1, 2, 3, 4], [5, 6, 7], [8, 9, 10]]
+Explanation:
+The input has been split into consecutive parts with size difference at most 1, and earlier parts are a larger size than the later parts.
+
+Note:
+The length of root will be in the range [0, 1000].
+Each value of a node in the input will be an integer in the range [0, 999].
+k will be an integer in the range [1, 50].
+```
+### mine 100% 100%
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun splitListToParts(root: ListNode?, k: Int): Array<ListNode?> {
+        val res = Array<ListNode?>(k) { null }
+        if (root == null) return res
+        val link = mutableListOf<ListNode>()
+        var cur = root
+        while (cur != null) {
+            link.add(cur)
+            cur = cur.next
+        }
+        if (link.size <= k) {
+            var i = 0
+            while (i < link.size) {
+                res[i] = link[i].apply {
+                    next = null
+                }
+                i++
+            }
+            return res
+        }
+
+        val small = link.size / k
+        val big = small + 1
+        var useSmall = true
+        val smallMaxCount = (link.size - (link.size - small * k) * big) / small
+        var smallCount = 0
+        var kk = res.size
+        var index = link.size
+        while (index > 0) {
+            if (smallMaxCount == smallCount) useSmall = false
+            if (index != link.size) {
+                link[index - 1].next = null
+            }
+            if (useSmall) {
+                res[kk - 1] = link[index - small]
+                index -= small
+                smallCount++
+            } else {
+                res[kk - 1] = link[index - big]
+                index -= big
+            }
+            kk--
+        }
+        return res
+    }
+}
+```
