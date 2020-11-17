@@ -5153,3 +5153,379 @@ class Solution {
     }
 }
 ```
+### 68
+```
+Element Appearing More Than 25% In Sorted Array
+
+Given an integer array sorted in non-decreasing order, there is exactly one integer in the array that occurs more than 25% of the time.
+
+Return that integer.
+
+Example 1:
+Input: arr = [1,2,2,6,6,6,6,7,10]
+Output: 6
+
+Constraints:
+1 <= arr.length <= 10^4
+0 <= arr[i] <= 10^5
+```
+##### mine
+```
+class Solution {
+    fun findSpecialInteger(arr: IntArray): Int {
+        val aliquot = arr.size % 4 == 0
+        val percentCount = if (aliquot) arr.size / 4 else arr.size / 4 + 1
+        var count = 1
+        var cur = -1
+        for (i in arr) {
+            if (cur != i) {
+                cur = i
+                count = 1
+            } else {
+                count++
+            }
+
+            if (aliquot && count > percentCount) {
+                return cur
+            }
+
+            if(!aliquot && count >= percentCount) {
+                return cur
+            }
+        }
+        return -1
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun findSpecialInteger(arr: IntArray): Int {
+        val indexs = intArrayOf(arr.size / 4, arr.size / 2, arr.size / 4 * 3)
+        for (index in indexs) {
+            val firstIndex = findFirstIndex(arr, index)
+            if (arr[firstIndex] == arr[firstIndex + arr.size / 4]) {
+                return arr[firstIndex]
+            }
+        }
+        return -1
+    }
+
+    fun findFirstIndex(arr: IntArray, index: Int): Int {
+        if (index == 0) return index
+        var i = index
+        while (i > -1) {
+            if (arr[i] == arr[index])
+                i--
+            else
+                return i + 1
+        }
+        return 0
+    }
+}
+```
+### 69
+```
+Goat Latin
+
+A sentence S is given, composed of words separated by spaces. Each word consists of lowercase and uppercase letters only.
+
+We would like to convert the sentence to "Goat Latin" (a made-up language similar to Pig Latin.)
+
+The rules of Goat Latin are as follows:
+
+If a word begins with a vowel (a, e, i, o, or u), append "ma" to the end of the word.
+For example, the word 'apple' becomes 'applema'.
+ 
+If a word begins with a consonant (i.e. not a vowel), remove the first letter and append it to the end, then add "ma".
+For example, the word "goat" becomes "oatgma".
+ 
+Add one letter 'a' to the end of each word per its word index in the sentence, starting with 1.
+For example, the first word gets "a" added to the end, the second word gets "aa" added to the end and so on.
+Return the final sentence representing the conversion from S to Goat Latin. 
+
+Example 1:
+Input: "I speak Goat Latin"
+Output: "Imaa peaksmaaa oatGmaaaa atinLmaaaaa"
+
+Example 2:
+Input: "The quick brown fox jumped over the lazy dog"
+Output: "heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa"
+
+Notes:
+S contains only uppercase, lowercase and spaces. Exactly one space between each word.
+1 <= S.length <= 150.
+```
+##### mine
+```
+class Solution {
+    fun toGoatLatin(S: String): String {
+        val strings = S.split(" ")
+        var res = ""
+        var index = 0
+        for (str in strings) {
+            var last = ""
+            var i = 0
+            while (i < index + 1) {
+                last += 'a'
+                i++
+            }
+            if (index != 0) {
+                res += " "
+            }
+            res += if (str.isVowel()) {
+                str + "ma" + last
+            } else {
+                val first = str[0]
+                str.removeRange(0, 1) + first + "ma" + last
+            }
+            index++
+        }
+        return res   
+    }
+    
+    fun String.isVowel(): Boolean {
+        return this[0] == 'a' || this[0] == 'e' || this[0] == 'i' || this[0] == 'o' || this[0] == 'u'
+                || this[0] == 'A' || this[0] == 'E' || this[0] == 'I' || this[0] == 'O' || this[0] == 'U'
+    }
+}
+```
+### 70
+```
+Guess Number Higher or Lower II
+
+We are playing the Guessing Game. The game will work as follows:
+    I pick a number between 1 and n.
+    You guess a number.
+    If you guess the right number, you win the game.
+    If you guess the wrong number, then I will tell you whether the number I picked is higher or lower, and you will continue guessing.
+    Every time you guess a wrong number x, you will pay x dollars. If you run out of money, you lose the game.
+
+Given a particular n, return the minimum amount of money you need to guarantee a win regardless of what number I pick.
+
+Example 1:
+Input: n = 10
+Output: 16
+Explanation: The winning strategy is as follows:
+- The range is [1,10]. Guess 7.
+    - If this is my number, your total is $0. Otherwise, you pay $7.
+    - If my number is higher, the range is [8,10]. Guess 9.
+        - If this is my number, your total is $7. Otherwise, you pay $9.
+        - If my number is higher, it must be 10. Guess 10. Your total is $7 + $9 = $16.
+        - If my number is lower, it must be 8. Guess 8. Your total is $7 + $9 = $16.
+    - If my number is lower, the range is [1,6]. Guess 3.
+        - If this is my number, your total is $7. Otherwise, you pay $3.
+        - If my number is higher, the range is [4,6]. Guess 5.
+            - If this is my number, your total is $7 + $3 = $10. Otherwise, you pay $5.
+            - If my number is higher, it must be 6. Guess 6. Your total is $7 + $3 + $5 = $15.
+            - If my number is lower, it must be 4. Guess 4. Your total is $7 + $3 + $5 = $15.
+        - If my number is lower, the range is [1,2]. Guess 1.
+            - If this is my number, your total is $7 + $3 = $10. Otherwise, you pay $1.
+            - If my number is higher, it must be 2. Guess 2. Your total is $7 + $3 + $1 = $11.
+The worst case in all these scenarios is that you pay $16. Hence, you only need $16 to guarantee a win.
+
+Example 2:
+Input: n = 1
+Output: 0
+Explanation: There is only one possible number, so you can guess 1 and not have to pay anything.
+
+Example 3:
+Input: n = 2
+Output: 1
+Explanation: There are two possible numbers, 1 and 2.
+- Guess 1.
+    - If this is my number, your total is $0. Otherwise, you pay $1.
+    - If my number is higher, it must be 2. Guess 2. Your total is $1.
+The worst case is that you pay $1.
+
+Constraints:
+1 <= n <= 200
+```
+##### like
+```
+class Solution {
+    fun getMoneyAmount(n: Int): Int {
+        val arr = Array<IntArray>(n + 1) {
+            IntArray(n+1) {
+                0
+            }
+        }
+        return helperGet(arr, 1, n)
+    }
+
+    fun helperGet(array: Array<IntArray>, start: Int, end: Int) :Int {
+        if(start >= end) return 0
+        if(array[start][end] != 0) return array[start][end]
+        var res = Int.MAX_VALUE
+        var i = start
+        while (i <= end) {
+            val tmp = i + Math.max(helperGet(array, start, i - 1), helperGet(array, i + 1, end))
+            res = Math.min(res, tmp)
+            i++
+        }
+        array[start][end] = res
+        return res
+    }
+}
+``` 
+### 71
+```
+Count Vowels Permutation
+
+Given an integer n, your task is to count how many strings of length n can be formed under the following rules:
+
+Each character is a lower case vowel ('a', 'e', 'i', 'o', 'u')
+Each vowel 'a' may only be followed by an 'e'.
+Each vowel 'e' may only be followed by an 'a' or an 'i'.
+Each vowel 'i' may not be followed by another 'i'.
+Each vowel 'o' may only be followed by an 'i' or a 'u'.
+Each vowel 'u' may only be followed by an 'a'.
+Since the answer may be too large, return it modulo 10^9 + 7.
+
+Example 1:
+Input: n = 1
+Output: 5
+Explanation: All possible strings are: "a", "e", "i" , "o" and "u".
+
+Example 2:
+Input: n = 2
+Output: 10
+Explanation: All possible strings are: "ae", "ea", "ei", "ia", "ie", "io", "iu", "oi", "ou" and "ua".
+
+Example 3: 
+Input: n = 5
+Output: 68
+
+Constraints:
+1 <= n <= 2 * 10^4
+```
+##### mine 1  Memory Limit Exceeded
+```
+class Solution {
+    fun countVowelPermutation(n: Int): Int {
+        val queue = ArrayDeque<Char>()
+        queue.add('a')
+        queue.add('e')
+        queue.add('i')
+        queue.add('o')
+        queue.add('u')
+        var size = 0
+        var times = 0
+        while (queue.isNotEmpty()) {
+            if (size == 0) {
+                size = queue.size
+                times++
+                if (times == n) {
+                    return size % 1000000007
+                }
+            }
+            when (queue.pop()) {
+                'a' -> {
+                    queue.add('e')
+                }
+                'e' -> {
+                    queue.add('a')
+                    queue.add('i')
+                }
+                'i' -> {
+                    queue.add('a')
+                    queue.add('e')
+                    queue.add('o')
+                    queue.add('u')
+                }
+                'o' -> {
+                    queue.add('i')
+                    queue.add('u')
+                }
+                'u' -> {
+                    queue.add('a')
+                }
+            }
+            size--
+        }
+        return -1 % 1000000007
+    }
+}
+```
+##### mine 2 100 100
+```
+class Solution {
+    fun countVowelPermutation(n: Int): Int {
+        var aCount = 1L
+        var eCount = 1L
+        var iCount = 1L
+        var oCount = 1L
+        var uCount = 1L
+
+        var aCount1 = 0L
+        var eCount1 = 0L
+        var iCount1 = 0L
+        var oCount1 = 0L
+        var uCount1 = 0L
+
+        var times = 0
+        while (times < n) {
+            times++
+            if(times == n) {
+                return ((if(n % 2 == 0) aCount1 + eCount1 + iCount1 + oCount1 + uCount1 else aCount + eCount + iCount + oCount + uCount) % 1000000007L).toInt()
+            }
+            if(times % 2 == 0) {
+                aCount = 0L
+                eCount = 0L
+                iCount = 0L
+                oCount = 0L
+                uCount = 0L
+
+                eCount += aCount1
+
+                aCount += eCount1
+                iCount += eCount1
+
+                aCount += iCount1
+                eCount += iCount1
+                oCount += iCount1
+                uCount += iCount1
+
+                iCount += oCount1
+                uCount += oCount1
+
+                aCount += uCount1
+
+                aCount %= 1000000007L
+                eCount %= 1000000007L
+                iCount %= 1000000007L
+                oCount %= 1000000007L
+                uCount %= 1000000007L
+            } else {
+                aCount1 = 0L
+                eCount1 = 0L
+                iCount1 = 0L
+                oCount1 = 0L
+                uCount1 = 0L
+
+                eCount1 += aCount
+
+                aCount1 += eCount
+                iCount1 += eCount
+
+                aCount1 += iCount
+                eCount1 += iCount
+                oCount1 += iCount
+                uCount1 += iCount
+
+                iCount1 += oCount
+                uCount1 += oCount
+
+                aCount1 += uCount
+
+                aCount1 %= 1000000007L
+                eCount1 %= 1000000007L
+                iCount1 %= 1000000007L
+                oCount1 %= 1000000007L
+                uCount1 %= 1000000007L
+            }
+        }
+        return (-1L % 1000000007L).toInt()
+    }
+}
+```
