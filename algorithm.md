@@ -5529,3 +5529,242 @@ class Solution {
     }
 }
 ```
+### 72
+```
+Convert Sorted List to Binary Search Tree
+
+Given the head of a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+
+Example 1:
+Input: head = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: One possible answer is [0,-3,9,-10,null,5], which represents the shown height balanced BST.
+
+Example 2:
+Input: head = []
+Output: []
+
+Example 3:
+Input: head = [0]
+Output: [0]
+
+Example 4:
+Input: head = [1,3]
+Output: [3,1]
+
+Constraints:
+The number of nodes in head is in the range [0, 2 * 104].
+-10^5 <= Node.val <= 10^5
+```
+##### mine
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+   fun sortedListToBST(head: ListNode?): TreeNode? {
+        if (head == null) return null
+
+        val list = mutableListOf<ListNode>()
+        var cur = head
+        while (cur != null) {
+            list.add(cur)
+            cur = cur.next
+        }
+        return sortedListToBSTHelp(list, 0, list.size - 1)
+    }
+
+    fun sortedListToBSTHelp(list: List<ListNode>, start: Int, end: Int): TreeNode? {
+        if (start > end) return null
+        if(start == end) return TreeNode(list[start].`val`)
+        val center = start + (end - start) / 2
+        return TreeNode(list[center].`val`).apply {
+            left = sortedListToBSTHelp(list, start, center - 1)
+            right = sortedListToBSTHelp(list, center + 1, end)
+        }
+    }
+}
+```
+### 73
+```
+Number of Equivalent Domino Pairs
+
+Given a list of dominoes, dominoes[i] = [a, b] is equivalent to dominoes[j] = [c, d] if and only if either (a==c and b==d), or (a==d and b==c) - that is, one domino can be rotated to be equal to another domino.
+
+Return the number of pairs (i, j) for which 0 <= i < j < dominoes.length, and dominoes[i] is equivalent to dominoes[j].
+
+Example 1:
+Input: dominoes = [[1,2],[2,1],[3,4],[5,6]]
+Output: 1
+
+Constraints:
+1 <= dominoes.length <= 40000
+1 <= dominoes[i][j] <= 9
+```
+##### mine slow
+```
+class Solution {
+    fun numEquivDominoPairs(dominoes: Array<IntArray>): Int {
+        var res = 0
+
+        var i = 0
+        while (i < dominoes.size - 1) {
+            val sum = dominoes[i][0] + dominoes[i][1]
+            var j = i + 1
+            while (j < dominoes.size) {
+                if (sum == dominoes[j][0] + dominoes[j][1] && (dominoes[j][0] == dominoes[i][0] || dominoes[j][0] == dominoes[i][1])) {
+                    res++
+                }
+                j++
+            }
+            i++
+        }
+
+        return res
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun numEquivDominoPairs(dominoes: Array<IntArray>): Int {
+       val count: MutableMap<Int, Int> = HashMap()
+        var res = 0
+        for (d in dominoes) {
+            val k = Math.min(d[0], d[1]) * 10 + Math.max(d[0], d[1])
+            count[k] = count.getOrDefault(k, 0) + 1
+        }
+        for (v in count.values) {
+            res += v * (v - 1) / 2
+        }
+        return res
+    }
+}
+```
+### 74
+```
+Insertion Sort List
+
+Sort a linked list using insertion sort.
+
+A graphical example of insertion sort. The partial sorted list (black) initially contains only the first element in the list.
+With each iteration one element (red) is removed from the input data and inserted in-place into the sorted list
+ 
+Algorithm of Insertion Sort:
+
+Insertion sort iterates, consuming one input element each repetition, and growing a sorted output list.
+At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there.
+It repeats until no input elements remain.
+
+Example 1:
+Input: 4->2->1->3
+Output: 1->2->3->4
+
+Example 2:
+Input: -1->5->3->4->0
+Output: -1->0->3->4->5
+```
+##### mine 1
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        var cur = head.next
+        val res = ListNode(0).apply {
+            next = head
+        }
+        head.next = null
+
+        while (cur != null) {
+            val next = cur.next
+
+            var cur2 = res.next
+            var pre2: ListNode? = res
+            while (cur2 != null) {
+                if (cur2.`val` > cur.`val`) {
+                    cur.next = cur2
+                    pre2!!.next = cur
+                    break
+                }
+                cur2 = cur2.next
+                pre2 = pre2!!.next
+            }
+            if (cur2 == null) {
+                pre2!!.next = cur
+                cur.next = null
+            }
+
+            cur = next
+        }
+        return res.next
+    }
+}
+```
+##### min2
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        val list = mutableListOf<ListNode>()
+        var cur = head
+        while (cur != null) {
+            list.add(cur)
+            cur = cur.next
+        }
+        list.sortBy {
+            it.`val`
+        }
+        val res = ListNode(0).apply {
+            next = list[0]
+        }
+        if (list.size > 1) {
+            cur = res.next
+            for (i in 1 until list.size) {
+                list[i].next = null
+                cur!!.next = list[i]
+                cur = cur.next
+            }
+        }
+
+        return res.next
+    }
+}
+```
