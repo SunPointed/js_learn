@@ -6020,3 +6020,227 @@ class Solution {
     }
 }
 ```
+### 77
+```
+Find Minimum in Rotated Sorted Array
+
+Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
+
+[4,5,6,7,0,1,2] if it was rotated 4 times.
+[0,1,2,4,5,6,7] if it was rotated 7 times.
+Notice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].
+
+Given the sorted rotated array nums, return the minimum element of this array.
+
+Example 1:
+Input: nums = [3,4,5,1,2]
+Output: 1
+Explanation: The original array was [1,2,3,4,5] rotated 3 times.
+
+Example 2:
+Input: nums = [4,5,6,7,0,1,2]
+Output: 0
+Explanation: The original array was [0,1,2,4,5,6,7] and it was rotated 4 times.
+
+Example 3:
+Input: nums = [11,13,15,17]
+Output: 11
+Explanation: The original array was [11,13,15,17] and it was rotated 4 times.
+
+Constraints:
+n == nums.length
+1 <= n <= 5000
+-5000 <= nums[i] <= 5000
+All the integers of nums are unique.
+nums is sorted and rotated between 1 and n times.
+```
+##### mine 1 too easy?
+```
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        return nums.min()!!
+    }
+}
+```
+##### mine 2 faster
+```
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        val a = nums[0]
+        var i = 1
+        while (i < nums.size) {
+            if(a > nums[i]){
+                return nums[i]
+            }
+            i++
+        }
+        return a
+    }
+}
+```
+##### binary search problem
+```
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        var start = 0
+        var end = nums.size - 1
+        while (start < end) {
+            if(nums[start] < nums[end]) return nums[start]
+            val mid = (start + end) / 2
+            if(nums[mid] >= nums[start]) {
+                start = mid + 1
+            } else {
+                end = mid
+            }
+        }
+        return nums[start]
+    }
+}
+```
+### 78
+```
+Best Time to Buy and Sell Stock with Cooldown
+
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:
+
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)
+
+Example:
+Input: [1,2,3,0,2]
+Output: 3 
+Explanation: transactions = [buy, sell, cooldown, buy, sell]
+```
+##### mine
+```
+// buy[i] = max(buy[i-1] , cool[i-1] - p) 卖后不能马上买，所以和sell无关
+// sell[i] = max(buy[i-1] + p , sell[i-1]) i - 1 为cool，则i不能卖，故和cool无关
+// cool[i] = max(cool[i-1], sell[i-1]) cool[i] 必然 <= sell[i] , 因为sell[i]有可能在i时sell => cool[i] = sell[i-1]
+// buy[i] = max(buy[i-1], sell[i-2]-p)
+// sell[i] = max(buy[i-1] + p , sell[i-1])
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        if (prices.size < 2) return 0
+        if (prices.size < 3) return if (prices[0] < prices[1]) prices[1] - prices[0] else 0
+        val buy = IntArray(prices.size)
+        val sell = IntArray(prices.size)
+        buy[0] = -prices[0]
+        buy[1] = if (prices[0] < prices[1]) -prices[0] else -prices[1]
+        sell[0] = 0
+        sell[1] = if (prices[0] < prices[1]) prices[1] - prices[0] else 0
+        var i = 2
+        while (i < prices.size) {
+            buy[i] = Math.max(buy[i - 1], sell[i - 2] - prices[i])
+            sell[i] = Math.max(buy[i - 1] + prices[i], sell[i - 1])
+            i++
+        }
+        return sell[prices.size - 1]
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var sell = 0
+        var buy = Int.MIN_VALUE
+        var preSell = 0
+        var preBuy = buy
+        for(price in prices) {
+            preBuy = buy
+            buy = Math.max(preBuy, preSell - price)
+            preSell = sell
+            sell = Math.max(preBuy + price, preSell)
+        }
+        return sell
+    }
+}
+```
+### 79
+```
+Best Time to Buy and Sell Stock
+
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+
+Note that you cannot sell a stock before you buy one.
+
+Example 1:
+Input: [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+             Not 7-1 = 6, as selling price needs to be larger than buying price.
+
+Example 2:
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+```
+##### mine
+```
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var cost = Int.MAX_VALUE
+        var pro = 0
+        for(price in prices){
+            cost = Math.min(cost, price)
+            pro = Math.max(pro, price - cost)
+        }
+        return pro
+    }
+}
+```
+### 80
+```
+Best Time to Buy and Sell Stock II
+
+Say you have an array prices for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
+
+Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).
+
+Example 1:
+Input: [7,1,5,3,6,4]
+Output: 7
+Explanation: Buy on day 2 (price = 1) and sell on day 3 (price = 5), profit = 5-1 = 4.
+             Then buy on day 4 (price = 3) and sell on day 5 (price = 6), profit = 6-3 = 3.
+
+Example 2:
+Input: [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+             Note that you cannot buy on day 1, buy on day 2 and sell them later, as you are
+             engaging multiple transactions at the same time. You must sell before buying again.
+
+Example 3:
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+
+Constraints:
+1 <= prices.length <= 3 * 10 ^ 4
+0 <= prices[i] <= 10 ^ 4
+```
+##### mine
+```
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        if(prices.size < 2) return 0
+        val buy = IntArray(prices.size)
+        val sell = IntArray(prices.size)
+        buy[0] = -prices[0]
+        sell[0] = 0
+        var i = 1
+        while (i < prices.size) {
+            buy[i] = Math.max(sell[i-1] - prices[i], buy[i-1])
+            sell[i] = Math.max(sell[i-1], buy[i-1] + prices[i])
+            i++
+        }
+        return sell[prices.size - 1]
+    }
+}
+```
