@@ -6662,3 +6662,630 @@ class Solution {
     }
 }
 ```
+### 86
+```
+Three Equal Parts
+
+Given an array A of 0s and 1s, divide the array into 3 non-empty parts such that all of these parts represent the same binary value.
+
+If it is possible, return any [i, j] with i+1 < j, such that:
+
+A[0], A[1], ..., A[i] is the first part;
+A[i+1], A[i+2], ..., A[j-1] is the second part, and
+A[j], A[j+1], ..., A[A.length - 1] is the third part.
+All three parts have equal binary value.
+If it is not possible, return [-1, -1].
+
+Note that the entire part is used when considering what binary value it represents.  For example, [1,1,0] represents 6 in decimal, not 3.  Also, leading zeros are allowed, so [0,1,1] and [1,1] represent the same value.
+
+Example 1:
+Input: [1,0,1,0,1]
+Output: [0,3]
+
+Example 2:
+Input: [1,1,0,1,1]
+Output: [-1,-1]
+ 
+Note:
+3 <= A.length <= 30000
+A[i] == 0 or A[i] == 1
+```
+##### mine 1 Time Limit Exceeded
+```
+class Solution {
+    fun threeEqualParts(A: IntArray): IntArray {
+        for(i in A.indices) {
+            for(j in A.indices.reversed()) {
+                if(i < j && threeEqualPartsHelp(A, i, j)){
+                    return intArrayOf(i, j)
+                }
+            }
+        }
+        return intArrayOf(-1, -1)
+    }
+
+    fun threeEqualPartsHelp(arr: IntArray, startIndex: Int, endIndex: Int): Boolean {
+        var bs = 0
+        while (bs <= startIndex) {
+            if (arr[bs] != 0) break
+            bs++
+        }
+        val be = startIndex
+
+        var ms = startIndex + 1
+        while (ms <= endIndex - 1) {
+            if (arr[ms] != 0) break
+            ms++
+        }
+        val me = endIndex - 1
+
+        var es = endIndex
+        while (es <= arr.size - 1) {
+            if (arr[es] != 0) break
+            es++
+        }
+        val ee = arr.size - 1
+
+        if (bs == startIndex && ms == endIndex - 1 && es == arr.size - 1) return true
+
+        val step = ee - es
+        if (step == me - ms && step == be - bs) {
+            var isTrue = true
+            for (i in 0 until step) {
+                if (!(arr[i + es] == arr[i + ms] && arr[i + es] == arr[i + bs])) {
+                    isTrue = false
+                    break
+                }
+            }
+            return isTrue
+        }
+        return false
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun threeEqualParts(A: IntArray): IntArray {
+        if (A.size < 3) return intArrayOf(-1, -1)
+        var oneCount = 0
+        for (i in A) {
+            if (i == 1) oneCount++
+        }
+
+        if (oneCount == 0) return intArrayOf(0, A.size - 1)
+
+        if (oneCount % 3 != 0) return intArrayOf(-1, -1)
+
+        val k = oneCount / 3
+
+        var start = 0
+        for (i in A) {
+            if (i == 1) {
+                break
+            }
+            start++
+        }
+
+        var count = 0
+        var a = 0
+        for (i in A) {
+            if (i == 1) {
+                count++
+            }
+
+            if (count == k + 1) {
+                break
+            }
+            a++
+        }
+        var mid = a
+
+        count = 0
+        a = 0
+        for (i in A) {
+            if (i == 1) {
+                count++
+            }
+
+            if (count == k * 2 + 1) {
+                break
+            }
+            a++
+        }
+        var end = a
+        while (end < A.size && A[start] == A[mid] && A[mid] == A[end]) {
+            start++
+            mid++
+            end++
+        }
+
+        if (end == A.size) return intArrayOf(start - 1, mid)
+
+        return intArrayOf(-1, -1)
+    }
+}
+```
+### 87
+```
+Maximum Number of Vowels in a Substring of Given Length
+
+Given a string s and an integer k.
+
+Return the maximum number of vowel letters in any substring of s with length k.
+
+Vowel letters in English are (a, e, i, o, u).
+
+Example 1:
+Input: s = "abciiidef", k = 3
+Output: 3
+Explanation: The substring "iii" contains 3 vowel letters.
+
+Example 2:
+Input: s = "aeiou", k = 2
+Output: 2
+Explanation: Any substring of length 2 contains 2 vowels.
+
+Example 3:
+Input: s = "leetcode", k = 3
+Output: 2
+Explanation: "lee", "eet" and "ode" contain 2 vowels.
+
+Example 4:
+Input: s = "rhythms", k = 4
+Output: 0
+Explanation: We can see that s doesn't have any vowel letters.
+
+Example 5:
+Input: s = "tryhard", k = 4
+Output: 1
+
+Constraints:
+1 <= s.length <= 10^5
+s consists of lowercase English letters.
+1 <= k <= s.length
+```
+### mine 1 slow
+```
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        var res = 0
+        val list = LinkedList<Char>()
+        var temp = 0
+        for (c in s) {
+            if (list.size < k) {
+                list.add(c)
+                if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                    temp++
+                }
+            } else {
+                val pre = list.removeAt(0)
+                list.add(c)
+                if (pre == 'a' || pre == 'e' || pre == 'i' || pre == 'o' || pre == 'u') {
+                    temp--
+                }
+                if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                    temp++
+                }
+            }
+            res = Math.max(temp, res)
+        }
+        return res
+    }
+}
+```
+### mine 2 slow
+```
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        var res = 0
+        var temp = 0
+        val set = mutableSetOf<Char>().apply { 
+            add('a')
+            add('e')
+            add('i')
+            add('o')
+            add('u')
+        }
+        for (i in s.indices) {
+            val c = s[i]
+            if (set.contains(c)) {
+                temp++
+            }
+            if (i >= k) {
+                val pre = s[i - k]
+                if (set.contains(pre)) {
+                    temp--
+                }
+            }
+            res = Math.max(temp, res)
+        }
+        return res
+    }
+}
+```
+### 88
+```
+Design Linked List
+
+Design your implementation of the linked list. You can choose to use a singly or doubly linked list.
+A node in a singly linked list should have two attributes: val and next. val is the value of the current node, and next is a pointer/reference to the next node.
+If you want to use the doubly linked list, you will need one more attribute prev to indicate the previous node in the linked list. Assume all nodes in the linked list are 0-indexed.
+
+Implement the MyLinkedList class:
+
+MyLinkedList() Initializes the MyLinkedList object.
+int get(int index) Get the value of the indexth node in the linked list. If the index is invalid, return -1.
+void addAtHead(int val) Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list.
+void addAtTail(int val) Append a node of value val as the last element of the linked list.
+void addAtIndex(int index, int val) Add a node of value val before the indexth node in the linked list. If index equals the length of the linked list, the node will be appended to the end of the linked list. If index is greater than the length, the node will not be inserted.
+void deleteAtIndex(int index) Delete the indexth node in the linked list, if the index is valid.
+
+Example 1:
+Input
+["MyLinkedList", "addAtHead", "addAtTail", "addAtIndex", "get", "deleteAtIndex", "get"]
+[[], [1], [3], [1, 2], [1], [1], [1]]
+Output
+[null, null, null, null, 2, null, 3]
+Explanation
+MyLinkedList myLinkedList = new MyLinkedList();
+myLinkedList.addAtHead(1);
+myLinkedList.addAtTail(3);
+myLinkedList.addAtIndex(1, 2);    // linked list becomes 1->2->3
+myLinkedList.get(1);              // return 2
+myLinkedList.deleteAtIndex(1);    // now the linked list is 1->3
+myLinkedList.get(1);              // return 3
+ 
+
+Constraints:
+0 <= index, val <= 1000
+Please do not use the built-in LinkedList library.
+At most 2000 calls will be made to get, addAtHead, addAtTail,  addAtIndex and deleteAtIndex.
+```
+##### mine
+```
+class MyLinkedList() {
+
+    /** Initialize your data structure here. */
+    class Node(var `val`: Int, var next: Node?)
+
+    private var root = Node(-1, null)
+
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    fun get(index: Int): Int {
+        var cur = root.next
+        var count = 0
+        while (cur != null) {
+            if (count == index) return cur.`val`
+            cur = cur.next
+            count++
+        }
+        return -1
+    }
+
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    fun addAtHead(`val`: Int) {
+        val newNode = Node(`val`, root.next)
+        root.next = newNode
+    }
+
+    /** Append a node of value val to the last element of the linked list. */
+    fun addAtTail(`val`: Int) {
+        val newNode = Node(`val`, null)
+        var cur = root.next
+        if (cur == null) {
+            root.next = newNode
+        } else {
+            while (cur!!.next != null) {
+                cur = cur.next
+            }
+            cur.next = newNode
+        }
+    }
+
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    fun addAtIndex(index: Int, `val`: Int) {
+        if (index == 0) addAtHead(`val`)
+
+        var cur = root.next
+        var pre = root
+        var count = 0
+        while (cur != null) {
+            if (count == index) break
+            pre = cur
+            cur = cur.next
+            count++
+        }
+
+        if (count == index) {
+            val newNode = Node(`val`, cur)
+            pre.next = newNode
+        }
+    }
+
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    fun deleteAtIndex(index: Int) {
+        var cur = root.next
+        var pre = root
+        var count = 0
+        while (cur != null) {
+            if (count == index) break
+            pre = cur
+            cur = cur.next
+            count++
+        }
+        if (cur != null) {
+            pre.next = cur.next
+            cur.next = null
+        }
+    }
+
+}
+```
+### 89
+```
+Reformat Date
+
+Given a date string in the form Day Month Year, where:
+    Day is in the set {"1st", "2nd", "3rd", "4th", ..., "30th", "31st"}.
+    Month is in the set {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}.
+    Year is in the range [1900, 2100].
+Convert the date string to the format YYYY-MM-DD, where:
+    YYYY denotes the 4 digit year.
+    MM denotes the 2 digit month.
+    DD denotes the 2 digit day.
+
+Example 1:
+Input: date = "20th Oct 2052"
+Output: "2052-10-20"
+
+Example 2:
+Input: date = "6th Jun 1933"
+Output: "1933-06-06"
+
+Example 3:
+Input: date = "26th May 1960"
+Output: "1960-05-26"
+
+Constraints:
+The given dates are guaranteed to be valid, so no error handling is necessary.
+```
+##### mine
+```
+class Solution {
+    fun reformatDate(date: String): String {
+        val monthMap = mutableMapOf(
+            Pair("Jan", "01"),
+            Pair("Feb", "02"),
+            Pair("Mar", "03"),
+            Pair("Apr", "04"),
+            Pair("May", "05"),
+            Pair("Jun", "06"),
+            Pair("Jul", "07"),
+            Pair("Aug", "08"),
+            Pair("Sep", "09"),
+            Pair("Oct", "10"),
+            Pair("Nov", "11"),
+            Pair("Dec", "12")
+        )
+        val temp = date.split(" ")
+        val day = temp[0].toDay() ?: 0
+        return if (day < 10) "${temp[2]}-${monthMap[temp[1]]}-0${temp[0].toDay()}" else "${temp[2]}-${monthMap[temp[1]]}-${temp[0].toDay()}"
+    }
+
+    fun String.toDay(): Int? {
+        return try {
+            when {
+                contains("st") -> {
+                    split("st")[0].toInt()
+                }
+                contains("nd") -> {
+                    split("nd")[0].toInt()
+                }
+                contains("rd") -> {
+                    split("rd")[0].toInt()
+                }
+                contains("th") -> {
+                    split("th")[0].toInt()
+                }
+                else -> null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+}
+```
+### 90
+```
+Minimum Operations to Make Array Equal
+
+You have an array arr of length n where arr[i] = (2 * i) + 1 for all valid values of i (i.e. 0 <= i < n).
+
+In one operation, you can select two indices x and y where 0 <= x, y < n and subtract 1 from arr[x] and add 1 to arr[y] (i.e. perform arr[x] -=1 and arr[y] += 1). The goal is to make all the elements of the array equal. It is guaranteed that all the elements of the array can be made equal using some operations.
+
+Given an integer n, the length of the array. Return the minimum number of operations needed to make all the elements of arr equal.
+
+Example 1:
+Input: n = 3
+Output: 2
+Explanation: arr = [1, 3, 5]
+First operation choose x = 2 and y = 0, this leads arr to be [2, 3, 4]
+In the second operation choose x = 2 and y = 0 again, thus arr = [3, 3, 3].
+
+Example 2:
+Input: n = 6
+Output: 9
+ 
+Constraints:
+1 <= n <= 10^4
+```
+##### mine
+```
+class Solution {
+    fun minOperations(n: Int): Int {
+        var res = 0
+        if(n % 2 == 0) {
+            val right = n / 2
+            val left = right - 1
+            res += 1
+            val midValue = right + left + 1
+            for(i in 0 until left) {
+                res += midValue - (i * 2 + 1)
+            }
+        } else {
+            val mid = n / 2
+            val midValue = mid * 2 + 1
+            for(i in 0 until mid) {
+                res += midValue - (i * 2 + 1)
+            }
+        }
+        return res
+    }
+}
+```
+### 91
+```
+Validate Binary Tree Nodes
+
+You have n binary tree nodes numbered from 0 to n - 1 where node i has two children leftChild[i] and rightChild[i], return true if and only if all the given nodes form exactly one valid binary tree.
+
+If node i has no left child then leftChild[i] will equal -1, similarly for the right child.
+
+Note that the nodes have no values and that we only use the node numbers in this problem.
+
+Example 1:
+Input: n = 4, leftChild = [1,-1,3,-1], rightChild = [2,-1,-1,-1]
+Output: true
+
+Example 2:
+Input: n = 4, leftChild = [1,-1,3,-1], rightChild = [2,3,-1,-1]
+Output: false
+
+Example 3:
+Input: n = 2, leftChild = [1,0], rightChild = [-1,-1]
+Output: false
+
+Example 4:
+Input: n = 6, leftChild = [1,-1,-1,4,-1,-1], rightChild = [2,-1,-1,5,-1,-1]
+Output: false
+ 
+Constraints:
+1 <= n <= 10^4
+leftChild.length == rightChild.length == n
+-1 <= leftChild[i], rightChild[i] <= n - 1
+```
+##### mine
+```
+fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        val cnt = IntArray(n)
+        for (i in 0 until n) {
+            if (leftChild[i] >= 0) {
+                cnt[leftChild[i]] += 1
+            }
+            if (rightChild[i] >= 0) {
+                cnt[rightChild[i]] += 1
+            }
+        }
+        var res = 0
+        for (i in 0 until n) {
+            if (cnt[i] > 1) {
+                return false
+            }
+            if(cnt[i] == 0) res++
+        }
+        return res == 1
+    }
+```
+### 92
+```
+Minimum Flips to Make a OR b Equal to c
+
+Given 3 positives numbers a, b and c. Return the minimum flips required in some bits of a and b to make ( a OR b == c ). (bitwise OR operation).
+Flip operation consists of change any single bit 1 to 0 or change the bit 0 to 1 in their binary representation.
+
+Example 1:
+Input: a = 2, b = 6, c = 5
+Output: 3
+Explanation: After flips a = 1 , b = 4 , c = 5 such that (a OR b == c)
+
+Example 2:
+Input: a = 4, b = 2, c = 7
+Output: 1
+
+Example 3:
+Input: a = 1, b = 2, c = 3
+Output: 0
+ 
+Constraints:
+1 <= a <= 10^9
+1 <= b <= 10^9
+1 <= c <= 10^9
+```
+##### mine
+```
+class Solution {
+    fun minFlips(a: Int, b: Int, c: Int): Int {
+        val d = a xor c
+        val e = b xor c
+        var sd = Integer.toBinaryString(d)
+        var se = Integer.toBinaryString(e)
+        var sc = Integer.toBinaryString(c)
+
+        val max = Math.max(sd.length, Math.max(se.length, sc.length))
+        if(sd.length < max){
+            var a = ""
+            var i = sd.length
+            while (i < max) {
+                a += "0"
+                i++
+            }
+            sd = a + sd
+        }
+        if(se.length < max){
+            var a = ""
+            var i = se.length
+            while (i < max) {
+                a += "0"
+                i++
+            }
+            se = a + se
+        }
+        if(sc.length < max){
+            var a = ""
+            var i = sc.length
+            while (i < max) {
+                a += "0"
+                i++
+            }
+            sc = a + sc
+        }
+
+        var i = sd.length - 1
+        var j = se.length - 1
+        var k = sc.length - 1
+        var count = 0
+        while (i >= 0 && j >= 0) {
+            if(sd[i] == se[j]) {
+                if(sd[i] == '1') {
+                    val temp = if(k >= 0) sc[k] else '0'
+                    if(temp == '1') {
+                        count++
+                    } else {
+                        count += 2
+                    }
+                }
+            } else {
+                val temp = if(k >= 0) sc[k] else '0'
+                if(temp == '0') {
+                    count++
+                }
+            }
+            i--
+            j--
+            k--
+        }
+        return count
+    }
+}
+```
