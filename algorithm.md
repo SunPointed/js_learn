@@ -7289,3 +7289,621 @@ class Solution {
     }
 }
 ```
+##### like
+```
+class Solution {
+    fun minFlips(a: Int, b: Int, c: Int): Int {
+        var ans = 0
+        val ab = a or b
+        val equal = ab xor c
+        for (i in 0..30) {
+            val mask = 1 shl i
+            if (equal and mask > 0)
+                ans += if (a and mask === b and mask && c and mask === 0) 2 else 1
+        }
+        return ans
+    }
+}
+```
+### 93
+```
+Range Sum Query - Mutable
+
+Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+
+The update(i, val) function modifies nums by updating the element at index i to val.
+
+Example:
+Given nums = [1, 3, 5]
+sumRange(0, 2) -> 9
+update(1, 2)
+sumRange(0, 2) -> 8
+
+Constraints:
+The array is only modifiable by the update function.
+You may assume the number of calls to update and sumRange function is distributed evenly.
+0 <= i <= j <= nums.length - 1
+```
+##### mine
+```
+class NumArray(nums: IntArray) {
+
+    private val mNums = nums
+
+    fun update(i: Int, `val`: Int) {
+        if (i in mNums.indices) {
+            mNums[i] = `val`
+        }
+    }
+
+    fun sumRange(i: Int, j: Int): Int {
+        var res = 0
+        var a = i
+        while (a <= j) {
+            res += mNums[a]
+            a++
+        }
+        return res
+    }
+
+}
+```
+##### like
+```
+class NumArray(nums: IntArray) {
+    class SegmentTreeNode(var start: Int, var end: Int) {
+        var left: SegmentTreeNode? = null
+        var right: SegmentTreeNode? = null
+        var sum = 0
+    }
+
+    var root: SegmentTreeNode? = null
+    
+    init {
+        root = buildTree(nums, 0, nums.size - 1)
+    }
+
+    private fun buildTree(nums: IntArray, start: Int, end: Int): SegmentTreeNode? {
+        return if (start > end) {
+            null
+        } else {
+            val ret = SegmentTreeNode(start, end)
+            if (start == end) {
+                ret.sum = nums[start]
+            } else {
+                val mid = start + (end - start) / 2
+                ret.left = buildTree(nums, start, mid)
+                ret.right = buildTree(nums, mid + 1, end)
+                ret.sum = ret.left!!.sum + ret.right!!.sum
+            }
+            ret
+        }
+    }
+
+    fun update(i: Int, `val`: Int) {
+        update(root, i, `val`)
+    }
+
+    fun update(root: SegmentTreeNode?, pos: Int, `val`: Int) {
+        if (root!!.start == root.end) {
+            root.sum = `val`
+        } else {
+            val mid = root.start + (root.end - root.start) / 2
+            if (pos <= mid) {
+                update(root.left, pos, `val`)
+            } else {
+                update(root.right, pos, `val`)
+            }
+            root.sum = root.left!!.sum + root.right!!.sum
+        }
+    }
+
+    fun sumRange(i: Int, j: Int): Int {
+        return sumRange(root, i, j)
+    }
+
+    fun sumRange(root: SegmentTreeNode?, start: Int, end: Int): Int {
+        return if (root!!.end == end && root.start == start) {
+            root.sum
+        } else {
+            val mid = root.start + (root.end - root.start) / 2
+            when {
+                end <= mid -> {
+                    sumRange(root.left, start, end)
+                }
+                start >= mid + 1 -> {
+                    sumRange(root.right, start, end)
+                }
+                else -> {
+                    sumRange(root.right, mid + 1, end) + sumRange(root.left, start, mid)
+                }
+            }
+        }
+    }
+}
+```
+### 94
+```
+Design HashMap
+
+Design a HashMap without using any built-in hash table libraries.
+
+To be specific, your design should include these functions:
+
+put(key, value) : Insert a (key, value) pair into the HashMap. If the value already exists in the HashMap, update the value.
+get(key): Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key.
+remove(key) : Remove the mapping for the value key if this map contains the mapping for the key.
+
+Example:
+
+MyHashMap hashMap = new MyHashMap();
+hashMap.put(1, 1);          
+hashMap.put(2, 2);         
+hashMap.get(1);            // returns 1
+hashMap.get(3);            // returns -1 (not found)
+hashMap.put(2, 1);          // update the existing value
+hashMap.get(2);            // returns 1 
+hashMap.remove(2);          // remove the mapping for 2
+hashMap.get(2);            // returns -1 (not found) 
+
+Note:
+
+All keys and values will be in the range of [0, 1000000].
+The number of operations will be in the range of [1, 10000].
+Please do not use the built-in HashMap library.
+```
+##### mine
+```
+class MyHashMap() {
+
+    /** Initialize your data structure here. */
+    class Node(val rawKey: Int, var value: Int, var next: Node? = null)
+
+    private val SIZE = 10000
+    private val array = Array<Node?>(SIZE) {
+        null
+    }
+
+    /** value will always be non-negative. */
+    fun put(key: Int, value: Int) {
+        val hash = key % SIZE
+        var cur = array[hash]
+        if (cur == null) {
+            array[hash] = Node(key, value)
+        } else {
+            var pre: Node? = null
+            while (cur != null) {
+                if (cur.rawKey == key) {
+                    cur.value = value
+                    return
+                }
+                pre = cur
+                cur = cur.next
+            }
+            pre?.next = Node(key, value)
+        }
+    }
+
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    fun get(key: Int): Int {
+        val hash = key % SIZE
+        var cur = array[hash]
+
+        while (cur != null) {
+            if (cur.rawKey == key) return cur.value
+            cur = cur.next
+        }
+
+        return -1
+    }
+
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    fun remove(key: Int) {
+        val hash = key % SIZE
+        var cur = array[hash]
+        var pre: Node? = null
+
+        while (cur != null) {
+            if (cur.rawKey == key) {
+                if (pre == null) {
+                    array[hash] = cur.next
+                    cur.next = null
+                } else {
+                    pre.next = cur.next
+                    cur.next = null
+                }
+            }
+            pre = cur
+            cur = cur.next
+        }
+    }
+
+}
+```
+### 95
+```
+Longest Chunked Palindrome Decomposition
+
+Return the largest possible k such that there exists a_1, a_2, ..., a_k such that:
+    Each a_i is a non-empty string;
+    Their concatenation a_1 + a_2 + ... + a_k is equal to text;
+    For all 1 <= i <= k,  a_i = a_{k+1 - i}.
+
+Example 1:
+Input: text = "ghiabcdefhelloadamhelloabcdefghi"
+Output: 7
+Explanation: We can split the string on "(ghi)(abcdef)(hello)(adam)(hello)(abcdef)(ghi)".
+
+Example 2:
+Input: text = "merchant"
+Output: 1
+Explanation: We can split the string on "(merchant)".
+
+Example 3:
+Input: text = "antaprezatepzapreanta"
+Output: 11
+Explanation: We can split the string on "(a)(nt)(a)(pre)(za)(tpe)(za)(pre)(a)(nt)(a)".
+
+Example 4:
+Input: text = "aaa"
+Output: 3
+Explanation: We can split the string on "(a)(a)(a)".
+
+Constraints:
+text consists only of lowercase English characters.
+1 <= text.length <= 1000
+```
+##### mine
+```
+class Solution {
+    fun longestDecomposition(text: String): Int {
+        return longestDecompositionHelper(text, 0, text.length - 1)
+    }
+
+    fun longestDecompositionHelper(text: String, startIndex: Int, endIndex: Int): Int {
+        if (startIndex == endIndex) return 1
+        if (startIndex > endIndex) return 0
+        if (text.isEmpty()) return 0
+        if (text.length == 1) return 1
+
+        val len = endIndex - startIndex
+        if (len <= 0) return 0
+
+        var res = 0
+        val half = if (len % 2 == 0) len / 2 - 1 else len / 2
+        for (i in startIndex..(startIndex + half)) {
+            var valid = true
+            for (j in startIndex..i) {
+                val a = text[j]
+                val b = text[endIndex - i + j]
+                if (a != b) {
+                    valid = false
+                    break
+                }
+            }
+            if (valid) {
+                res += 2
+                res += longestDecompositionHelper(text, i + 1, endIndex - (i - startIndex) - 1)
+                break
+            }
+        }
+        if (res == 0) res++
+        return res
+    }
+}
+```
+### 96
+```
+Consecutive Characters
+
+Given a string s, the power of the string is the maximum length of a non-empty substring that contains only one unique character.
+
+Return the power of the string.
+
+Example 1:
+Input: s = "leetcode"
+Output: 2
+Explanation: The substring "ee" is of length 2 with the character 'e' only.
+
+Example 2:
+Input: s = "abbcccddddeeeeedcba"
+Output: 5
+Explanation: The substring "eeeee" is of length 5 with the character 'e' only.
+
+Example 3:
+Input: s = "triplepillooooow"
+Output: 5
+
+Example 4:
+Input: s = "hooraaaaaaaaaaay"
+Output: 11
+
+Example 5:
+Input: s = "tourist"
+Output: 1
+ 
+Constraints:
+1 <= s.length <= 500
+s contains only lowercase English letters.
+```
+##### mine slow
+```
+class Solution {
+    fun maxPower(s: String): Int {
+        val arr = IntArray(26) { 0 }
+        var pre = '0'
+        var max = 0
+        for (c in s) {
+            if (pre != c) {
+                arr[c - 'a'] = 0
+            }
+            arr[c - 'a']++
+            max = Math.max(max, arr[c - 'a'])
+            pre = c
+        }
+        return max
+    }
+}
+```
+### 97
+```
+Palindrome Partitioning III
+
+You are given a string s containing lowercase letters and an integer k. You need to :
+
+First, change some characters of s to other lowercase English letters.
+Then divide s into k non-empty disjoint substrings such that each substring is palindrome.
+Return the minimal number of characters that you need to change to divide the string.
+
+Example 1:
+Input: s = "abc", k = 2
+Output: 1
+Explanation: You can split the string into "ab" and "c", and change 1 character in "ab" to make it palindrome.
+
+Example 2:
+Input: s = "aabbc", k = 3
+Output: 0
+Explanation: You can split the string into "aa", "bb" and "c", all of them are palindrome.
+
+Example 3:
+Input: s = "leetcode", k = 8
+Output: 0
+
+Constraints:
+1 <= k <= s.length <= 100.
+s only contains lowercase English letters.
+```
+##### like
+```
+class Solution {
+    fun palindromePartition(s: String, k: Int): Int {
+        val changes = Array(s.length) {
+            IntArray(s.length)
+        }
+        for (i in s.indices) {
+            for (j in (i + 1) until s.length) {
+                changes[i][j] = getChanges(s, i, j)
+            }
+        }
+
+        val dp = Array(k + 1) {
+            IntArray(s.length)
+        }
+        for (i in s.indices) {
+            dp[1][i] = changes[0][i]
+        }
+        // dp[3][5] = Math.min(dp[2][4] + toPal[5][5], dp[2][3] + toPal[4][5], dp[2][2] + toPal[3][5], dp[2][1] + toPal[2][5])
+        for (i in 2..k) {
+            for (end in (i - 1) until s.length) {
+                var min = s.length
+                for (start in (end - 1) downTo 0) {
+                    min = Math.min(min, dp[i - 1][start] + changes[start + 1][end])
+                }
+                dp[i][end] = min
+            }
+        }
+        return dp[k][s.length - 1]
+    }
+
+    fun getChanges(str: String, startIndex: Int, endIndex: Int): Int {
+        var res = 0
+        var start = startIndex
+        var end = endIndex
+        while (start < end) {
+            if (str[start++] != str[end--]) res++
+        }
+        return res
+    }
+}
+```
+### 98
+```
+Minimum Number of Days to Eat N Oranges
+
+There are n oranges in the kitchen and you decided to eat some of these oranges every day as follows:
+
+Eat one orange.
+If the number of remaining oranges (n) is divisible by 2 then you can eat  n/2 oranges.
+If the number of remaining oranges (n) is divisible by 3 then you can eat  2*(n/3) oranges.
+You can only choose one of the actions per day.
+
+Return the minimum number of days to eat n oranges.
+
+Example 1:
+Input: n = 10
+Output: 4
+Explanation: You have 10 oranges.
+Day 1: Eat 1 orange,  10 - 1 = 9.  
+Day 2: Eat 6 oranges, 9 - 2*(9/3) = 9 - 6 = 3. (Since 9 is divisible by 3)
+Day 3: Eat 2 oranges, 3 - 2*(3/3) = 3 - 2 = 1. 
+Day 4: Eat the last orange  1 - 1  = 0.
+You need at least 4 days to eat the 10 oranges.
+
+Example 2:
+Input: n = 6
+Output: 3
+Explanation: You have 6 oranges.
+Day 1: Eat 3 oranges, 6 - 6/2 = 6 - 3 = 3. (Since 6 is divisible by 2).
+Day 2: Eat 2 oranges, 3 - 2*(3/3) = 3 - 2 = 1. (Since 3 is divisible by 3)
+Day 3: Eat the last orange  1 - 1  = 0.
+You need at least 3 days to eat the 6 oranges.
+
+Example 3:
+Input: n = 1
+Output: 1
+
+Example 4:
+Input: n = 56
+Output: 6
+ 
+Constraints:
+1 <= n <= 2*10^9
+```
+##### mine 1  Time Limit Exceeded
+```
+class Solution {
+    fun minDays(n: Int): Int {
+        if (n == 1) return 1
+        val a = if(n % 3 == 0) minDays(n/3) else Int.MAX_VALUE
+        val b = if(n % 2 == 0) minDays((n/2)) else Int.MAX_VALUE
+        val c = minDays(n - 1)
+        val res = Math.min(a, Math.min(b, c))
+        return res + 1
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    val map = mutableMapOf<Int, Int>()
+    fun minDays(n: Int): Int {
+        if (n <= 1) return n
+        if (!map.containsKey(n)) {
+            val a = n % 3 + minDays(n / 3)
+            val b = n % 2 + minDays(n / 2)
+            map[n] = Math.min(a, b) + 1
+        }
+        return map[n]!!
+    }
+}
+```
+### 99
+```
+Check If Array Pairs Are Divisible by k
+
+Given an array of integers arr of even length n and an integer k.
+
+We want to divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k.
+
+Return True If you can find a way to do that or False otherwise.
+
+Example 1:
+Input: arr = [1,2,3,4,5,10,6,7,8,9], k = 5
+Output: true
+Explanation: Pairs are (1,9),(2,8),(3,7),(4,6) and (5,10).
+
+Example 2:
+Input: arr = [1,2,3,4,5,6], k = 7
+Output: true
+Explanation: Pairs are (1,6),(2,5) and(3,4).
+
+Example 3:
+Input: arr = [1,2,3,4,5,6], k = 10
+Output: false
+Explanation: You can try all possible pairs to see that there is no way to divide arr into 3 pairs each with sum divisible by 10.
+
+Example 4:
+Input: arr = [-10,10], k = 2
+Output: true
+
+Example 5:
+Input: arr = [-1,1,-2,2,-3,3,-4,4], k = 3
+Output: true
+
+Constraints:
+arr.length == n
+1 <= n <= 10^5
+n is even.
+-10^9 <= arr[i] <= 10^9
+1 <= k <= 10^5
+```
+##### mine
+```
+class Solution {
+    fun canArrange(arr: IntArray, k: Int): Boolean {
+        val frequency = IntArray(k)
+        for (a in arr) {
+            var num = a % k
+            if (num < 0) num += k
+            frequency[num]++
+        }
+        if (frequency[0] % 2 != 0) return false
+
+        for (i in 1..k / 2) if (frequency[i] != frequency[k - i]) return false
+
+        return true
+    }
+}
+```
+### 100
+```
+Perfect Squares
+
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+Example 1:
+Input: n = 12
+Output: 3 
+Explanation: 12 = 4 + 4 + 4.
+
+Example 2:
+Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+```
+##### mine
+```
+class Solution {
+    val numSquares = mutableMapOf<Int, Int>().apply {
+        put(0, 0)
+        put(1, 1)
+        put(2, 2)
+        put(3, 3)
+    }
+    fun numSquares(n: Int): Int {
+        if(numSquares.containsKey(n)) return numSquares[n]!!
+        val max = Math.sqrt(n.toDouble()).toInt()
+        if(max * max == n){
+            numSquares[n] = 1
+            return 1
+        }
+        var res = n
+        for(i in max downTo 1) {
+            res = Math.min(res, 1 + numSquares(n - i * i))
+        }
+        numSquares[n] = res
+        return res
+    }
+}
+```
+##### like
+```
+// dp[n] = Min{ dp[n - i*i] + 1 },  n - i*i >=0 && i >= 1
+class Solution {
+    fun numSquares(n: Int): Int {
+        val dp = IntArray(n + 1)
+        Arrays.fill(dp, Int.MAX_VALUE)
+        dp[0] = 0
+        for (i in 1..n) {
+            var min = Int.MAX_VALUE
+            var j = 1
+            while (i - j * j >= 0) {
+                min = Math.min(min, dp[i - j * j] + 1)
+                ++j
+            }
+            dp[i] = min
+        }
+        return dp[n]
+    }
+}
+```
