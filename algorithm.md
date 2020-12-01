@@ -7907,3 +7907,295 @@ class Solution {
     }
 }
 ```
+### 101
+```
+Tiling a Rectangle with the Fewest Squares
+
+Given a rectangle of size n x m, find the minimum number of integer-sided squares that tile the rectangle.
+
+Example 1:
+Input: n = 2, m = 3
+Output: 3
+Explanation: 3 squares are necessary to cover the rectangle.
+2 (squares of 1x1)
+1 (square of 2x2)
+
+Example 2:
+Input: n = 5, m = 8
+Output: 5
+
+Example 3:
+Input: n = 11, m = 13
+Output: 6
+
+Constraints:
+1 <= n <= 13
+1 <= m <= 13
+```
+### mine ulgy but fast ...
+```
+class Solution {
+    val tilingRectangle = mutableMapOf<String, Int>()
+    fun tilingRectangle(n: Int, m: Int): Int {
+        val isNBigger = n > m
+        val max = if (isNBigger) n else m
+        val min = if (isNBigger) m else n
+        val key = "$max-$min"
+        if (tilingRectangle.containsKey(key)) {
+            return tilingRectangle[key]!!
+        }
+        if (max == min) {
+            tilingRectangle[key] = 1
+            return 1
+        }
+        if (min == 1) {
+            tilingRectangle[key] = max
+            return max
+        }
+        var res = Int.MAX_VALUE
+        val list = mutableListOf<Pos>()
+        for (i in 1..min) {
+            if(i < min) {
+                list.clear()
+                list.add(Pos(0, 0))
+                list.add(Pos(0, min - i))
+                list.add(Pos(i, min - i))
+                list.add(Pos(i, min))
+                list.add(Pos(max, min))
+                list.add(Pos(max, 0))
+                res = Math.min(res, 1 + tilingRectangleHelper1(list))
+            } else {
+                res = Math.min(res, 1 + tilingRectangle(min, max - min))
+            }
+        }
+        tilingRectangle[key] = res
+        return res
+    }
+
+    class Pos(var x: Int, var y: Int)
+
+    //  ** -> 2 4
+    //   *
+    fun tilingRectangleHelper1(posList: MutableList<Pos>): Int {
+        if (posList[0].x == posList[2].x || posList[2].x == posList[4].x
+            || posList[2].y == posList[4].y || posList[2].y == posList[0].y
+        ) return tilingRectangle(
+            posList[5].x - posList[0].x,
+            posList[4].y - posList[5].y
+        )
+        val l = posList[1].y - posList[0].y
+        val b = posList[4].x - posList[3].x
+
+        val t = posList[5].x - posList[0].x
+        val r = posList[4].y - posList[5].y
+        
+        if (l <= b) {
+            // l < b 一定小于 t
+            if (l == t - b) {
+                return 1 + tilingRectangle(b, r)
+            } else if (l < t - b) {
+                return 1 + tilingRectangleHelper1(posList.apply {
+                    this[0].x += l
+                    this[1].x += l
+                })
+            } else {
+                return 1 + tilingRectangleHelper4(posList.apply {
+                    this[0].x += l
+                    this[1].x += l
+                })
+            }
+        } else {
+            // b < l 一定小于 r
+            if (b == r - l) {
+                return 1 + tilingRectangle(l, t)
+            } else if (b < r - l) {
+                return 1 + tilingRectangleHelper1(posList.apply {
+                    this[3].y -= b
+                    this[4].y -= b
+                })
+            } else {
+                return 1 + tilingRectangleHelper2(posList.apply {
+                    this[3].y -= b
+                    this[4].y -= b
+                })
+            }
+        }
+    }
+
+    //      ** -> 3 1
+    //      *
+    fun tilingRectangleHelper2(posList: MutableList<Pos>): Int {
+        if (posList[1].y == posList[3].y || posList[3].y == posList[5].y
+            || posList[5].x == posList[3].x || posList[3].x == posList[1].x
+        ) return tilingRectangle(
+            posList[5].x - posList[0].x,
+            posList[1].y - posList[0].y
+        )
+
+        val r = posList[4].y - posList[5].y
+        val b = posList[2].x - posList[1].x
+
+        val t = posList[5].x - posList[0].x
+        val l = posList[1].y - posList[0].y
+
+        if (r <= b) {
+            // r < b 一定小于 t
+            if (r == t - b) {
+                return 1 + tilingRectangle(b, l)
+            } else if (r < t - b) {
+                return 1 + tilingRectangleHelper2(posList.apply {
+                    this[5].x -= r
+                    this[4].x -= r
+                })
+            } else {
+                return 1 + tilingRectangleHelper3(posList.apply {
+                    this[5].x -= r
+                    this[4].x -= r
+                })
+            }
+        } else {
+            // b < r 一定小于 l
+            if (b == l - r) {
+                return 1 + tilingRectangle(r, t)
+            } else if (b < l - r) {
+                return 1 + tilingRectangleHelper2(posList.apply {
+                    this[1].y -= b
+                    this[2].y -= b
+                })
+            } else {
+                return 1 + tilingRectangleHelper1(posList.apply {
+                    this[1].y -= b
+                    this[2].y -= b
+                })
+            }
+        }
+    }
+
+    //     *  -> 4 2  4 need convert posList
+    //     **
+    fun tilingRectangleHelper3(posList: MutableList<Pos>): Int {
+        if (posList[4].x == posList[2].x || posList[4].x == posList[0].x
+            || posList[4].y == posList[2].y || posList[4].y == posList[0].y
+        ) return tilingRectangle(
+            posList[2].x - posList[1].x,
+            posList[1].y - posList[0].y
+        )
+
+        val t = posList[5].x - posList[0].x
+        val r = posList[2].y - posList[3].y
+
+        val l = posList[1].y - posList[0].y
+        val b = posList[2].x - posList[1].x
+        
+        if (t <= r) {
+            // t < r 一定小于 l
+            if (t == l - r) {
+                return 1 + tilingRectangle(b, r)
+            } else if (t < l - r) {
+                return 1 + tilingRectangleHelper3(posList.apply {
+                    this[0].y += t
+                    this[5].y += t
+                })
+            } else {
+                return 1 + tilingRectangleHelper4(posList.apply {
+                    this[0].y += t
+                    this[5].y += t
+                    posList.add(0, removeAt(posList.size - 1))
+                    posList.add(0, removeAt(posList.size - 1))
+                })
+            }
+        } else {
+            // r < t 一定小于 b
+            if (r == b - t) {
+                return 1 + tilingRectangle(l, t)
+            } else if (r < b - t) {
+                return 1 + tilingRectangleHelper3(posList.apply {
+                    this[3].x -= r
+                    this[2].x -= r
+                })
+            } else {
+                return 1 + tilingRectangleHelper2(posList.apply {
+                    this[3].x -= r
+                    this[2].x -= r
+                })
+            }
+        }
+    }
+
+    //     * -> 1 3  3 need convert posList
+    //    **
+    fun tilingRectangleHelper4(posList: MutableList<Pos>): Int {
+        if (posList[1].x == posList[5].x || posList[1].x == posList[3].x
+            || posList[1].y == posList[5].y || posList[1].y == posList[3].y
+        ) return tilingRectangle(
+            posList[4].x - posList[3].x,
+            posList[4].y - posList[5].y
+        )
+
+        val l = posList[3].y - posList[2].y
+        val t = posList[5].x - posList[0].x
+
+        val b = posList[4].x - posList[3].x
+        val r = posList[4].y - posList[5].y
+        
+        if (l <= t) {
+            // l < t 一定小于 b
+            if (l == b - t) {
+                return 1 + tilingRectangle(t, r)
+            } else if (l < b - t) {
+                return 1 + tilingRectangleHelper4(posList.apply {
+                    this[2].x += l
+                    this[3].x += l
+                })
+            } else {
+                return 1 + tilingRectangleHelper1(posList.apply {
+                    this[2].x += l
+                    this[3].x += l
+                })
+            }
+        } else {
+            // t < l 一定小于 r
+            if (t == r - l) {
+                return 1 + tilingRectangle(l, b)
+            } else if (t < r - l) {
+                return 1 + tilingRectangleHelper4(posList.apply {
+                    this[0].y += t
+                    this[5].y += t
+                })
+            } else {
+                return 1 + tilingRectangleHelper3(posList.apply {
+                    this[0].y += t
+                    this[5].y += t
+                    posList.add(posList.removeAt(0))
+                    posList.add(posList.removeAt(0))
+                })
+            }
+        }
+    }
+}
+```
+### 102
+```
+Shortest Unsorted Continuous Subarray
+
+Given an integer array nums, you need to find one continuous subarray that if you only sort this subarray in ascending order, then the whole array will be sorted in ascending order.
+
+Return the shortest such subarray and output its length.
+
+Example 1:
+Input: nums = [2,6,4,8,10,9,15]
+Output: 5
+Explanation: You need to sort [6, 4, 8, 10, 9] in ascending order to make the whole array sorted in ascending order.
+
+Example 2:
+Input: nums = [1,2,3,4]
+Output: 0
+
+Example 3:
+Input: nums = [1]
+Output: 0
+
+Constraints:
+1 <= nums.length <= 104
+-105 <= nums[i] <= 105
+```
