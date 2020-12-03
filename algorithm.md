@@ -1,7 +1,5 @@
-### 1
+### 1 Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
 ```
-Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
-
 For example, given n = 3, a solution set is:
 
 [
@@ -72,10 +70,8 @@ class Solution {
     }
 }
 ```
-### 2
+### 2 Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
 ```
-Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
-
 Each number in candidates may only be used once in the combination.
 
 Note:
@@ -206,10 +202,8 @@ class Solution {
     }
 }
 ```
-### 3
+### 3 Multiply Strings
 ```
-Multiply Strings
-
 Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
 
 Input: num1 = "2", num2 = "3"
@@ -313,7 +307,7 @@ class Solution {
     }
 }
 ```
-### 4
+### 4 Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 ```
 Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 
@@ -361,10 +355,8 @@ class Solution {
     }
 }
 ```
-### 5
+### 5 Implement pow(x, n), which calculates x raised to the power n (xn).
 ```
-Implement pow(x, n), which calculates x raised to the power n (xn).
-
 Input: 2.00000, 10
 Output: 1024.00000
 
@@ -391,10 +383,8 @@ class Solution {
     }
 }
 ```
-### 6
+### 6 Write a program to solve a Sudoku puzzle by filling the empty cells.
 ```
-Write a program to solve a Sudoku puzzle by filling the empty cells.
-
 A sudoku solution must satisfy all of the following rules:
 
 Each of the digits 1-9 must occur exactly once in each row.
@@ -487,10 +477,8 @@ class Solution {
     }
 }
 ```
-### 7
+### 7 Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
 ```
-Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
-
 Example:
 Input:
 [
@@ -602,10 +590,8 @@ class Solution {
     }
 }
 ```
-### 8
+### 8 Given an unsorted integer array, find the smallest missing positive integer.
 ```
-Given an unsorted integer array, find the smallest missing positive integer.
-
 Input: [1,2,0]
 Output: 3
 
@@ -745,10 +731,8 @@ class Solution {
     }
 }
 ```
-### 9
+### 9 Given an array of strings, group anagrams together.
 ```
-Given an array of strings, group anagrams together.
-
 Input: ["eat", "tea", "tan", "ate", "nat", "bat"],
 Output:
 [
@@ -780,10 +764,8 @@ class Solution {
     }
 }
 ```
-### 10
+### 10 Substring with Concatenation of All Words
 ```
-Substring with Concatenation of All Words
-
 You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
 
 Example 1:
@@ -849,10 +831,8 @@ class Solution {
     }
 }
 ```
-### 11
+### 11 Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
 ```
-Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
-
 Note:
 The solution set must not contain duplicate triplets.
 
@@ -905,9 +885,8 @@ class Solution {
     }
 }
 ```
-### 12
+### 12 Construct Binary Search Tree from Preorder Traversal
 ```
- Construct Binary Search Tree from Preorder Traversal
  根据前序遍历结果回复二叉搜索树
  https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/
 
@@ -987,10 +966,8 @@ class Solution {
     }
 }
 ```
-### 13
+### 13 Reorder Routes to Make All Paths Lead to the City Zero
 ```
-Reorder Routes to Make All Paths Lead to the City Zero
-
 https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/
 
 There are n cities numbered from 0 to n-1 and n-1 roads such that there is only one way to travel between two different cities (this network form a tree). Last year, The ministry of transport decided to orient the roads in one direction because they are too narrow.
@@ -1044,10 +1021,8 @@ class Solution {
     }
 }
 ```
-### 14
+### 14 Scramble String
 ```
-Scramble String
-
 Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
 
 Below is one possible representation of s1 = "great":
@@ -1115,10 +1090,8 @@ class Solution {
     }
 }
 ```
-### 15
+### 15 Domino and Tromino Tiling
 ```
-Domino and Tromino Tiling
-
 We have two types of tiles: a 2x1 domino shape, and an "L" tromino shape. These shapes may be rotated.
 
 XX  <- domino
@@ -1179,10 +1152,8 @@ N  will be in range [1, 1000].
         })
     }
 ```
-### 16
+### 16 X of a Kind in a Deck of Cards
 ```
-X of a Kind in a Deck of Cards
-
 In a deck of cards, each card has an integer written on it.
 
 Return true if and only if you can choose X >= 2 such that it is possible to split the entire deck into 1 or more groups of cards, where:
@@ -1270,10 +1241,8 @@ class Solution {
     }
 }
 ```
-### 17
+### 17 Subarray Sums Divisible by K
 ```
-Subarray Sums Divisible by K
-
 Given an array A of integers, return the number of (contiguous, non-empty) subarrays that have a sum divisible by K.
 
 Input: A = [4,5,0,-2,-3,1], K = 5
@@ -1312,10 +1281,8 @@ class Solution {
     }
 }
 ```
-### 18
+### 18 Design Twitter
 ```
-Design Twitter
-
 Design a simplified version of Twitter where users can post tweets, follow/unfollow another user and is able to see the 10 most recent tweets in the user's news feed. Your design should support the following methods:
 
 postTweet(userId, tweetId): Compose a new tweet.
@@ -1515,10 +1482,8 @@ class Twitter() {
     }
 }
 ```
-### 19
+### 19 Longest Harmonious Subsequence
 ```
-Longest Harmonious Subsequence
-
 We define a harmounious array as an array where the difference between its maximum value and its minimum value is exactly 1.
 
 Now, given an integer array, you need to find the length of its longest harmonious subsequence among all its possible subsequences.
@@ -1584,10 +1549,8 @@ class Solution {
     }
 }
 ```
-### 20
+### 20 Patching Array
 ```
-Patching Array
-
 Given a sorted positive integer array nums and an integer n, add/patch elements to the array such that any number in range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required.
 
 Input: nums = [1,3], n = 6
@@ -1627,10 +1590,8 @@ class Solution {
     }
 }
 ```
-### 21
+### 21 Smallest Range Covering Elements from K Lists
 ```
-Smallest Range Covering Elements from K Lists
-
 You have k lists of sorted integers in ascending order. Find the smallest range that includes at least one number from each of the k lists.
 
 We define the range [a,b] is smaller than range [c,d] if b-a < d-c or a < c if b-a == d-c.
@@ -1685,10 +1646,8 @@ class Solution {
     }
 }
 ```
-### 22
+### 22 Range Module
 ```
-Range Module
-
 A Range Module is a module that tracks ranges of numbers. Your task is to design and implement the following interfaces in an efficient manner.
 
 addRange(int left, int right) Adds the half-open interval [left, right), tracking every real number in that interval. Adding an interval that partially overlaps with currently tracked numbers should add any numbers in the interval [left, right) that are not already tracked.
@@ -1806,10 +1765,8 @@ class RangeModule() {
  * obj.removeRange(left,right)
  */
 ```
-### 23
+### 23 Binary Tree Pruning
 ```
-Binary Tree Pruning
-
 We are given the head node root of a binary tree, where additionally every node's value is either a 0 or a 1.
 
 Return the same tree where every subtree (of the given tree) not containing a 1 has been removed.
@@ -1872,10 +1829,8 @@ class Solution {
     }
 }
 ```
-### 24
+### 24 Max Dot Product of Two Subsequences
 ```
-Max Dot Product of Two Subsequences
-
 Given two arrays nums1 and nums2
 
 Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
@@ -1942,10 +1897,8 @@ class Solution {
     }
 }
 ```
-### 25
+### 25 Decrypt String from Alphabet to Integer Mapping
 ```
-Decrypt String from Alphabet to Integer Mapping
-
 Given a string s formed by digits ('0' - '9') and '#' . We want to map s to English lowercase characters as follows:
 
 Characters ('a' to 'i') are represented by ('1' to '9') respectively.
@@ -2022,10 +1975,8 @@ class Solution {
     }
 }
 ```
-### 26
+### 26 Reverse Nodes in k-Group
 ```
-Reverse Nodes in k-Group
-
 Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
 
 k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
@@ -2118,10 +2069,8 @@ class Solution {
     }
 }
 ```
-### 27
+### 27 Sequential Digits
 ```
-Sequential Digits
-
 An integer has sequential digits if and only if each digit in the number is one more than the previous digit.
 
 Return a sorted list of all the integers in the range [low, high] inclusive that have sequential digits.
@@ -2167,10 +2116,8 @@ class Solution {
     }
 }
 ```
-### 28
+### 28 Maximum Students Taking Exam
 ```
-Maximum Students Taking Exam
-
 Given a m * n matrix seats  that represent seats distributions in a classroom. If a seat is broken, it is denoted by '#' character otherwise it is denoted by a '.' character.
 
 Students can see the answers of those sitting next to the left, right, upper left and upper right, but he cannot see the answers of the student sitting directly in front or behind him. Return the maximum number of students that can take the exam together without any cheating being possible..
@@ -2221,10 +2168,8 @@ fun maxStudents(seats: Array<CharArray>): Int {
         return ans
     }
 ```
-### 29
+### 29 Maximize Sum Of Array After K Negations
 ```
-Maximize Sum Of Array After K Negations
-
 Given an array A of integers, we must modify the array in the following way: we choose an i and replace A[i] with -A[i], and we repeat this process K times in total.  (We may choose the same index i multiple times.)
 
 Return the largest possible sum of the array after modifying it in this way.
@@ -2289,10 +2234,8 @@ class Solution {
     }
 }
 ```
-### 30
+### 30 Kth Largest Element in an Array
 ```
-Kth Largest Element in an Array
-
 Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
 
 Example 1:
@@ -2330,10 +2273,8 @@ class Solution {
     }
 }
 ```
-### 31
+### 31 Maximum Number of Non-Overlapping Substrings
 ```
-Maximum Number of Non-Overlapping Substrings
-
 Given a string s of lowercase letters, you need to find the maximum number of non-empty substrings of s that meet the following conditions:
 
 The substrings do not overlap, that is for any two substrings s[i..j] and s[k..l], either j < k or i > l is true.
@@ -2417,10 +2358,8 @@ s contains only lowercase English letters.
         return ans
     }
 ```
-### 32
+### 32 Random Pick Index
 ```
-Random Pick Index
-
 Given an array of integers with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.
 
 Note:
@@ -2471,10 +2410,8 @@ class Solution(val nums: IntArray) {
  * var param_1 = obj.pick(target)
  */
 ```
-### 33
+### 33 Find Latest Group of Size M
 ```
-Find Latest Group of Size M
-
 Given an array arr that represents a permutation of numbers from 1 to n. You have a binary string of size n that initially has all its bits set to zero.
 
 At each step i (assuming both the binary string and arr are 1-indexed) from 1 to n, the bit at position arr[i] is set to 1. You are given an integer m and you need to find the latest step at which there exists a group of ones of length m. A group of ones is a contiguous substring of 1s such that it cannot be extended in either direction.
@@ -2534,10 +2471,8 @@ class Solution {
     }
 }
 ```
-### 34
+### 34 Second Highest Salary
 ```
-Second Highest Salary
-
 Write a SQL query to get the second highest salary from the Employee table.
 +----+--------+
 | Id | Salary |
@@ -2559,10 +2494,8 @@ SELECT max(Salary) as SecondHighestSalary
 FROM Employee
 WHERE Salary < (SELECT max(Salary) FROM Employee)
 ```
-### 35
+### 35 Best Time to Buy and Sell Stock III
 ```
-Best Time to Buy and Sell Stock III
-
 Say you have an array for which the i'th element is the price of a given stock on day i.
 
 Design an algorithm to find the maximum profit. You may complete at most two transactions.
@@ -2612,10 +2545,8 @@ class Solution {
     }
 }
 ```
-### 36
+### 36 Find Smallest Letter Greater Than Target
 ```
-Find Smallest Letter Greater Than Target
-
 Given a list of sorted characters letters containing only lowercase letters, and given a target letter target, find the smallest element in the list that is larger than the given target.
 
 Letters also wrap around. For example, if the target is target = 'z' and letters = ['a', 'b'], the answer is 'a'.
@@ -2689,10 +2620,8 @@ class Solution {
     }
 }
 ```
-### 37
+### 37 Longest Well-Performing Interval
 ```
-Longest Well-Performing Interval
-
 We are given hours, a list of the number of hours worked per day for a given employee.
 
 A day is considered to be a tiring day if and only if the number of hours worked is (strictly) greater than 8.
@@ -2736,10 +2665,8 @@ class Solution {
     }
 }
 ```
-### 38
+### 38 Maximum Number of Occurrences of a Substring
 ```
-Maximum Number of Occurrences of a Substring
-
 Given a string s, return the maximum number of ocurrences of any substring under the following rules:
     The number of unique characters in the substring must be less than or equal to maxLetters.
     The substring size must be between minSize and maxSize inclusive.
@@ -2886,10 +2813,8 @@ class Solution {
     }
 }
 ```
-### 39
+### 39 Print in Order
 ```
-Print in Order
-
 Suppose we have a class:
 public class Foo {
   public void first() { print("first"); }
@@ -2944,10 +2869,8 @@ class Foo {
     }
 }
 ```
-### 40
+### 40 Reorder List
 ```
-Reorder List
-
 Given a singly linked list L: L0→L1→…→Ln-1→Ln,
 reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
 
@@ -2996,10 +2919,8 @@ class Solution {
     }
 }
 ```
-### 41
+### 41 Permutation in String
 ```
-Permutation in String
-
 Given two strings s1 and s2, write a function to return true if s2 contains the permutation of s1. In other words, one of the first string's permutations is the substring of the second string.
 
 Example 1:
@@ -3090,10 +3011,8 @@ class Solution {
     }
 }
 ```
-### 42
+### 42 Total Hamming Distance
 ```
-Total Hamming Distance
-
 The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
 
 Now your job is to find the total Hamming distance between all pairs of the given numbers.
@@ -3148,10 +3067,8 @@ class Solution {
     }
 }
 ```
-### 43
+### 43 Find the Difference
 ```
-Find the Difference
-
 You are given two strings s and t.
 String t is generated by random shuffling string s and then add one more letter at a random position.
 Return the letter that was added to t.
@@ -3193,10 +3110,8 @@ class Solution {
     }
 }
 ```
-### 44
+### 44 Convert Sorted Array to Binary Search Tree
 ```
-Convert Sorted Array to Binary Search Tree
-
 Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
 
 For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
@@ -3246,10 +3161,8 @@ class Solution {
     }
 }
 ```
-### 45
+### 45 Water and Jug Problem
 ```
-Water and Jug Problem
-
 You are given two jugs with capacities x and y litres. There is an infinite amount of water supply available. You need to determine whether it is possible to measure exactly z litres using these two jugs.
 
 If z liters of water is measurable, you must have z liters of water contained within one or both buckets by the end.
@@ -3288,10 +3201,8 @@ class Solution {
     }
 }
 ```
-### 46
+### 46 As Far from Land as Possible
 ```
-As Far from Land as Possible
-
 Given an N x N grid containing only values 0 and 1, where 0 represents water and 1 represents land, find a water cell such that its distance to the nearest land cell is maximized and return the distance.
 
 The distance used in this problem is the Manhattan distance: the distance between two cells (x0, y0) and (x1, y1) is |x0 - x1| + |y0 - y1|.
@@ -3355,10 +3266,8 @@ class Solution {
     }
 }
 ```
-### 47
+### 47 Maximum Subarray
 ```
-Maximum Subarray
-
 Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
 
 Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
@@ -3429,7 +3338,7 @@ class Solution {
     }
 }
 ```
-#####
+##### like
 ```
 class Solution {
     fun maxSubArray(nums: IntArray): Int {
@@ -3443,10 +3352,8 @@ class Solution {
     }
 }
 ```
-### 48
+### 48 2 Keys Keyboard
 ```
-2 Keys Keyboard
-
 Initially on a notepad only one character 'A' is present. You can perform two operations on this notepad for each step:
 Copy All: You can copy all the characters present on the notepad (partial copy is not allowed).
 Paste: You can paste the characters which are copied last time.
@@ -3490,10 +3397,8 @@ class Solution {
     }
 }
 ```
-### 49
+### 49 132 Pattern
 ```
-132 Pattern
-
 Given an array of n integers nums, a 132 pattern is a subsequence of three integers nums[i], nums[j] and nums[k] such that i < j < k and nums[i] < nums[k] < nums[j].
 
 Return true if there is a 132 pattern in nums, otherwise return false.
@@ -3581,10 +3486,8 @@ class Solution {
     }
 }
 ```
-### 50
+### 50 Wildcard Matching
 ```
-Wildcard Matching
-
 Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*'.
 
 '?' Matches any single character.
@@ -3698,10 +3601,8 @@ class Solution {
     }
 }
 ```
-### 51
+### 51 Number of Closed Islands
 ```
-Number of Closed Islands
-
 Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally connected group of 0s and a closed island is an island totally (all left, top, right, bottom) surrounded by 1s.
 
 Return the number of closed islands.
@@ -3806,10 +3707,8 @@ class Solution {
     }
 }
 ```
-### 52
+### 52 Construct Quad Tree
 ```
-Construct Quad Tree
-
 Given a n * n matrix grid of 0's and 1's only. We want to represent the grid with a Quad-Tree.
 
 Return the root of the Quad-Tree representing the grid.
@@ -3937,10 +3836,8 @@ class Solution {
     }
 }
 ```
-### 53
+### 53 Sqrt(x)
 ```
-Sqrt(x)
-
 Implement int sqrt(int x).
 
 Compute and return the square root of x, where x is guaranteed to be a non-negative integer.
@@ -3982,10 +3879,8 @@ class Solution {
     }
 }
 ```
-### 54
+### 54 Number of Dice Rolls With Target Sum
 ```
-Number of Dice Rolls With Target Sum
-
 You have d dice, and each die has f faces numbered 1, 2, ..., f.
 
 Return the number of possible ways (out of fd total ways) modulo 10^9 + 7 to roll the dice so the sum of the face up numbers equals target.
@@ -4077,10 +3972,8 @@ class Solution {
     }
 }
 ```
-### 55
+### 55 Minimum Size Subarray Sum
 ```
-Minimum Size Subarray Sum
-
 Given an array of n positive integers and a positive integer s, find the minimal length of a contiguous subarray of which the sum ≥ s. If there isn't one, return 0 instead.
 
 Example: 
@@ -4111,10 +4004,8 @@ class Solution {
     }
 }
 ```
-### 56
+### 56 Construct String from Binary Tree
 ```
-Construct String from Binary Tree
-
 You need to construct a string consists of parenthesis and integers from a binary tree with the preorder traversing way.
 
 The null node needs to be represented by empty parenthesis pair "()". And you need to omit all the empty parenthesis pairs that don't affect the one-to-one mapping relationship between the string and the original binary tree.
@@ -4175,10 +4066,8 @@ class Solution {
     }
 }
 ```
-### 57
+### 57 Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
 ```
-Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
-
 The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
 
 It is guaranteed that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
@@ -4258,10 +4147,8 @@ class Solution {
     }
 }
 ```
-### 58
+### 58 Zuma Game
 ```
-Zuma Game
-
 Think about Zuma Game. You have a row of balls on the table, colored red(R), yellow(Y), blue(B), green(G), and white(W). You also have several balls in your hand.
 
 Each time, you may choose a ball in your hand, and insert it into the row (including the leftmost place and rightmost place). Then, if there is a group of 3 or more balls in the same color touching, remove these balls. Keep doing this until no more balls can be removed.
@@ -4346,10 +4233,8 @@ class Solution {
     }
 }
 ```
-### 59
+### 59 Knight Probability in Chessboard
 ```
-Knight Probability in Chessboard
-
 On an NxN chessboard, a knight starts at the r-th row and c-th column and attempts to make exactly K moves. The rows and columns are 0 indexed, so the top-left square is (0, 0), and the bottom-right square is (N-1, N-1).
 
 A chess knight has 8 possible moves it can make, as illustrated below. Each move is two squares in a cardinal direction, then one square in an orthogonal direction.
@@ -4448,10 +4333,8 @@ class Solution {
     }
 }
 ```
-### 60
+### 60 Convert Binary Number in a Linked List to Integer
 ```
-Convert Binary Number in a Linked List to Integer
-
 Given head which is a reference node to a singly-linked list. The value of each node in the linked list is either 0 or 1. The linked list holds the binary representation of a number.
 
 Return the decimal value of the number in the linked list.
@@ -4541,10 +4424,8 @@ class Solution {
     }
 }
 ```
-### 61
+### 61 Given a chemical formula (given as a string), return the count of each atom.
 ```
-Given a chemical formula (given as a string), return the count of each atom.
-
 The atomic element always starts with an uppercase character, then zero or more lowercase letters, representing the name.
 
 One or more digits representing that element's count may follow if the count is greater than 1. If the count is 1, no digits will follow. For example, H2O and H2O2 are possible, but H1O2 is impossible.
@@ -4703,10 +4584,8 @@ class Solution {
     }
 }
 ```
-### 62
+### 62 Merge Intervals
 ```
-Merge Intervals
-
 Given a collection of intervals, merge all overlapping intervals.
 
 Example 1:
@@ -4724,7 +4603,7 @@ NOTE: input types have been changed on April 15, 2019. Please reset to default c
 Constraints:
 intervals[i][0] <= intervals[i][1]
 ```
-### mine
+##### mine
 ```
 class Solution {
     fun merge(intervals: Array<IntArray>): Array<IntArray> {
@@ -4763,10 +4642,8 @@ class Solution {
     }
 }
 ```
-### 63
+### 63 Add to Array-Form of Integer
 ```
-Add to Array-Form of Integer
-
 For a non-negative integer X, the array-form of X is an array of its digits in left to right order.  For example, if X = 1231, then the array form is [1,2,3,1].
 
 Given the array-form A of a non-negative integer X, return the array-form of the integer X+K.
@@ -4888,10 +4765,8 @@ class Solution {
     }
 }
 ```
-### 64
-```
-Given an array of distinct integers arr, find all pairs of elements with the minimum absolute difference of any two elements. 
-
+### 64 Given an array of distinct integers arr, find all pairs of elements with the minimum absolute difference of any two elements.
+``` 
 Return a list of pairs in ascending order(with respect to pairs), each pair [a, b] follows
 a, b are from arr
 a < b
@@ -4935,10 +4810,8 @@ class Solution {
     }
 }
 ```
-### 65
+### 65 Get Watched Videos by Your Friends
 ```
-Get Watched Videos by Your Friends
-
 There are n people, each person has a unique id between 0 and n-1. Given the arrays watchedVideos and friends, where watchedVideos[i] and friends[i] contain the list of watched videos and the list of friends respectively for the person with id = i.
 
 Level 1 of videos are all watched videos by your friends, level 2 of videos are all watched videos by the friends of your friends and so on. In general, the level k of videos are all watched videos by people with the shortest path exactly equal to k with you. Given your id and the level of videos, return the list of videos ordered by their frequencies (increasing). For videos with the same frequency order them alphabetically from least to greatest. 
@@ -5022,10 +4895,8 @@ class Solution {
     }
 }
 ```
-### 66
+### 66 Classes More Than 5 Students
 ```
-Classes More Than 5 Students
-
 There is a table courses with columns: student and class
 
 Please list out all classes which have more than or equal to 5 students.
@@ -5059,10 +4930,8 @@ The students should not be counted duplicate in each course.
 ```
 select class from courses group by class having count(distinct student) >= 5;
 ```
-### 67
+### 67 Split Linked List in Parts
 ```
-Split Linked List in Parts
-
 Given a (singly) linked list with head node root, write a function to split the linked list into k consecutive linked list "parts".
 
 The length of each part should be as equal as possible: no two parts should have a size differing by more than 1. This may lead to some parts being null.
@@ -5095,7 +4964,7 @@ The length of root will be in the range [0, 1000].
 Each value of a node in the input will be an integer in the range [0, 999].
 k will be an integer in the range [1, 50].
 ```
-### mine 100% 100%
+##### mine 100% 100%
 ```
 /**
  * Example:
@@ -5153,10 +5022,8 @@ class Solution {
     }
 }
 ```
-### 68
+### 68 Element Appearing More Than 25% In Sorted Array
 ```
-Element Appearing More Than 25% In Sorted Array
-
 Given an integer array sorted in non-decreasing order, there is exactly one integer in the array that occurs more than 25% of the time.
 
 Return that integer.
@@ -5224,10 +5091,8 @@ class Solution {
     }
 }
 ```
-### 69
+### 69 Goat Latin
 ```
-Goat Latin
-
 A sentence S is given, composed of words separated by spaces. Each word consists of lowercase and uppercase letters only.
 
 We would like to convert the sentence to "Goat Latin" (a made-up language similar to Pig Latin.)
@@ -5290,10 +5155,8 @@ class Solution {
     }
 }
 ```
-### 70
+### 70 Guess Number Higher or Lower II
 ```
-Guess Number Higher or Lower II
-
 We are playing the Guessing Game. The game will work as follows:
     I pick a number between 1 and n.
     You guess a number.
@@ -5368,10 +5231,8 @@ class Solution {
     }
 }
 ``` 
-### 71
+### 71 Count Vowels Permutation
 ```
-Count Vowels Permutation
-
 Given an integer n, your task is to count how many strings of length n can be formed under the following rules:
 
 Each character is a lower case vowel ('a', 'e', 'i', 'o', 'u')
@@ -5529,10 +5390,8 @@ class Solution {
     }
 }
 ```
-### 72
+### 72 Convert Sorted List to Binary Search Tree
 ```
-Convert Sorted List to Binary Search Tree
-
 Given the head of a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 
 For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
@@ -5603,10 +5462,8 @@ class Solution {
     }
 }
 ```
-### 73
+### 73 Number of Equivalent Domino Pairs
 ```
-Number of Equivalent Domino Pairs
-
 Given a list of dominoes, dominoes[i] = [a, b] is equivalent to dominoes[j] = [c, d] if and only if either (a==c and b==d), or (a==d and b==c) - that is, one domino can be rotated to be equal to another domino.
 
 Return the number of pairs (i, j) for which 0 <= i < j < dominoes.length, and dominoes[i] is equivalent to dominoes[j].
@@ -5659,10 +5516,8 @@ class Solution {
     }
 }
 ```
-### 74
+### 74 Insertion Sort List
 ```
-Insertion Sort List
-
 Sort a linked list using insertion sort.
 
 A graphical example of insertion sort. The partial sorted list (black) initially contains only the first element in the list.
@@ -5768,10 +5623,8 @@ class Solution {
     }
 }
 ```
-### 75
+### 75 Number of Ways to Stay in the Same Place After Some Steps
 ```
-Number of Ways to Stay in the Same Place After Some Steps
-
 You have a pointer at index 0 in an array of size arrLen. At each step, you can move 1 position to the left, 1 position to the right in the array or stay in the same place  (The pointer should not be placed outside the array at any time).
 
 Given two integers steps and arrLen, return the number of ways such that your pointer still at index 0 after exactly steps steps.
@@ -5826,10 +5679,8 @@ class Solution {
     }
 }
 ```
-### 76
+### 76 Brace Expansion II
 ```
-Brace Expansion II
-
 Under a grammar given below, strings can represent a set of lowercase words.  Let's use R(expr) to denote the set of words the expression represents.
 
 Grammar can best be understood through simple examples:
@@ -6020,10 +5871,8 @@ class Solution {
     }
 }
 ```
-### 77
+### 77 Find Minimum in Rotated Sorted Array
 ```
-Find Minimum in Rotated Sorted Array
-
 Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
 
 [4,5,6,7,0,1,2] if it was rotated 4 times.
@@ -6097,10 +5946,8 @@ class Solution {
     }
 }
 ```
-### 78
+### 78 Best Time to Buy and Sell Stock with Cooldown
 ```
-Best Time to Buy and Sell Stock with Cooldown
-
 Say you have an array for which the ith element is the price of a given stock on day i.
 
 Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:
@@ -6158,10 +6005,8 @@ class Solution {
     }
 }
 ```
-### 79
+### 79 Best Time to Buy and Sell Stock
 ```
-Best Time to Buy and Sell Stock
-
 Say you have an array for which the ith element is the price of a given stock on day i.
 
 If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), design an algorithm to find the maximum profit.
@@ -6193,10 +6038,8 @@ class Solution {
     }
 }
 ```
-### 80
+### 80 Best Time to Buy and Sell Stock II
 ```
-Best Time to Buy and Sell Stock II
-
 Say you have an array prices for which the ith element is the price of a given stock on day i.
 
 Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
@@ -6244,10 +6087,8 @@ class Solution {
     }
 }
 ```
-### 81
+### 81 Binary Tree Maximum Path Sum
 ```
-Binary Tree Maximum Path Sum
-
 Given a non-empty binary tree, find the maximum path sum.
 
 For this problem, a path is defined as any node sequence from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
@@ -6350,10 +6191,8 @@ class Solution {
     }
 }
 ```
-### 82
+### 82 Average of Levels in Binary Tree
 ```
-Average of Levels in Binary Tree
-
 Given a non-empty binary tree, return the average value of the nodes on each level in the form of an array.
 
 Example 1:
@@ -6413,10 +6252,8 @@ class Solution {
     }
 }
 ```
-### 83
+### 83 Making File Names Unique
 ```
-Making File Names Unique
-
 Given an array of strings names of size n. You will create n folders in your file system such that, at the ith minute, you will create a folder with the name names[i].
 
 Since two files cannot have the same name, if you enter a folder name which is previously used, the system will have a suffix addition to its name in the form of (k), where, k is the smallest positive integer such that the obtained name remains unique.
@@ -6525,11 +6362,9 @@ class Solution {
     }
 }
 ```
-### 84
+### 84 Video Stitching
 ```
- Video Stitching
-
- You are given a series of video clips from a sporting event that lasted T seconds.  These video clips can be overlapping with each other and have varied lengths.
+You are given a series of video clips from a sporting event that lasted T seconds.  These video clips can be overlapping with each other and have varied lengths.
 
 Each video clip clips[i] is an interval: it starts at time clips[i][0] and ends at time clips[i][1].  We can cut these clips into segments freely: for example, a clip [0, 7] can be cut into segments [0, 1] + [1, 3] + [3, 7].
 
@@ -6616,10 +6451,8 @@ public int videoStitching(int[][] clips, int T) {
   return res;
 }
 ```
-### 85
+### 85 Lexicographical Numbers
 ```
-Lexicographical Numbers
-
 Given an integer n, return 1 - n in lexicographical order.
 
 For example, given 13, return: [1,10,11,12,13,2,3,4,5,6,7,8,9].
@@ -6662,10 +6495,8 @@ class Solution {
     }
 }
 ```
-### 86
+### 86 Three Equal Parts
 ```
-Three Equal Parts
-
 Given an array A of 0s and 1s, divide the array into 3 non-empty parts such that all of these parts represent the same binary value.
 
 If it is possible, return any [i, j] with i+1 < j, such that:
@@ -6806,10 +6637,8 @@ class Solution {
     }
 }
 ```
-### 87
+### 87 Maximum Number of Vowels in a Substring of Given Length
 ```
-Maximum Number of Vowels in a Substring of Given Length
-
 Given a string s and an integer k.
 
 Return the maximum number of vowel letters in any substring of s with length k.
@@ -6845,7 +6674,7 @@ Constraints:
 s consists of lowercase English letters.
 1 <= k <= s.length
 ```
-### mine 1 slow
+##### mine 1 slow
 ```
 class Solution {
     fun maxVowels(s: String, k: Int): Int {
@@ -6874,7 +6703,7 @@ class Solution {
     }
 }
 ```
-### mine 2 slow
+##### mine 2 slow
 ```
 class Solution {
     fun maxVowels(s: String, k: Int): Int {
@@ -6904,10 +6733,8 @@ class Solution {
     }
 }
 ```
-### 88
+### 88 Design Linked Lists
 ```
-Design Linked List
-
 Design your implementation of the linked list. You can choose to use a singly or doubly linked list.
 A node in a singly linked list should have two attributes: val and next. val is the value of the current node, and next is a pointer/reference to the next node.
 If you want to use the doubly linked list, you will need one more attribute prev to indicate the previous node in the linked list. Assume all nodes in the linked list are 0-indexed.
@@ -7022,10 +6849,8 @@ class MyLinkedList() {
 
 }
 ```
-### 89
+### 89 Reformat Date
 ```
-Reformat Date
-
 Given a date string in the form Day Month Year, where:
     Day is in the set {"1st", "2nd", "3rd", "4th", ..., "30th", "31st"}.
     Month is in the set {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}.
@@ -7096,10 +6921,8 @@ class Solution {
     }
 }
 ```
-### 90
+### 90 Minimum Operations to Make Array Equal
 ```
-Minimum Operations to Make Array Equal
-
 You have an array arr of length n where arr[i] = (2 * i) + 1 for all valid values of i (i.e. 0 <= i < n).
 
 In one operation, you can select two indices x and y where 0 <= x, y < n and subtract 1 from arr[x] and add 1 to arr[y] (i.e. perform arr[x] -=1 and arr[y] += 1). The goal is to make all the elements of the array equal. It is guaranteed that all the elements of the array can be made equal using some operations.
@@ -7144,10 +6967,8 @@ class Solution {
     }
 }
 ```
-### 91
+### 91 Validate Binary Tree Nodes
 ```
-Validate Binary Tree Nodes
-
 You have n binary tree nodes numbered from 0 to n - 1 where node i has two children leftChild[i] and rightChild[i], return true if and only if all the given nodes form exactly one valid binary tree.
 
 If node i has no left child then leftChild[i] will equal -1, similarly for the right child.
@@ -7197,10 +7018,8 @@ fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): 
         return res == 1
     }
 ```
-### 92
+### 92 Minimum Flips to Make a OR b Equal to c
 ```
-Minimum Flips to Make a OR b Equal to c
-
 Given 3 positives numbers a, b and c. Return the minimum flips required in some bits of a and b to make ( a OR b == c ). (bitwise OR operation).
 Flip operation consists of change any single bit 1 to 0 or change the bit 0 to 1 in their binary representation.
 
@@ -7305,10 +7124,8 @@ class Solution {
     }
 }
 ```
-### 93
+### 93 Range Sum Query - Mutable
 ```
-Range Sum Query - Mutable
-
 Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
 
 The update(i, val) function modifies nums by updating the element at index i to val.
@@ -7422,10 +7239,8 @@ class NumArray(nums: IntArray) {
     }
 }
 ```
-### 94
+### 94 Design HashMap
 ```
-Design HashMap
-
 Design a HashMap without using any built-in hash table libraries.
 
 To be specific, your design should include these functions:
@@ -7520,10 +7335,8 @@ class MyHashMap() {
 
 }
 ```
-### 95
+### 95 Longest Chunked Palindrome Decomposition
 ```
-Longest Chunked Palindrome Decomposition
-
 Return the largest possible k such that there exists a_1, a_2, ..., a_k such that:
     Each a_i is a non-empty string;
     Their concatenation a_1 + a_2 + ... + a_k is equal to text;
@@ -7592,10 +7405,8 @@ class Solution {
     }
 }
 ```
-### 96
+### 96 Consecutive Characters
 ```
-Consecutive Characters
-
 Given a string s, the power of the string is the maximum length of a non-empty substring that contains only one unique character.
 
 Return the power of the string.
@@ -7645,10 +7456,8 @@ class Solution {
     }
 }
 ```
-### 97
+### 97 Palindrome Partitioning III
 ```
-Palindrome Partitioning III
-
 You are given a string s containing lowercase letters and an integer k. You need to :
 
 First, change some characters of s to other lowercase English letters.
@@ -7716,10 +7525,8 @@ class Solution {
     }
 }
 ```
-### 98
+### 98 Minimum Number of Days to Eat N Oranges
 ```
-Minimum Number of Days to Eat N Oranges
-
 There are n oranges in the kitchen and you decided to eat some of these oranges every day as follows:
 
 Eat one orange.
@@ -7787,10 +7594,8 @@ class Solution {
     }
 }
 ```
-### 99
+### 99 Check If Array Pairs Are Divisible by k
 ```
-Check If Array Pairs Are Divisible by k
-
 Given an array of integers arr of even length n and an integer k.
 
 We want to divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k.
@@ -7845,10 +7650,8 @@ class Solution {
     }
 }
 ```
-### 100
+### 100 Perfect Squares
 ```
-Perfect Squares
-
 Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
 
 Example 1:
@@ -7907,10 +7710,8 @@ class Solution {
     }
 }
 ```
-### 101
+### 101 Tiling a Rectangle with the Fewest Squares
 ```
-Tiling a Rectangle with the Fewest Squares
-
 Given a rectangle of size n x m, find the minimum number of integer-sided squares that tile the rectangle.
 
 Example 1:
@@ -8174,10 +7975,8 @@ class Solution {
     }
 }
 ```
-### 102
+### 102 Shortest Unsorted Continuous Subarray
 ```
-Shortest Unsorted Continuous Subarray
-
 Given an integer array nums, you need to find one continuous subarray that if you only sort this subarray in ascending order, then the whole array will be sorted in ascending order.
 
 Return the shortest such subarray and output its length.
@@ -8198,4 +7997,571 @@ Output: 0
 Constraints:
 1 <= nums.length <= 104
 -105 <= nums[i] <= 105
+```
+##### like
+```
+class Solution {
+    fun findUnsortedSubarray(nums: IntArray): Int {
+        if(nums.isEmpty() || nums.size == 1) return 0
+        var max = Int.MIN_VALUE
+        var end = -2
+        for (i in nums.indices) {
+            max = Math.max(max, nums[i])
+            if (nums[i] < max) end = i
+        }
+        if(end == -2) return 0
+
+        var min: Int = Int.MAX_VALUE
+        var begin = -1
+        for (i in nums.size - 1 downTo 0) {
+            min = Math.min(min, nums[i])
+            if (nums[i] > min) begin = i
+        }
+        return end - begin + 1
+    }
+}
+```
+### 103 Longest Subarray of 1's After Deleting One Element
+```
+Given a binary array nums, you should delete one element from it.
+
+Return the size of the longest non-empty subarray containing only 1's in the resulting array.
+
+Return 0 if there is no such subarray.
+
+Example 1:
+Input: nums = [1,1,0,1]
+Output: 3
+Explanation: After deleting the number in position 2, [1,1,1] contains 3 numbers with value of 1's.
+
+Example 2:
+Input: nums = [0,1,1,1,0,1,1,0,1]
+Output: 5
+Explanation: After deleting the number in position 4, [0,1,1,1,1,1,0,1] longest subarray with value of 1's is [1,1,1,1,1].
+
+Example 3:
+Input: nums = [1,1,1]
+Output: 2
+Explanation: You must delete one element.
+
+Example 4:
+Input: nums = [1,1,0,0,1,1,1,0,1]
+Output: 4
+
+Example 5:
+Input: nums = [0,0,0]
+Output: 0
+ 
+Constraints:
+
+1 <= nums.length <= 10^5
+nums[i] is either 0 or 1
+```
+##### mine
+```
+class Solution {
+    fun longestSubarray(nums: IntArray): Int {
+        if (nums.isEmpty() || nums.size == 1) return 0
+        var res = 0
+        var oneCount = 0
+        var zeroIndex = -1
+        var index = 0
+        while (index < nums.size){
+            val i = nums[index]
+            if (i == 0) {
+                if (zeroIndex != -1) {
+                    res = Math.max(res, oneCount)
+                    oneCount = index - (zeroIndex + 1)
+                    zeroIndex = -1
+                } else {
+                    zeroIndex = index
+                    index++
+                }
+            } else {
+                oneCount++
+                index++
+            }
+        }
+        res = Math.max(res, oneCount)
+        if(res == nums.size) return res - 1 // all 1
+        return res
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun longestSubarray(nums: IntArray): Int {
+        var i = 0
+        var k = 1
+        var res = 0
+        var j = 0
+        while (j < nums.size) {
+            if (nums[j] == 0) {
+                k--
+            }
+            while (k < 0) {
+                if (nums[i] == 0) {
+                    k++
+                }
+                i++
+            }
+            res = Math.max(res, j - i)
+            ++j
+        }
+        return res
+    }
+}
+```
+### 104 Minimum Distance Between BST Nodes
+```
+Given a Binary Search Tree (BST) with the root node root, return the minimum difference between the values of any two different nodes in the tree.
+
+Example :
+Input: root = [4,2,6,1,3,null,null]
+Output: 1
+Explanation:
+Note that root is a TreeNode object, not an array.
+The given tree [4,2,6,1,3,null,null] is represented by the following diagram:
+
+          4
+        /   \
+      2      6
+     / \    
+    1   3  
+
+while the minimum difference in this tree is 1, it occurs between node 1 and node 2, also between node 3 and node 2.
+
+Note:
+The size of the BST will be between 2 and 100.
+The BST is always valid, each node's value is an integer, and each node's value is different.
+This question is the same as 530: https://leetcode.com/problems/minimum-absolute-difference-in-bst/
+```
+##### like
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    var res = Int.MAX_VALUE
+    var pre : Int? = null
+    fun minDiffInBST(root: TreeNode?): Int {
+        if (root!!.left != null) minDiffInBST(root.left)
+        if (pre != null) res = Math.min(res, root.`val` - pre!!)
+        pre = root.`val`
+        if (root.right != null) minDiffInBST(root.right)
+        return res
+    }
+}
+```
+### 105 Two Sum IV - Input is a BST
+```
+Given the root of a Binary Search Tree and a target number k, return true if there exist two elements in the BST such that their sum is equal to the given target.
+
+Example 1:
+Input: root = [5,3,6,2,4,null,7], k = 9
+Output: true
+
+Example 2:
+Input: root = [5,3,6,2,4,null,7], k = 28
+Output: false
+
+Example 3:
+Input: root = [2,1,3], k = 4
+Output: true
+
+Example 4:
+Input: root = [2,1,3], k = 1
+Output: false
+
+Example 5:
+Input: root = [2,1,3], k = 3
+Output: true
+ 
+Constraints:
+The number of nodes in the tree is in the range [1, 104].
+-104 <= Node.val <= 104
+root is guaranteed to be a valid binary search tree.
+-105 <= k <= 105
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    val findTarget = mutableSetOf<Int>()
+    fun findTarget(root: TreeNode?, k: Int): Boolean {
+        if(root == null) return false
+        if(findTarget.contains(root.`val`)) return true
+        findTarget.add(k - root.`val`)
+        if(findTarget(root.left, k)) return true
+        if(findTarget(root.right, k)) return true
+        return false
+    }
+}
+```
+### 106 Hand of Straights
+```
+Alice has a hand of cards, given as an array of integers.
+
+Now she wants to rearrange the cards into groups so that each group is size W, and consists of W consecutive cards.
+
+Return true if and only if she can.
+
+Note: This question is the same as 1296: https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
+
+Example 1:
+Input: hand = [1,2,3,6,2,3,4,7,8], W = 3
+Output: true
+Explanation: Alice's hand can be rearranged as [1,2,3],[2,3,4],[6,7,8]
+
+Example 2:
+Input: hand = [1,2,3,4,5], W = 4
+Output: false
+Explanation: Alice's hand can't be rearranged into groups of 4.
+
+Constraints:
+1 <= hand.length <= 10000
+0 <= hand[i] <= 10^9
+1 <= W <= hand.length
+```
+##### mine
+```
+class Solution {
+    fun isNStraightHand(hand: IntArray, W: Int): Boolean {
+        if (hand.isEmpty()) return false
+        if (hand.size % W != 0) return false
+
+        val usedCount = intArrayOf(0)
+        hand.sort()
+        return isNStraightHandHelper(hand, W, usedCount)
+
+    }
+
+    fun isNStraightHandHelper(
+        hand: IntArray,
+        childSize: Int,
+        usedCount: IntArray
+    ): Boolean {
+        if(usedCount[0] == hand.size) return true
+
+        var start = 0
+        while (hand[start] == -1) {
+            start++
+        }
+
+        var pre = hand[start]
+        hand[start] = -1
+        usedCount[0]++
+        start++
+        var count = 1
+        while (start < hand.size) {
+            if (hand[start] != -1 && pre + 1 == hand[start]) {
+                pre = hand[start]
+                hand[start] = -1
+                usedCount[0]++
+                count++
+                if (count == childSize) {
+                    break
+                }
+            }
+            start++
+        }
+        
+        if(usedCount[0] % childSize != 0) return false
+
+        return when {
+            usedCount[0] == hand.size -> {
+                true
+            }
+            usedCount[0] + childSize <= hand.size -> {
+                isNStraightHandHelper(hand, childSize, usedCount)
+            }
+            else -> {
+                false
+            }
+        }
+    }
+}
+```
+### 107 Split a String in Balanced Strings
+```
+Balanced strings are those who have equal quantity of 'L' and 'R' characters.
+
+Given a balanced string s split it in the maximum amount of balanced strings.
+
+Return the maximum amount of splitted balanced strings.
+
+Example 1:
+Input: s = "RLRRLLRLRL"
+Output: 4
+Explanation: s can be split into "RL", "RRLL", "RL", "RL", each substring contains same number of 'L' and 'R'.
+
+Example 2:
+Input: s = "RLLLLRRRLR"
+Output: 3
+Explanation: s can be split into "RL", "LLLRRR", "LR", each substring contains same number of 'L' and 'R'.
+
+Example 3:
+Input: s = "LLLLRRRR"
+Output: 1
+Explanation: s can be split into "LLLLRRRR".
+
+Example 4:
+Input: s = "RLRRRLLRLL"
+Output: 2
+Explanation: s can be split into "RL", "RRRLLRLL", since each substring contains an equal number of 'L' and 'R'
+
+Constraints:
+1 <= s.length <= 1000
+s[i] = 'L' or 'R'
+```
+##### mine
+```
+class Solution {
+    fun balancedStringSplit(s: String): Int {
+        var res = 0
+        var lcount = 0
+        var rcount = 0
+        for (c in s) {
+            if (c == 'L') {
+                lcount++
+            } else {
+                rcount++
+            }
+
+            if(lcount > 0 && lcount == rcount) {
+                res++
+                lcount = 0
+                rcount = 0
+            }
+        }
+        return res
+    }
+}
+```
+### 108 Insert Delete GetRandom O(1) - Duplicates allowed
+```
+Design a data structure that supports all following operations in average O(1) time.
+
+Note: Duplicate elements are allowed.
+insert(val): Inserts an item val to the collection.
+remove(val): Removes an item val from the collection if present.
+getRandom: Returns a random element from current collection of elements. The probability of each element being returned is linearly related to the number of same value the collection contains.
+
+Example:
+// Init an empty collection.
+RandomizedCollection collection = new RandomizedCollection();
+
+// Inserts 1 to the collection. Returns true as the collection did not contain 1.
+collection.insert(1);
+
+// Inserts another 1 to the collection. Returns false as the collection contained 1. Collection now contains [1,1].
+collection.insert(1);
+
+// Inserts 2 to the collection, returns true. Collection now contains [1,1,2].
+collection.insert(2);
+
+// getRandom should return 1 with the probability 2/3, and returns 2 with the probability 1/3.
+collection.getRandom();
+
+// Removes 1 from the collection, returns true. Collection now contains [1,2].
+collection.remove(1);
+
+// getRandom should return 1 and 2 both equally likely.
+collection.getRandom();
+```
+##### mine
+```
+class RandomizedCollection {
+    /** Initialize your data structure here. */
+    val map = mutableMapOf<Int, MutableList<Int>>()
+    val list = mutableListOf<Int>()
+    val random = Random()
+
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    fun insert(`val`: Int): Boolean {
+        return if (map.containsKey(`val`)) {
+            map[`val`]!!.add(list.size)
+            list.add(`val`)
+            false
+        } else {
+            map[`val`] = mutableListOf<Int>().apply {
+                add(list.size)
+            }
+            list.add(`val`)
+            true
+        }
+    }
+
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    fun remove(`val`: Int): Boolean {
+        return if (map.containsKey(`val`)) {
+            val index = map[`val`]!!.removeAt(0)
+            if(map[`val`].isNullOrEmpty()) map.remove(`val`)
+            if(index == list.size - 1) {
+                list.removeAt(index)
+            } else {
+                val lastIndex = list.size - 1
+                val last = list.removeAt(lastIndex)
+                list.removeAt(index)
+                list.add(index, last)
+                map[last]!!.remove(lastIndex)
+                map[last]!!.add(index)
+            }
+            true
+        } else false
+    }
+
+    /** Get a random element from the collection. */
+    fun getRandom(): Int {
+        return list[random.nextInt(list.size)]
+    }
+}
+
+/**
+ * Your RandomizedCollection object will be instantiated and called as such:
+ * var obj = RandomizedCollection()
+ * var param_1 = obj.insert(`val`)
+ * var param_2 = obj.remove(`val`)
+ * var param_3 = obj.getRandom()
+ */
+```
+### 109 Largest Perimeter Triangle
+```
+Given an array A of positive lengths, return the largest perimeter of a triangle with non-zero area, formed from 3 of these lengths.
+
+If it is impossible to form any triangle of non-zero area, return 0.
+
+Example 1:
+Input: [2,1,2]
+Output: 5
+
+Example 2:
+Input: [1,2,1]
+Output: 0
+
+Example 3:
+Input: [3,2,3,4]
+Output: 10
+
+Example 4:
+Input: [3,6,2,3]
+Output: 8
+
+Note:
+3 <= A.length <= 10000
+1 <= A[i] <= 10^6
+```
+##### mine
+```
+class Solution {
+    fun largestPerimeter(A: IntArray): Int {
+        if(A.size < 3) return 0
+        A.sort()
+        var i = A.size - 1
+        while (i > 1) {
+            val temp = A[i - 1] + A[i -2]
+            if(A[i] < temp) {
+                return A[i] + temp
+            }
+            i--
+        }
+        return 0
+    }
+}
+```
+### 110 Number of Steps to Reduce a Number in Binary Representation to One
+```
+Given a number s in their binary representation. Return the number of steps to reduce it to 1 under the following rules:
+
+If the current number is even, you have to divide it by 2.
+
+If the current number is odd, you have to add 1 to it.
+
+It's guaranteed that you can always reach to one for all testcases.
+
+Example 1:
+Input: s = "1101"
+Output: 6
+Explanation: "1101" corressponds to number 13 in their decimal representation.
+Step 1) 13 is odd, add 1 and obtain 14. 
+Step 2) 14 is even, divide by 2 and obtain 7.
+Step 3) 7 is odd, add 1 and obtain 8.
+Step 4) 8 is even, divide by 2 and obtain 4.  
+Step 5) 4 is even, divide by 2 and obtain 2. 
+Step 6) 2 is even, divide by 2 and obtain 1. 
+
+Example 2:
+Input: s = "10"
+Output: 1
+Explanation: "10" corressponds to number 2 in their decimal representation.
+Step 1) 2 is even, divide by 2 and obtain 1. 
+
+Example 3:
+Input: s = "1"
+Output: 0
+
+Constraints:
+1 <= s.length <= 500
+s consists of characters '0' or '1'
+s[0] == '1'
+```
+##### mine 100 100
+```
+class Solution {
+    fun numSteps(s: String): Int {
+        val arr = s.toCharArray()
+        return numSteps(arr, arr.size - 1)
+    }
+
+    fun numSteps(s: CharArray, endIndex: Int) : Int {
+        if(endIndex == 0 && s[0] == '1') {
+            return 0
+        }
+        var step = 0
+        if(s[endIndex] == '0') {
+            step++
+            step += numSteps(s, endIndex - 1)
+        } else {
+            step++
+            var isBreak = false
+            var i = endIndex
+            while (i >= 0) {
+                if(s[i] == '1'){
+                    s[i] = '0'
+                } else {
+                    s[i] = '1'
+                    isBreak = true
+                    break
+                }
+                i--
+            }
+            if(!isBreak){
+                val ns = CharArray(s.size + 1)
+                System.arraycopy(s, 0, ns, 1, s.size)
+                ns[0] = '1'
+                step += numSteps(ns, endIndex + 1)
+            } else {
+                step += numSteps(s, endIndex)
+            }
+        }
+        return step
+    }
+}
 ```
