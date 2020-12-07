@@ -8565,3 +8565,273 @@ class Solution {
     }
 }
 ```
+### 111 Top K Frequent Words
+```
+Given a non-empty list of words, return the k most frequent elements.
+
+Your answer should be sorted by frequency from highest to lowest. If two words have the same frequency, then the word with the lower alphabetical order comes first.
+
+Example 1:
+Input: ["i", "love", "leetcode", "i", "love", "coding"], k = 2
+Output: ["i", "love"]
+Explanation: "i" and "love" are the two most frequent words.
+    Note that "i" comes before "love" due to a lower alphabetical order.
+
+Example 2:
+Input: ["the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"], k = 4
+Output: ["the", "is", "sunny", "day"]
+Explanation: "the", "is", "sunny" and "day" are the four most frequent words,
+    with the number of occurrence being 4, 3, 2 and 1 respectively.
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ number of unique elements.
+Input words contain only lowercase letters.
+Follow up:
+Try to solve it in O(n log k) time and O(n) extra space.
+```
+##### mine
+```
+class Solution {
+    fun topKFrequent(words: Array<String>, k: Int): List<String> {
+        val map = LinkedHashMap<String, Int>()
+        for(w in words) {
+            if(map.containsKey(w)){
+                map[w] = map[w]!! + 1
+            } else {
+                map[w] = 1
+            }
+        }
+        var filter = 0
+        return map.entries.sortedWith(Comparator { o1, o2 ->
+            when {
+                o1.value > o2.value -> {
+                    -1
+                }
+                o1.value == o2.value -> {
+                    o1.key.compareTo(o2.key)
+                }
+                else -> {
+                    1
+                }
+            }
+        }).filter {
+            filter++ < k
+        }.map {
+            it.key
+        }
+    }
+}
+```
+##### like
+```
+class Solution {
+    fun topKFrequent(words: Array<String>, k: Int): List<String> {
+        val result = LinkedList<String>()
+        val map = HashMap<String, Int>()
+        for (i in words.indices) {
+            if (map.containsKey(words[i])) map[words[i]] = map[words[i]]!! + 1 else map[words[i]] =
+                1
+        }
+
+        val pq: PriorityQueue<Map.Entry<String, Int>> = PriorityQueue { a, b ->
+            if (a.value == b.value) b.key
+                .compareTo(a.key) else a.value - b.value
+        }
+
+        for (entry in map.entries) {
+            pq.offer(entry)
+            if (pq.size > k) pq.poll()
+        }
+
+        while (!pq.isEmpty()) result.add(0, pq.poll().key)
+
+        return result
+    }
+}
+```
+### 112 Average Salary Excluding the Minimum and Maximum Salary
+```
+Given an array of unique integers salary where salary[i] is the salary of the employee i.
+
+Return the average salary of employees excluding the minimum and maximum salary.
+
+Example 1:
+Input: salary = [4000,3000,1000,2000]
+Output: 2500.00000
+Explanation: Minimum salary and maximum salary are 1000 and 4000 respectively.
+Average salary excluding minimum and maximum salary is (2000+3000)/2= 2500
+
+Example 2:
+Input: salary = [1000,2000,3000]
+Output: 2000.00000
+Explanation: Minimum salary and maximum salary are 1000 and 3000 respectively.
+Average salary excluding minimum and maximum salary is (2000)/1= 2000
+
+Example 3:
+Input: salary = [6000,5000,4000,3000,2000,1000]
+Output: 3500.00000
+
+Example 4:
+Input: salary = [8000,9000,2000,3000,6000,1000]
+Output: 4750.00000
+
+Constraints:
+3 <= salary.length <= 100
+10^3 <= salary[i] <= 10^6
+salary[i] is unique.
+Answers within 10^-5 of the actual value will be accepted as correct.
+```
+##### mine
+```
+class Solution {
+    fun average(salary: IntArray): Double {
+        var total = 0
+        var min = Int.MAX_VALUE
+        var max = Int.MIN_VALUE
+        for (i in salary) {
+            total += i
+            if(min > i) min = i
+            if(max < i) max = i
+        }
+        return (total - min - max).toDouble() / (salary.size.toDouble() - 2.0)
+    }
+}
+```
+### 113 Maximum Binary Tree II
+```
+We are given the root node of a maximum tree: a tree where every node has a value greater than any other value in its subtree.
+
+Just as in the previous problem, the given tree was constructed from an list A (root = Construct(A)) recursively with the following Construct(A) routine:
+
+If A is empty, return null.
+Otherwise, let A[i] be the largest element of A.  Create a root node with value A[i].
+The left child of root will be Construct([A[0], A[1], ..., A[i-1]])
+The right child of root will be Construct([A[i+1], A[i+2], ..., A[A.length - 1]])
+Return root.
+Note that we were not given A directly, only a root node root = Construct(A).
+
+Suppose B is a copy of A with the value val appended to it.  It is guaranteed that B has unique values.
+
+Return Construct(B).
+
+Example 1:
+Input: root = [4,1,3,null,null,2], val = 5
+Output: [5,4,null,1,3,null,null,2]
+Explanation: A = [1,4,2,3], B = [1,4,2,3,5]
+
+Example 2:
+Input: root = [5,2,4,null,1], val = 3
+Output: [5,2,4,null,1,null,3]
+Explanation: A = [2,1,5,4], B = [2,1,5,4,3]
+
+Example 3:
+Input: root = [5,2,3,null,1], val = 4
+Output: [5,2,4,null,1,3]
+Explanation: A = [2,1,5,3], B = [2,1,5,3,4]
+
+Constraints:
+1 <= B.length <= 100
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun insertIntoMaxTree(root: TreeNode?, `val`: Int): TreeNode? {
+        if(root == null) return null
+
+        if(root.`val` < `val`){
+            return TreeNode(`val`).apply { left = root }
+        }
+
+        if(root.right == null) {
+            return root.apply {
+                right = TreeNode(`val`)
+            }
+        }
+
+        if(root.right != null) {
+            return root.apply {
+                right = insertIntoMaxTree(root.right, `val`)
+            }
+        }
+
+        return root
+    }
+}
+```
+### 114 Maximum Binary Tree
+```
+Given an integer array with no duplicates. A maximum tree building on this array is defined as follow:
+
+The root is the maximum number in the array.
+The left subtree is the maximum tree constructed from left part subarray divided by the maximum number.
+The right subtree is the maximum tree constructed from right part subarray divided by the maximum number.
+Construct the maximum tree by the given array and output the root node of this tree.
+
+Example 1:
+Input: [3,2,1,6,0,5]
+Output: return the tree root node representing the following tree:
+
+      6
+    /   \
+   3     5
+    \    / 
+     2  0   
+       \
+        1
+Note:
+The size of the given array will be in the range [1,1000].
+```
+##### mine
+```
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun constructMaximumBinaryTree(nums: IntArray): TreeNode? {
+        return constructMaximumBinaryTreeHelper(nums, 0, nums.size - 1)
+    }
+
+    fun constructMaximumBinaryTreeHelper(nums: IntArray, startIndex: Int, endIndex: Int): TreeNode? {
+        if(startIndex > endIndex) return null
+        var maxIndex = startIndex
+        var i = startIndex
+        var max = 0
+        while (i <= endIndex) {
+            if(i == startIndex) {
+                max = nums[i]
+            } else {
+                if(max < nums[i]){
+                    max = nums[i]
+                    maxIndex = i
+                }
+            }
+            i++
+        }
+        return TreeNode(nums[maxIndex]).apply {
+            if(maxIndex != 0){
+                left = constructMaximumBinaryTreeHelper(nums, startIndex, maxIndex - 1)
+            }
+            if(maxIndex != nums.size - 1) {
+                right = constructMaximumBinaryTreeHelper(nums, maxIndex + 1, endIndex)
+            }
+        }
+    }
+}
+```
