@@ -8835,3 +8835,736 @@ class Solution {
     }
 }
 ```
+### 115  Merge In Between Linked Lists
+```
+You are given two linked lists: list1 and list2 of sizes n and m respectively.
+
+Remove list1's nodes from the ath node to the bth node, and put list2 in their place.
+
+The blue edges and nodes in the following figure incidate the result:
+
+Build the result list and return its head.
+
+Example 1:
+Input: list1 = [0,1,2,3,4,5], a = 3, b = 4, list2 = [1000000,1000001,1000002]
+Output: [0,1,2,1000000,1000001,1000002,5]
+Explanation: We remove the nodes 3 and 4 and put the entire list2 in their place. The blue edges and nodes in the above figure indicate the result.
+
+Example 2:
+Input: list1 = [0,1,2,3,4,5,6], a = 2, b = 5, list2 = [1000000,1000001,1000002,1000003,1000004]
+Output: [0,1,1000000,1000001,1000002,1000003,1000004,6]
+Explanation: The blue edges and nodes in the above figure indicate the result.
+
+Constraints:
+3 <= list1.length <= 104
+1 <= a <= b < list1.length - 1
+1 <= list2.length <= 104
+```
+##### mine
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeInBetween(list1: ListNode?, a: Int, b: Int, list2: ListNode?): ListNode? {
+        if(list1 == null || list2 == null) return null
+        var i = 0
+        var cur = list1
+        var pre: ListNode? = null
+        while (i < a) {
+            pre = cur
+            cur = cur?.next
+            i++
+        }
+
+        pre?.next = list2
+
+        while (i < b) {
+            cur = cur?.next
+            i++
+        }
+
+        var end = list2
+        while (end!!.next != null) {
+            end = end.next
+        }
+
+        end.next = cur?.next
+
+        return list1
+    }
+}
+```
+### 116 Stone Game II
+```
+Alice and Bob continue their games with piles of stones.  There are a number of piles arranged in a row, and each pile has a positive integer number of stones piles[i].  The objective of the game is to end with the most stones. 
+
+Alice and Bob take turns, with Alice starting first.  Initially, M = 1.
+
+On each player's turn, that player can take all the stones in the first X remaining piles, where 1 <= X <= 2M.  Then, we set M = max(M, X).
+
+The game continues until all the stones have been taken.
+
+Assuming Alice and Bob play optimally, return the maximum number of stones Alice can get.
+
+Example 1:
+Input: piles = [2,7,9,4,4]
+Output: 10
+Explanation:  If Alice takes one pile at the beginning, Bob takes two piles, then Alice takes 2 piles again. Alice can get 2 + 4 + 4 = 10 piles in total. If Alice takes two piles at the beginning, then Bob can take all three piles left. In this case, Alice get 2 + 7 = 9 piles in total. So we return 10 since it's larger. 
+
+Example 2:
+Input: piles = [1,2,3,4,5,100]
+Output: 104
+
+Constraints:
+1 <= piles.length <= 100
+1 <= piles[i] <= 104
+```
+##### like
+```
+class Solution {
+    //the sum from piles[i] to the end
+    var sums: IntArray? = null
+
+    // hash[i][M] store Alex max score from pile[i] for the given M
+    // i range (0, n)
+    // M range (0, n), actually M can at most reach to n/2
+    var hash: Array<IntArray>? = null
+
+    fun stoneGameII(piles: IntArray?): Int {
+        if (piles == null || piles.isEmpty()) return 0
+        val n = piles.size
+        sums = IntArray(n)
+        sums!![n - 1] = piles[n - 1]
+
+        //the sum from piles[i] to the end
+        for (i in n - 2 downTo 0) {
+            sums!![i] = sums!![i + 1] + piles[i]
+        }
+        hash = Array(n) { IntArray(n) }
+        return helper(piles, 0, 1)
+    }
+
+    // helper method return the Alex max score from pile[i] for the given M
+    private fun helper(a: IntArray, i: Int, M: Int): Int {
+        // base case
+        if (i >= a.size) return 0
+        // when the left number of piles is less then 2M, the player can get all of them
+        if (2 * M >= a.size - i) {
+            return sums!![i]
+        }
+        // already seen before
+        if (hash!![i][M] != 0) return hash!![i][M]
+
+        //the min value the next player can get
+        var min = Int.MAX_VALUE
+        for (x in 1..2 * M) {
+            min = Math.min(min, helper(a, i + x, Math.max(M, x)))
+        }
+
+        // Alex max stones = all the left stones - the min stones Bob can get
+        hash!![i][M] = sums!![i] - min
+        return hash!![i][M]
+    }
+}
+```
+### 117 Course Schedule II
+```
+There are a total of n courses you have to take labelled from 0 to n - 1.
+
+Some courses may have prerequisites, for example, if prerequisites[i] = [ai, bi] this means you must take the course bi before the course ai.
+
+Given the total number of courses numCourses and a list of the prerequisite pairs, return the ordering of courses you should take to finish all courses.
+
+If there are many valid answers, return any of them. If it is impossible to finish all courses, return an empty array.
+
+Example 1:
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: [0,1]
+Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
+
+Example 2:
+Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+Output: [0,2,1,3]
+Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0.
+So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
+
+Example 3:
+Input: numCourses = 1, prerequisites = []
+Output: [0]
+
+Constraints:
+1 <= numCourses <= 2000
+0 <= prerequisites.length <= numCourses * (numCourses - 1)
+prerequisites[i].length == 2
+0 <= ai, bi < numCourses
+ai != bi
+All the pairs [ai, bi] are distinct.
+```
+##### like
+```
+class Solution {
+    fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
+        val arr = IntArray(numCourses) {
+            0
+        }
+        val list = MutableList<MutableList<Int>>(numCourses) {
+            mutableListOf()
+        }
+        for (pre in prerequisites) {
+            arr[pre[0]]++
+            list[pre[1]].add(pre[0])
+        }
+
+        return findOrderHelp(list, arr)
+    }
+
+    fun findOrderHelp(list: List<List<Int>>, arr: IntArray) : IntArray {
+        val order = IntArray(arr.size){0}
+        val visit = ArrayDeque<Int>()
+        for(i in arr.indices) {
+            if(arr[i] == 0) visit.offer(i)
+        }
+        var visited = 0
+        while (!visit.isEmpty()) {
+            val from = visit.poll()
+            order[visited++] = from
+            for(to in list[from]) {
+                arr[to]--
+                if(arr[to] == 0) {
+                    visit.offer(to)
+                }
+            }
+        }
+        return if(visited == arr.size) order else intArrayOf()
+    }
+}
+```
+### 118 The Skyline Problem
+```
+A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Given the locations and heights of all the buildings, return the skyline formed by these buildings collectively.
+
+The geometric information of each building is given in the array buildings where buildings[i] = [lefti, righti, heighti]:
+
+lefti is the x coordinate of the left edge of the ith building.
+righti is the x coordinate of the right edge of the ith building.
+heighti is the height of the ith building.
+You may assume all buildings are perfect rectangles grounded on an absolutely flat surface at height 0.
+
+The skyline should be represented as a list of "key points" sorted by their x-coordinate in the form [[x1,y1],[x2,y2],...]. Each key point is the left endpoint of some horizontal segment in the skyline except the last point in the list, which always has a y-coordinate 0 and is used to mark the skyline's termination where the rightmost building ends. Any ground between the leftmost and rightmost buildings should be part of the skyline's contour.
+
+Note: There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...,[2 3],[4 5],[7 5],[11 5],[12 7],...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...,[2 3],[4 5],[12 7],...]
+
+Example 1:
+Input: buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]
+Output: [[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]
+Explanation:
+Figure A shows the buildings of the input.
+Figure B shows the skyline formed by those buildings. The red points in figure B represent the key points in the output list.
+
+Example 2:
+Input: buildings = [[0,2,3],[2,5,3]]
+Output: [[0,3],[5,0]]
+
+Constraints:
+1 <= buildings.length <= 104
+0 <= lefti < righti <= 231 - 1
+1 <= heighti <= 231 - 1
+buildings is sorted by lefti in non-decreasing order.
+```
+##### like
+```
+class Solution {
+    fun getSkyline(buildings: Array<IntArray>): List<List<Int>> {
+        if (buildings.isNullOrEmpty()) return emptyList()
+
+        val heights = mutableListOf<MutableList<Int>>()
+        for (buiding in buildings) {
+            heights.add(mutableListOf(buiding[0], -buiding[2]))
+            heights.add(mutableListOf(buiding[1], buiding[2]))
+        }
+        heights.sortWith(Comparator { o1, o2 ->
+            if (o1[0] != o2[0]) {
+                o1[0] - o2[0]
+            } else {
+                o1[1] - o2[1]
+            }
+        })
+
+        val pq = PriorityQueue<Int> { o1, o2 -> o2 - o1 }
+        pq.offer(0)
+
+        var pre = 0
+        val res = mutableListOf<MutableList<Int>>()
+        for(h in heights) {
+            if(h[1] < 0) {
+                pq.offer(-h[1])
+            } else {
+                pq.remove(h[1])
+            }
+            val cur = pq.peek()!!
+            if(pre != cur) {
+                res.add(mutableListOf(h[0], cur))
+                pre = cur
+            }
+        }
+        return res
+    }
+}
+```
+### 119 Sort List
+```
+Given the head of a linked list, return the list after sorting it in ascending order.
+
+Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?
+
+Example 1:
+Input: head = [4,2,1,3]
+Output: [1,2,3,4]
+
+Example 2:
+Input: head = [-1,5,3,4,0]
+Output: [-1,0,3,4,5]
+
+Example 3:
+Input: head = []
+Output: []
+
+Constraints:
+The number of nodes in the list is in the range [0, 5 * 104].
+-105 <= Node.val <= 105
+```
+##### mine 1 slow
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun sortList(head: ListNode?): ListNode? {
+        if(head == null) return null
+        val queue = PriorityQueue<ListNode> { o1, o2 ->
+            o1.`val` - o2.`val`
+        }
+        var cur = head
+        while (cur != null) {
+            queue.add(cur)
+            cur = cur.next
+        }
+        cur = queue.poll()
+        val res = cur
+        while (queue.isNotEmpty()) {
+            val next = queue.poll()
+            cur!!.next = next
+            cur = next
+        }
+        cur!!.next = null
+        return res
+    }
+}
+```
+##### like
+```
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun sortList(head: ListNode?): ListNode? {
+        if (head?.next == null) return head
+
+        // step 1. cut the list to two halves
+
+        // step 1. cut the list to two halves
+        var prev: ListNode? = null
+        var slow = head
+        var fast = head
+
+        while (fast?.next != null) {
+            prev = slow
+            slow = slow!!.next
+            fast = fast.next!!.next
+        }
+
+        prev!!.next = null
+
+        // step 2. sort each half
+
+        // step 2. sort each half
+        val l1 = sortList(head)
+        val l2 = sortList(slow)
+
+        // step 3. merge l1 and l2
+
+        // step 3. merge l1 and l2
+        return merge(l1, l2)
+    }
+
+    fun merge(l11: ListNode?, l22: ListNode?): ListNode? {
+        var l1 = l11
+        var l2 = l22
+        val l = ListNode(0)
+        var p: ListNode? = l
+        while (l1 != null && l2 != null) {
+            if (l1.`val` < l2.`val`) {
+                p!!.next = l1
+                l1 = l1.next
+            } else {
+                p!!.next = l2
+                l2 = l2.next
+            }
+            p = p.next
+        }
+        if (l1 != null) p!!.next = l1
+        if (l2 != null) p!!.next = l2
+        return l.next
+    }
+}
+```
+### 120 Median of Two Sorted Arrays
+```
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+Follow up: The overall run time complexity should be O(log (m+n)).
+
+Example 1:
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+
+Example 2:
+Input: nums1 = [1,2], nums2 = [3,4]
+Output: 2.50000
+Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+
+Example 3:
+Input: nums1 = [0,0], nums2 = [0,0]
+Output: 0.00000
+
+Example 4:
+Input: nums1 = [], nums2 = [1]
+Output: 1.00000
+
+Example 5:
+Input: nums1 = [2], nums2 = []
+Output: 2.00000
+
+Constraints:
+nums1.length == m
+nums2.length == n
+0 <= m <= 1000
+0 <= n <= 1000
+1 <= m + n <= 2000
+-106 <= nums1[i], nums2[i] <= 106
+```
+##### mine
+```
+class Solution {
+    fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        val nums3 = IntArray(nums1.size + nums2.size)
+        System.arraycopy(nums1, 0, nums3, 0, nums1.size)
+        System.arraycopy(nums2, 0, nums3, nums1.size, nums2.size)
+        nums3.sort()
+        return if (nums3.size % 2 == 0) (nums3[nums3.size / 2] + nums3[nums3.size / 2 - 1]) / 2.0 else nums3[nums3.size / 2].toDouble()
+    }
+}
+```
+### 121 Longest Palindromic Substring
+```
+Given a string s, return the longest palindromic substring in s.
+
+Example 1:
+Input: s = "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+
+Example 2:
+Input: s = "cbbd"
+Output: "bb"
+
+Example 3:
+Input: s = "a"
+Output: "a"
+
+Example 4:
+Input: s = "ac"
+Output: "a"
+
+Constraints:
+1 <= s.length <= 1000
+s consist of only digits and English letters (lower-case and/or upper-case),
+```
+##### mine 1 Time Limit Exceeded
+```
+class Solution {
+    fun longestPalindrome(s: String): String {
+        longestPalindromeMap.clear()
+        if (s.length == 1) return s
+        return longestPalindromeHelper(s, 0, s.length - 1)
+    }
+
+    val longestPalindromeMap = mutableMapOf<String, String>()
+    fun longestPalindromeHelper(s: String, startIndex: Int, endIndex: Int): String {
+        val key = "$startIndex-$endIndex"
+        if (longestPalindromeMap.containsKey(key)) {
+            return longestPalindromeMap[key]!!
+        }
+        if (startIndex > endIndex) {
+            longestPalindromeMap[key] = ""
+            return ""
+        }
+        if (startIndex == endIndex) {
+            val res = s.substring(startIndex, startIndex + 1)
+            longestPalindromeMap[key] = res
+            return res
+        }
+        if (endIndex - startIndex == 1) {
+            val res = if (s[startIndex] == s[endIndex]) s.substring(
+                startIndex,
+                endIndex + 1
+            ) else s.substring(startIndex, endIndex)
+            longestPalindromeMap[key] = res
+            return res
+        }
+
+        val key1 = "${startIndex + 1}-${endIndex}"
+        val key2 = "${startIndex}-${endIndex - 1}"
+        val key3 = "${startIndex + 1}-${endIndex - 1}"
+        val s1 = if (longestPalindromeMap.containsKey(key1))
+            longestPalindromeMap[key1]!!
+        else {
+            longestPalindromeHelper(s, startIndex + 1, endIndex)
+        }
+        val s2 = if (longestPalindromeMap.containsKey(key2))
+            longestPalindromeMap[key2]!!
+        else {
+            longestPalindromeHelper(s, startIndex, endIndex - 1)
+        }
+        val temp = if (longestPalindromeMap.containsKey(key3))
+            longestPalindromeMap[key3]!! else longestPalindromeHelper(
+            s,
+            startIndex + 1,
+            endIndex - 1
+        )
+        val s3 = if (s[startIndex] == s[endIndex] && temp.length == endIndex - startIndex - 1) {
+            s.substring(startIndex, endIndex + 1)
+        } else {
+            temp
+        }
+
+        val res = if (s1.length > s2.length) {
+            if (s1.length > s3.length) s1 else s3
+        } else {
+            if (s2.length > s3.length) s2 else s3
+        }
+        longestPalindromeMap[key] = res
+
+        return res
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun longestPalindrome(s: String): String {
+        var res = ""
+        for (i in s.indices) {
+            val s1 = longestPalindromeHelper(s, i, i)
+            val s2 = longestPalindromeHelper(s, i, i + 1)
+            if (s1.length > res.length) res = s1
+            if (s2.length > res.length) res = s2
+        }
+        return res
+    }
+
+    fun longestPalindromeHelper(s: String, startIndex: Int, startIndex2: Int): String {
+        if(startIndex2 == s.length) return s.substring(startIndex)
+        if(startIndex2 == 0) return s.substring(0, 1)
+        var i = startIndex
+        var j = startIndex2
+        while (i >= 0 && j < s.length) {
+            if (s[i] == s[j]) {
+                i--
+                j++
+            } else {
+                break
+            }
+        }
+        if(j - i == 1)
+            return if(s[i] == s[j]) s.substring(i , j + 1) else s.substring(i, j)
+        i++
+        j--
+        return s.substring(i , j + 1)
+    }
+}
+```
+### 122 ZigZag Conversion
+```
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string s, int numRows);
+
+Example 1:
+Input: s = "PAYPALISHIRING", numRows = 3
+Output: "PAHNAPLSIIGYIR"
+
+Example 2:
+Input: s = "PAYPALISHIRING", numRows = 4
+Output: "PINALSIGYAHRPI"
+Explanation:
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+
+Example 3:
+Input: s = "A", numRows = 1
+Output: "A"
+
+Constraints:
+
+1 <= s.length <= 1000
+s consists of English letters (lower-case and upper-case), ',' and '.'.
+1 <= numRows <= 1000
+```
+##### mine
+```
+class Solution {
+    fun convert(s: String, numRows: Int): String {
+        val step = numRows * 2 - 2
+        if (step <= 0) return s
+        var res = ""
+        for (i in 1..numRows) {
+            var j = i - 1
+            if (i == 1 || i == numRows) {
+                while (j < s.length) {
+                    res += s[j]
+                    j += step
+                }
+            } else {
+                val k = step - i - (i - 2) // 出第一行和最后一行外，每step会多一个字符，计算多的字符到到j位置字符的偏移量
+                while (j < s.length) {
+                    res += s[j]
+                    if(j + k < s.length) {
+                        res += s[j + k]
+                    }
+                    j += step
+                }
+            }
+        }
+        return res
+    }
+}
+```
+### 123 Reverse Integer
+```
+Given a 32-bit signed integer, reverse digits of an integer.
+
+Note:
+Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−2^31,  2^31 − 1]. For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.
+
+Example 1:
+Input: x = 123
+Output: 321
+
+Example 2:
+Input: x = -123
+Output: -321
+
+Example 3:
+Input: x = 120
+Output: 21
+
+Example 4:
+Input: x = 0
+Output: 0
+
+Constraints:
+-231 <= x <= 231 - 1
+```
+##### like
+```
+class Solution {
+    fun reverse(x: Int): Int {
+        var result = 0
+        var xx = x
+        while (xx != 0) {
+            val tail = xx % 10
+            val newResult = result * 10 + tail
+            if ((newResult - tail) / 10 != result) {
+                return 0
+            }
+            result = newResult
+            xx /= 10
+        }
+        return result
+    }
+}
+```
+### 124  String to Integer (atoi)
+```
+Implement atoi which converts a string to an integer.
+
+The function first discards as many whitespace characters as necessary until the first non-whitespace character is found. Then, starting from this character takes an optional initial plus or minus sign followed by as many numerical digits as possible, and interprets them as a numerical value.
+
+The string can contain additional characters after those that form the integral number, which are ignored and have no effect on the behavior of this function.
+
+If the first sequence of non-whitespace characters in str is not a valid integral number, or if no such sequence exists because either str is empty or it contains only whitespace characters, no conversion is performed.
+
+If no valid conversion could be performed, a zero value is returned.
+
+Note:
+Only the space character ' ' is considered a whitespace character.
+Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−2^31,  2^31 − 1]. If the numerical value is out of the range of representable values, 2^31 − 1 or −2^31 is returned.
+
+Example 1:
+Input: str = "42"
+Output: 42
+
+Example 2:
+Input: str = "   -42"
+Output: -42
+Explanation: The first non-whitespace character is '-', which is the minus sign. Then take as many numerical digits as possible, which gets 42.
+
+Example 3:
+Input: str = "4193 with words"
+Output: 4193
+Explanation: Conversion stops at digit '3' as the next character is not a numerical digit.
+
+Example 4:
+Input: str = "words and 987"
+Output: 0
+Explanation: The first non-whitespace character is 'w', which is not a numerical digit or a +/- sign. Therefore no valid conversion could be performed.
+
+Example 5:
+Input: str = "-91283472332"
+Output: -2147483648
+Explanation: The number "-91283472332" is out of the range of a 32-bit signed integer. Thefore INT_MIN (−2^31) is returned.
+
+Constraints:
+0 <= s.length <= 200
+s consists of English letters (lower-case and upper-case), digits, ' ', '+', '-' and '.'.
+```
