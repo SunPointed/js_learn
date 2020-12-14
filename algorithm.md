@@ -9568,3 +9568,162 @@ Constraints:
 0 <= s.length <= 200
 s consists of English letters (lower-case and upper-case), digits, ' ', '+', '-' and '.'.
 ```
+##### mine
+```
+class Solution {
+    fun myAtoi(s: String): Int {
+        var res = 0
+        var i = 0
+        var isFind = false
+        var isPositive = true
+        while (i < s.length) {
+            if(isFind && s[i] !in '0'..'9') {
+                return if(isPositive) res else -res
+            }
+            if(isFind && s[i] in '0'..'9') {
+                val temp = res * 10 + (s[i] - '0')
+                if(isPositive && temp < 0) {
+                    return Int.MAX_VALUE
+                }
+                if(!isPositive && temp < 0) {
+                    return Int.MIN_VALUE
+                }
+                if((temp - (s[i] - '0')) / 10 != res){
+                    return if(isPositive) Int.MAX_VALUE else Int.MIN_VALUE
+                }
+                res = temp
+            }
+
+            if(!isFind && (s[i] in '0'..'9' || s[i] == '-' || s[i] == '+')){
+                isFind = true
+                if(s[i] == '-' || s[i] == '+'){
+                    isPositive = s[i] == '+'
+                    res = 0
+                }
+                if(s[i] in '0'..'9')
+                    res = s[i] - '0'
+            }
+            if(!isFind && !(s[i] in '0'..'9' || s[i] == ' ')){
+                return 0
+            }
+            i++
+        }
+        return if(isPositive) res else -res
+    }
+}
+```
+### 125 Palindrome Number
+```
+Determine whether an integer is a palindrome. An integer is a palindrome when it reads the same backward as forward.
+
+Follow up: Could you solve it without converting the integer to a string?
+
+Example 1:
+Input: x = 121
+Output: true
+
+Example 2:
+Input: x = -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+
+Example 3:
+Input: x = 10
+Output: false
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+
+Example 4:
+Input: x = -101
+Output: false
+
+Constraints:
+-231 <= x <= 231 - 1
+```
+##### mine
+```
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        var res = 0
+        var xx = x
+        val data = xx
+        while (xx > 0) {
+            res = res * 10 + xx % 10
+            xx /= 10
+        }
+        return res == data
+    }
+}
+```
+### 126 Regular Expression Matching
+```
+Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*' where: 
+
+'.' Matches any single character.​​​​
+'*' Matches zero or more of the preceding element.
+The matching should cover the entire input string (not partial).
+
+Example 1:
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+Example 2:
+Input: s = "aa", p = "a*"
+Output: true
+Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+
+Example 3:
+Input: s = "ab", p = ".*"
+Output: true
+Explanation: ".*" means "zero or more (*) of any character (.)".
+
+Example 4:
+Input: s = "aab", p = "c*a*b"
+Output: true
+Explanation: c can be repeated 0 times, a can be repeated 1 time. Therefore, it matches "aab".
+
+Example 5:
+Input: s = "mississippi", p = "mis*is*p*."
+Output: false
+
+Constraints:
+0 <= s.length <= 20
+0 <= p.length <= 30
+s contains only lowercase English letters.
+p contains only lowercase English letters, '.', and '*'.
+It is guaranteed for each appearance of the character '*', there will be a previous valid character to match.
+```
+##### mine
+```
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val arr = Array<BooleanArray>(s.length + 1) {
+            BooleanArray(p.length + 1) { false }
+        }
+        arr[0][0] = true
+        var j = 0
+        while (j < p.length) {
+            if (p[j] == '*' && arr[0][j - 1]) arr[0][j + 1] = true
+            j++
+        }
+        var i = 0
+        while (i < s.length) {
+            j = 0
+            while (j < p.length) {
+                if (s[i] == p[j] || p[j] == '.') {
+                    arr[i + 1][j + 1] = arr[i][j]
+                }
+                if (p[j] == '*') {
+                    if (s[i] != p[j - 1] && p[j - 1] != '.')
+                        arr[i + 1][j + 1] = arr[i + 1][j - 1]
+                    else
+                        arr[i + 1][j + 1] = arr[i][j + 1] || arr[i + 1][j] || arr[i + 1][j - 1]
+                }
+                j++
+            }
+            i++
+        }
+        return arr[s.length][p.length]
+    }
+}
+```
