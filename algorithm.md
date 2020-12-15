@@ -9727,3 +9727,301 @@ class Solution {
     }
 }
 ```
+### 127 Container With Most Water
+```
+Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of the line i is at (i, ai) and (i, 0). Find two lines, which, together with the x-axis forms a container, such that the container contains the most water.
+
+Notice that you may not slant the container.
+
+Example 1:
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+Example 2:
+Input: height = [1,1]
+Output: 1
+
+Example 3:
+Input: height = [4,3,2,1,4]
+Output: 16
+
+Example 4:
+Input: height = [1,2,1]
+Output: 2
+
+Constraints:
+n = height.length
+2 <= n <= 3 * 10^4
+0 <= height[i] <= 3 * 10^4
+```
+##### mine 1 slow
+```
+class Solution {
+    fun maxArea(height: IntArray): Int {
+        if (height.size <= 1) return 0
+        if (height.size == 2) return Math.min(height[0], height[1])
+        val list = mutableListOf<Int>().apply {
+            add(0)
+            add(1)
+        }
+        var area = Math.min(height[0], height[1])
+        var i = 2
+        while (i < height.size) {
+            for(j in list) {
+                var cur = (i - j) * Math.min(height[i], height[j])
+                if(cur > area) area = cur
+            }
+            list.add(i)
+            i++
+        }
+        return area
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun maxArea(height: IntArray): Int {
+        var area = Int.MIN_VALUE
+        var left = 0
+        var right: Int = height.size - 1
+        var temp = 0
+        while (left != right) {
+            if (height[left] < height[right]) {
+                temp = height[left] * (right - left)
+                left++
+            } else {
+                temp = height[right] * (right - left)
+                right--
+            }
+            area = if (area >= temp) area else temp
+        }
+        return area
+    }
+}
+```
+### 128 Integer to Roman
+```
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
+Given an integer, convert it to a roman numeral.
+
+Example 1:
+Input: num = 3
+Output: "III"
+
+Example 2:
+Input: num = 4
+Output: "IV"
+
+Example 3:
+Input: num = 9
+Output: "IX"
+
+Example 4:
+Input: num = 58
+Output: "LVIII"
+Explanation: L = 50, V = 5, III = 3.
+
+Example 5:
+Input: num = 1994
+Output: "MCMXCIV"
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+Constraints:
+1 <= num <= 3999
+```
+##### mine
+```
+class Solution {
+    fun intToRoman(num: Int): String {
+        var res = ""
+        var tc = num / 1000
+        while (tc > 0) {
+            res += 'M'
+            tc--
+        }
+        val hc = num % 1000 / 100
+        if(hc > 0) {
+            res += intToRomanHelper(hc, 'M', 'D', 'C')
+        }
+        val c = num % 100 / 10
+        if(c > 0) {
+            res += intToRomanHelper(c, 'C', 'L', 'X')
+        }
+        val sc = num % 10
+        if(sc > 0) {
+            res += intToRomanHelper(sc, 'X', 'V', 'I')
+        }
+        return res
+    }
+
+    fun intToRomanHelper(i: Int, c1: Char, c2: Char, c3: Char): String {
+        if (i > 9 || i < 1) return ""
+        return when (i) {
+            9 -> "" + c3 + c1
+            8 -> "" + c2 + c3 + c3 + c3
+            7 -> "" + c2 + c3 + c3
+            6 -> "" + c2 + c3
+            5 -> "" + c2
+            4 -> "" + c3 + c2
+            3 -> "" + c3 + c3 + c3
+            2 -> "" + c3 + c3
+            else -> "" + c3
+        }
+    }
+}
+```
+### 129 Roman to Integer
+```
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
+Given a roman numeral, convert it to an integer.
+
+Example 1:
+Input: s = "III"
+Output: 3
+
+Example 2:
+Input: s = "IV"
+Output: 4
+
+Example 3:
+Input: s = "IX"
+Output: 9
+
+Example 4:
+Input: s = "LVIII"
+Output: 58
+Explanation: L = 50, V= 5, III = 3.
+
+Example 5:
+Input: s = "MCMXCIV"
+Output: 1994
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+Constraints:
+1 <= s.length <= 15
+s contains only the characters ('I', 'V', 'X', 'L', 'C', 'D', 'M').
+It is guaranteed that s is a valid roman numeral in the range [1, 3999].
+```
+##### mine
+```
+class Solution {
+    fun romanToInt(s: String): Int {
+        val stack = ArrayDeque<Char>()
+        for (c in s) stack.push(c)
+        var res = 0
+        var pre: Char? = null
+        while (stack.isNotEmpty()) {
+            val cur = stack.pop()!!
+            res = romanToIntHelp(res, pre, cur)
+            pre = cur
+        }
+        return res
+    }
+
+    fun romanToIntHelp(res: Int, pre: Char?, cur: Char): Int {
+        if (pre == null) {
+            return when (cur) {
+                'I' -> res + 1
+                'V' -> res + 5
+                'X' -> res + 10
+                'L' -> res + 50
+                'C' -> res + 100
+                'D' -> res + 500
+                else -> res + 1000
+            }
+        } else {
+            return when (cur) {
+                'I' -> if (pre == 'V' || pre == 'X') res - 1 else res + 1
+                'V' -> res + 5
+                'X' -> if (pre == 'L' || pre == 'C') res - 10 else res + 10
+                'L' -> res + 50
+                'C' -> if (pre == 'D' || pre == 'M') res - 100 else res + 100
+                'D' -> res + 500
+                else -> res + 1000
+            }
+        }
+    }
+}
+```
+### 130 Longest Common Prefix
+```
+Write a function to find the longest common prefix string amongst an array of strings.
+
+If there is no common prefix, return an empty string "".
+
+Example 1:
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+
+Example 2:
+Input: strs = ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+
+Constraints:
+0 <= strs.length <= 200
+0 <= strs[i].length <= 200
+strs[i] consists of only lower-case English letters.
+```
+##### mine 1
+```
+class Solution {
+    fun longestCommonPrefix(strs: Array<String>): String {
+        if(strs.isEmpty()) return ""
+        if(strs.size == 1) return strs[0]
+        val set = mutableSetOf<Char>()
+        var count = 0
+        var step = 0
+        while (set.size == 0) {
+            for (str in strs) {
+                if(count >= str.length) return str
+                set.add(str[count])
+                step++
+                if (step == strs.size) {
+                    step = 0
+                    if (set.size > 1) {
+                        return str.substring(0, count)
+                    }
+                    set.clear()
+                    count++
+                }
+            }
+        }
+        return strs[0].substring(0, count)
+    }
+}
+```
