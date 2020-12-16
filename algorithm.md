@@ -10025,3 +10025,344 @@ class Solution {
     }
 }
 ```
+### 131 3Sum
+```
+Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+
+Notice that the solution set must not contain duplicate triplets.
+
+Example 1:
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+
+Example 2:
+Input: nums = []
+Output: []
+
+Example 3:
+Input: nums = [0]
+Output: []
+
+Constraints:
+0 <= nums.length <= 3000
+-105 <= nums[i] <= 105
+```
+##### mine
+```
+class Solution {
+    fun threeSum(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+        nums.sort()
+        for((i , v) in nums.withIndex()) {
+            if(i > 0 && nums[i - 1] == v) continue
+            threeSum2Help(nums, i + 1, -v).forEach {
+                it.add(v)
+                res.add(it)
+            }
+        }
+        return res
+    }
+
+    fun threeSum2Help(nums: IntArray, startIndex: Int, value: Int) : MutableList<MutableList<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+        var i = startIndex
+        var j = nums.size - 1
+        while (i < j) {
+            val cur = nums[i] + nums[j]
+            when {
+                cur == value -> {
+                    res.add(mutableListOf<Int>().apply {
+                        add(nums[i])
+                        add(nums[j])
+                    })
+                    var pre = nums[j]
+                    j--
+                    while (i < j && nums[j] == pre) {
+                        j--
+                    }
+                    pre = nums[i]
+                    i++
+                    while (i < j && nums[i] == pre) {
+                        i++
+                    }
+                }
+                cur < value -> {
+                    i++
+                }
+                cur > value -> {
+                    j--
+                }
+            }
+        }
+        return res
+    }
+}
+```
+### 132 3Sum Closest
+```
+Given an array nums of n integers and an integer target, find three integers in nums such that the sum is closest to target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
+
+Example 1:
+Input: nums = [-1,2,1,-4], target = 1
+Output: 2
+Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+
+Constraints:
+3 <= nums.length <= 10^3
+-10^3 <= nums[i] <= 10^3
+-10^4 <= target <= 10^4
+```
+##### mine 1
+```
+class Solution {
+    fun threeSumClosest(nums: IntArray, target: Int): Int {
+        var res = Pair(Int.MAX_VALUE, Int.MAX_VALUE)
+        nums.sort()
+        for ((i, v) in nums.withIndex()) {
+            if (i > 0 && nums[i - 1] == v) continue
+            val cur = threeSumClosestHelp(nums, i + 1, v, target)
+            res = if (res.first > cur.first) cur else res
+        }
+        return res.second
+    }
+
+    fun threeSumClosestHelp(
+        nums: IntArray,
+        startIndex: Int,
+        value: Int,
+        target: Int
+    ): Pair<Int, Int> {
+        var res = 0
+        var step = Int.MAX_VALUE
+
+        var i = startIndex
+        while (i < nums.size - 1) {
+            var j = i + 1
+            while (j < nums.size) {
+                val cur = value + nums[i] + nums[j]
+                val curStep = Math.abs(target - cur)
+                if (curStep < step) {
+                    step = curStep
+                    res = cur
+                }
+                j++
+            }
+            i++
+        }
+        return Pair(step, res)
+    }
+}
+```
+##### mine 2
+```
+class Solution {
+    fun threeSumClosest(nums: IntArray, target: Int): Int {
+        var res = Pair(Int.MAX_VALUE, Int.MAX_VALUE)
+        nums.sort()
+        for ((i, v) in nums.withIndex()) {
+            if (i > 0 && nums[i - 1] == v) continue
+            val cur = threeSumClosestHelp(nums, i + 1, v, target)
+            res = if (res.first > cur.first) cur else res
+        }
+        return res.second
+    }
+
+    fun threeSumClosestHelp(
+        nums: IntArray,
+        startIndex: Int,
+        value: Int,
+        target: Int
+    ): Pair<Int, Int> {
+        var res = 0
+        var step = Int.MAX_VALUE
+
+        var i = startIndex
+        var j = nums.size - 1
+        while (i < j) {
+            val cur = value + nums[i] + nums[j]
+            if(cur > target) {
+                j--
+            } else {
+                i++
+            }
+            val curStep = Math.abs(cur - target)
+            if(step > curStep){
+                step = curStep
+                res = cur
+            }
+        }
+        return Pair(step, res)
+    }
+}
+```
+### 133 Letter Combinations of a Phone Number
+```
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+Example 1:
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+Example 2:
+Input: digits = ""
+Output: []
+
+Example 3:
+Input: digits = "2"
+Output: ["a","b","c"]
+
+Constraints:
+0 <= digits.length <= 4
+digits[i] is a digit in the range ['2', '9'].
+```
+##### mine 1
+```
+class Solution {
+    fun letterCombinations(digits: String): List<String> {
+        if (digits.isEmpty()) return emptyList()
+        val res = mutableListOf<String>()
+        val mapping = arrayOf("0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz")
+        for (d in digits) {
+            val temp = mutableListOf<String>().apply { addAll(res) }
+            res.clear()
+            mapping[d - '0'].forEach {
+                if (temp.isEmpty()){
+                    res.add("" + it)
+                } else {
+                    temp.forEach { pre ->
+                        res.add(pre + it)
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+### 134 4Sum
+```
+Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
+Notice that the solution set must not contain duplicate quadruplets.
+
+Example 1:
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+
+Example 2:
+Input: nums = [], target = 0
+Output: []
+
+Constraints:
+0 <= nums.length <= 200
+-109 <= nums[i] <= 109
+-109 <= target <= 109
+```
+##### like
+```
+class Solution {
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>>? {
+        val res = ArrayList<List<Int>>()
+        val len = nums.size
+        if (len < 4) return res
+        Arrays.sort(nums)
+        val max = nums[len - 1]
+        if (4 * nums[0] > target || 4 * max < target) return res
+        var z: Int
+        var i: Int = 0
+        while (i < len) {
+            z = nums[i]
+            if (i > 0 && z == nums[i - 1]) {
+                i++
+                // avoid duplicate
+                continue
+            }
+            if (z + 3 * max < target) {
+                i++
+                // z is too small
+                continue
+            }
+            if (4 * z > target) // z is too large
+                break
+            if (4 * z == target) { // z is the boundary
+                if (i + 3 < len && nums[i + 3] == z) res.add(listOf(z, z, z, z))
+                break
+            }
+            threeSumForFourSum(nums, target - z, i + 1, len - 1, res, z)
+            i++
+        }
+        return res
+    }
+
+    /*
+     * Find all possible distinguished three numbers adding up to the target
+     * in sorted array nums[] between indices low and high. If there are,
+     * add all of them into the ArrayList fourSumList, using
+     * fourSumList.add(Arrays.asList(z1, the three numbers))
+     */
+    fun threeSumForFourSum(
+        nums: IntArray, target: Int, low: Int, high: Int, fourSumList: ArrayList<List<Int>>,
+        z1: Int
+    ) {
+        if (low + 1 >= high) return
+        val max = nums[high]
+        if (3 * nums[low] > target || 3 * max < target) return
+        var z: Int
+        var i: Int = low
+        while (i < high - 1) {
+            z = nums[i]
+            if (i > low && z == nums[i - 1]) {
+                i++
+                // avoid duplicate
+                continue
+            }
+            if (z + 2 * max < target) {
+                i++
+                // z is too small
+                continue
+            }
+            if (3 * z > target) // z is too large
+                break
+            if (3 * z == target) { // z is the boundary
+                if (i + 1 < high && nums[i + 2] == z) fourSumList.add(Arrays.asList(z1, z, z, z))
+                break
+            }
+            twoSumForFourSum(nums, target - z, i + 1, high, fourSumList, z1, z)
+            i++
+        }
+    }
+
+    /*
+     * Find all possible distinguished two numbers adding up to the target
+     * in sorted array nums[] between indices low and high. If there are,
+     * add all of them into the ArrayList fourSumList, using
+     * fourSumList.add(Arrays.asList(z1, z2, the two numbers))
+     */
+    fun twoSumForFourSum(
+        nums: IntArray, target: Int, low: Int, high: Int, fourSumList: ArrayList<List<Int>>,
+        z1: Int, z2: Int
+    ) {
+        if (low >= high) return
+        if (2 * nums[low] > target || 2 * nums[high] < target) return
+        var i = low
+        var j = high
+        var sum: Int
+        var x: Int
+        while (i < j) {
+            sum = nums[i] + nums[j]
+            if (sum == target) {
+                fourSumList.add(listOf(z1, z2, nums[i], nums[j]))
+                x = nums[i]
+                while (++i < j && x == nums[i]); // avoid duplicate
+                x = nums[j]
+                while (i < --j && x == nums[j]); // avoid duplicate
+            }
+            if (sum < target) i++
+            if (sum > target) j--
+        }
+        return
+    }
+}
+```
